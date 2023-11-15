@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\RInsight\RInsight\RInsight.csproj" />
+  </ItemGroup>
+
 </Project>
