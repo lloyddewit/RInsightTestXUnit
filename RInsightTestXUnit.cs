@@ -64,8 +64,6 @@ public class RInsightTestXUnit
     [Fact]
     public void TestGetLstTokens()
     {
-        _ = new clsRScript("");
-
         // test token list - RSyntacticName
         string strInput = "._+.1+.a+a+ba+baa+a_b+c12+1234567890+2.3+1e6+" + "abcdefghijklmnopqrstuvwxyz+`a`+`a b`+`[[`+`d,ae;af`+`(ah)`+`ai{aj}`+" + @"`~!@#$%^&*()_[] {} \|;:',./<>?`+`%%a_2ab%`+`%ac%`+`[[""b""]]n[[[o][p]]]`+" + "`if`+`else`+`while`+`repeat`+`for`+`in`+`function`+`return`+`else`+`next`+`break`";
         var lstInput = clsRScript.GetLstLexemes(strInput);
@@ -830,8 +828,10 @@ public class RInsightTestXUnit
 
     }
 
-    private static string GetLstTokensAsString(List<clsRToken> lstRTokens)
+    private static string GetLstTokensAsString(List<clsRToken>? lstRTokens)
     {
+        if (lstRTokens == null)
+            return "";
 
         string strNew = "";
         foreach (var clsRTokenNew in lstRTokens)
