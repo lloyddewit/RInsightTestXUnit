@@ -833,77 +833,77 @@ public class RInsightTestXUnit
             strNew += clsRTokenNew.text + "(";
             switch (clsRTokenNew.tokentype)
             {
-                case RToken.TokenTypes.RSyntacticName:
+                case RToken.TokenType.RSyntacticName:
                     {
                         strNew += "RSyntacticName";
                         break;
                     }
-                case RToken.TokenTypes.RFunctionName:
+                case RToken.TokenType.RFunctionName:
                     {
                         strNew += "RFunctionName";
                         break;
                     }
-                case RToken.TokenTypes.RKeyWord:
+                case RToken.TokenType.RKeyWord:
                     {
                         strNew += "RKeyWord";
                         break;
                     }
-                case RToken.TokenTypes.RConstantString:
+                case RToken.TokenType.RConstantString:
                     {
                         strNew += "RStringLiteral";
                         break;
                     }
-                case RToken.TokenTypes.RComment:
+                case RToken.TokenType.RComment:
                     {
                         strNew += "RComment";
                         break;
                     }
-                case RToken.TokenTypes.RSpace:
+                case RToken.TokenType.RSpace:
                     {
                         strNew += "RSpace";
                         break;
                     }
-                case RToken.TokenTypes.RBracket:
+                case RToken.TokenType.RBracket:
                     {
                         strNew += "RBracket";
                         break;
                     }
-                case RToken.TokenTypes.RSeparator:
+                case RToken.TokenType.RSeparator:
                     {
                         strNew += "RSeparator";
                         break;
                     }
-                case RToken.TokenTypes.RNewLine:
+                case RToken.TokenType.RNewLine:
                     {
                         strNew += "RNewLine";
                         break;
                     }
-                case RToken.TokenTypes.REndStatement:
+                case RToken.TokenType.REndStatement:
                     {
                         strNew += "REndStatement";
                         break;
                     }
-                case RToken.TokenTypes.REndScript:
+                case RToken.TokenType.REndScript:
                     {
                         strNew += "REndScript";
                         break;
                     }
-                case RToken.TokenTypes.ROperatorUnaryLeft:
+                case RToken.TokenType.ROperatorUnaryLeft:
                     {
                         strNew += "ROperatorUnaryLeft";
                         break;
                     }
-                case RToken.TokenTypes.ROperatorUnaryRight:
+                case RToken.TokenType.ROperatorUnaryRight:
                     {
                         strNew += "ROperatorUnaryRight";
                         break;
                     }
-                case RToken.TokenTypes.ROperatorBinary:
+                case RToken.TokenType.ROperatorBinary:
                     {
                         strNew += "ROperatorBinary";
                         break;
                     }
-                case RToken.TokenTypes.ROperatorBracket:
+                case RToken.TokenType.ROperatorBracket:
                     {
                         strNew += "ROperatorBracket";
                         break;
