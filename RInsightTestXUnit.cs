@@ -31,27 +31,27 @@ public class RInsightTestXUnit
 
         // test lexeme list - identifiers and standard operators
         var lstExpected = new List<string>(new string[] { "a", "::", "b", ":::", "ba", "$", "c", "@", "d", "^", "e", ":", "ea", "%%", "f", "%/%", "g", "%*%", "h", "%o%", "i", "%x%", "j", "%in%", "k", "/", "l", "*", "m", "+", "n", "-", "o", "<", "p", ">", "q", "<=", "r", ">=", "s", "==", "t", "!=", "u", "!", "v", "&", "wx", "&&", "y", "|", "z", "||", "a2", "~", "2b", "->", "c0a", "->>", "d0123456789a", "<-", "1234567890", "<<-", "e0a1b2", "=", "345f6789" });
-        var lstActual = RInsight.RScript.GetLstLexemes("a::b:::ba$c@d^e:ea%%f%/%g%*%h%o%i%x%j%in%k/l*m+n-o<p>q<=r>=s==t!=u!v&wx&&y|z||a2~2b->c0a->>d0123456789a<-1234567890<<-e0a1b2=345f6789");
+        var lstActual = RInsight.RTokenList.GetLstLexemes("a::b:::ba$c@d^e:ea%%f%/%g%*%h%o%i%x%j%in%k/l*m+n-o<p>q<=r>=s==t!=u!v&wx&&y|z||a2~2b->c0a->>d0123456789a<-1234567890<<-e0a1b2=345f6789");
         Assert.Equal(lstExpected, lstActual);
 
         // test lexeme list - separators, brackets, line feeds, user-defined operators and variable names with '.' and '_'
         lstExpected = new List<string>(new string[] { ",", "ae", ";", "af", "\r", "ag", "\n", "(", "ah", ")", "\r\n", "ai", "{", "aj", "}", "ak", "[", "al", "]", "al", "[[", "am", "]]", "_ao", "%>%", "|>", ".ap", "%aq%", ".ar_2", "%asat%", "au_av.awax" });
-        lstActual = RInsight.RScript.GetLstLexemes(",ae;af" + "\r" + "ag" + "\n" + "(ah)" + "\r\n" + "ai{aj}ak[al]al[[am]]_ao%>%|>.ap" + "%aq%.ar_2%asat%au_av.awax");
+        lstActual = RInsight.RTokenList.GetLstLexemes(",ae;af" + "\r" + "ag" + "\n" + "(ah)" + "\r\n" + "ai{aj}ak[al]al[[am]]_ao%>%|>.ap" + "%aq%.ar_2%asat%au_av.awax");
         Assert.Equal(lstExpected, lstActual);
 
         // test lexeme list - spaces
         lstExpected = new List<string>(new string[] { " ", "+", "ay", "-", " ", "az", "  ", "::", "ba", "   ", "%*%", "   ", "bb", "   ", "<<-", "    ", "bc", " ", "\r", "  ", "bd", "   ", "\n", "    ", "be", "   ", "\r\n", "  ", "bf", " " });
-        lstActual = RInsight.RScript.GetLstLexemes(" +ay- az  ::ba   %*%   bb   <<-    bc " + "\r" + "  bd   " + "\n" + "    be   " + "\r\n" + "  bf ");
+        lstActual = RInsight.RTokenList.GetLstLexemes(" +ay- az  ::ba   %*%   bb   <<-    bc " + "\r" + "  bd   " + "\n" + "    be   " + "\r\n" + "  bf ");
         Assert.Equal(lstExpected, lstActual);
 
         // test lexeme list - string literals
         lstExpected = new List<string>(new string[] { "\"a\"", "+", "\"bf\"", "%%", "\"bga\"", "%/%", "\"bgba\"", "%in%", "\"bgbaa\"", ">=", @"""~!@#$%^&*()_[] {} \|;:',./<>? """, ",", "\" bgbaaa\"", "\r", "\"bh\"", "\n", "\"bi\"", "\r\n", "\"bj\"", "{", "\"bk\"", "[[", "\"bl\"", "%>%", "\"bm\"", "%aq%", "\"bn\"", " ", "+", "\"bn\"", "-", " ", "\"bo\"", "  ", "::", "\"bq\"", "   ", "<<-", "    ", "\"br\"", " ", "\r", "  ", "\"bs\"", "   ", "\n", "    ", "\"bt\"", "   ", "\r\n", "  ", "\"bu\"", " " });
-        lstActual = RInsight.RScript.GetLstLexemes("\"a\"+\"bf\"%%\"bga\"%/%\"bgba\"%in%\"bgbaa\">=" + @"""~!@#$%^&*()_[] {} \|;:',./<>? "","" bgbaaa""" + "\r" + "\"bh\"" + "\n" + "\"bi\"" + "\r\n" + "\"bj\"{\"bk\"[[\"bl\"%>%\"bm\"%aq%\"bn\" +\"bn\"- \"bo\"  ::" + "\"bq\"   <<-    \"br\" " + "\r" + "  \"bs\"   " + "\n" + "    \"bt\"   " + "\r\n" + "  \"bu\" ");
+        lstActual = RInsight.RTokenList.GetLstLexemes("\"a\"+\"bf\"%%\"bga\"%/%\"bgba\"%in%\"bgbaa\">=" + @"""~!@#$%^&*()_[] {} \|;:',./<>? "","" bgbaaa""" + "\r" + "\"bh\"" + "\n" + "\"bi\"" + "\r\n" + "\"bj\"{\"bk\"[[\"bl\"%>%\"bm\"%aq%\"bn\" +\"bn\"- \"bo\"  ::" + "\"bq\"   <<-    \"br\" " + "\r" + "  \"bs\"   " + "\n" + "    \"bt\"   " + "\r\n" + "  \"bu\" ");
         Assert.Equal(lstExpected, lstActual);
 
         // test lexeme list - comments
         lstExpected = new List<string>(new string[] { "#", "\n", "c", "#", "\n", "ca", "#", "\n", "+", "#", "\n", "%/%", "#", "\n", "%in%", "#", "\n", ">=", @"#~!@#$%^&*()_[]{}\|;:',./<>?#", "\n", " ", "#", "\n", "  ", @"#~!@#$%^&*()_[] {} \|;:',./<>?", "\n", "#cb", "\n", "#cba", "\n", "# \",\" cbaa ", "\n", "#", "\r", "#cc", "\r", "#cca", "\r\n", "# ccaa ", "\r\n" });
-        lstActual = RInsight.RScript.GetLstLexemes("#" + "\n" + "c#" + "\n" + "ca#" + "\n" + "+#" + "\n" + "%/%#" + "\n" + "%in%#" + "\n" + @">=#~!@#$%^&*()_[]{}\|;:',./<>?#" + "\n" + " #" + "\n" + @"  #~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + "#cb" + "\n" + "#cba" + "\n" + "# \",\" cbaa " + "\n" + "#" + "\r" + "#cc" + "\r" + "#cca" + "\r\n" + "# ccaa " + "\r\n");
+        lstActual = RInsight.RTokenList.GetLstLexemes("#" + "\n" + "c#" + "\n" + "ca#" + "\n" + "+#" + "\n" + "%/%#" + "\n" + "%in%#" + "\n" + @">=#~!@#$%^&*()_[]{}\|;:',./<>?#" + "\n" + " #" + "\n" + @"  #~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + "#cb" + "\n" + "#cba" + "\n" + "# \",\" cbaa " + "\n" + "#" + "\r" + "#cc" + "\r" + "#cca" + "\r\n" + "# ccaa " + "\r\n");
         Assert.Equal(lstExpected, lstActual);
     }
 
@@ -60,66 +60,56 @@ public class RInsightTestXUnit
     {
         // test token list - RSyntacticName
         string strInput = "._+.1+.a+a+ba+baa+a_b+c12+1234567890+2.3+1e6+" + "abcdefghijklmnopqrstuvwxyz+`a`+`a b`+`[[`+`d,ae;af`+`(ah)`+`ai{aj}`+" + @"`~!@#$%^&*()_[] {} \|;:',./<>?`+`%%a_2ab%`+`%ac%`+`[[""b""]]n[[[o][p]]]`+" + "`if`+`else`+`while`+`repeat`+`for`+`in`+`function`+`return`+`else`+`next`+`break`";
-        var lstInput = RScript.GetLstLexemes(strInput);
         string strExpected = "._(RSyntacticName), +(ROperatorBinary), .1(RSyntacticName), " + "+(ROperatorBinary), .a(RSyntacticName), +(ROperatorBinary), a(RSyntacticName), " + "+(ROperatorBinary), ba(RSyntacticName), +(ROperatorBinary), baa(RSyntacticName), " + "+(ROperatorBinary), a_b(RSyntacticName), +(ROperatorBinary), c12(RSyntacticName), " + "+(ROperatorBinary), 1234567890(RSyntacticName), +(ROperatorBinary), " + "2.3(RSyntacticName), +(ROperatorBinary), 1e6(RSyntacticName), +(ROperatorBinary), " + "abcdefghijklmnopqrstuvwxyz(RSyntacticName), +(ROperatorBinary), `a`(RSyntacticName), " + "+(ROperatorBinary), `a b`(RSyntacticName), +(ROperatorBinary), `[[`(RSyntacticName), " + "+(ROperatorBinary), `d,ae;af`(RSyntacticName), +(ROperatorBinary), " + "`(ah)`(RSyntacticName), +(ROperatorBinary), `ai{aj}`(RSyntacticName), +(ROperatorBinary), " + @"`~!@#$%^&*()_[] {} \|;:',./<>?`(RSyntacticName), +(ROperatorBinary), " + "`%%a_2ab%`(RSyntacticName), +(ROperatorBinary), `%ac%`(RSyntacticName), " + "+(ROperatorBinary), `[[\"b\"]]n[[[o][p]]]`(RSyntacticName), +(ROperatorBinary), " + "`if`(RSyntacticName), +(ROperatorBinary), `else`(RSyntacticName), +(ROperatorBinary), " + "`while`(RSyntacticName), +(ROperatorBinary), `repeat`(RSyntacticName), " + "+(ROperatorBinary), `for`(RSyntacticName), +(ROperatorBinary), `in`(RSyntacticName), " + "+(ROperatorBinary), `function`(RSyntacticName), +(ROperatorBinary), " + "`return`(RSyntacticName), +(ROperatorBinary), `else`(RSyntacticName), " + "+(ROperatorBinary), `next`(RSyntacticName), +(ROperatorBinary), " + "`break`(RSyntacticName), ";
-        string strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        string strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - RBracket, RSeparator
         strInput = "d,ae;af" + "\r" + "ag" + "\n" + "(ah)" + "\r\n" + "ai{aj}";
-        lstInput = RScript.GetLstLexemes(strInput);
         strExpected = "d(RSyntacticName), ,(RSeparator), ae(RSyntacticName), ;(REndStatement), " + "af(RSyntacticName), " + "\r" + "(REndStatement), ag(RSyntacticName), " + "\n" + "(REndStatement), ((RBracket), ah(RSyntacticName), )(RBracket), " + "\r\n" + "(REndStatement), ai(RSyntacticName), {(RBracket), aj(RSyntacticName), }(REndScript), ";
-        strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - RSpace
         strInput = " + ay + az + ba   +   bb   +    bc " + "\r" + "  bd   " + "\n" + "    be   " + "\r\n" + "  bf ";
-        lstInput = RScript.GetLstLexemes(strInput);
         strExpected = " (RSpace), +(ROperatorUnaryRight),  (RSpace), ay(RSyntacticName), " + " (RSpace), +(ROperatorBinary),  (RSpace), az(RSyntacticName),  (RSpace), " + "+(ROperatorBinary),  (RSpace), ba(RSyntacticName),    (RSpace), " + "+(ROperatorBinary),    (RSpace), bb(RSyntacticName),    (RSpace), " + "+(ROperatorBinary),     (RSpace), bc(RSyntacticName),  (RSpace), " + "\r" + "(REndStatement),   (RSpace), bd(RSyntacticName),    (RSpace), " + "\n" + "(REndStatement),     (RSpace), be(RSyntacticName),    (RSpace), " + "\r\n" + "(REndStatement),   (RSpace), bf(RSyntacticName),  (RSpace), ";
-        strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - RStringLiteral
         strInput = "'a',\"bf\",'bga',\"bgba\",'bgbaa'," + @"""~!@#$%^&*()_[] {} \|;:',./<>? "","" bgbaaa""" + "\r" + "'bh'" + "\n" + "\"bi\"" + "\r\n" + "'bj'{\"bk\",'bl',\"bm\",'bn' ,\"bn\", 'bo'  ," + "\"bq\"   ,    'br' " + "\r" + "  \"bs\"   " + "\n" + "    'bt'   " + "\r\n" + @"  ""bu"" '~!@#$%^&*()_[] {} \|;:"",./<>? '";
-        lstInput = RScript.GetLstLexemes(strInput);
         strExpected = "'a'(RStringLiteral), ,(RSeparator), \"bf\"(RStringLiteral), " + ",(RSeparator), 'bga'(RStringLiteral), ,(RSeparator), " + "\"bgba\"(RStringLiteral), ,(RSeparator), 'bgbaa'(RStringLiteral), " + @",(RSeparator), ""~!@#$%^&*()_[] {} \|;:',./<>? ""(RStringLiteral), " + ",(RSeparator), \" bgbaaa\"(RStringLiteral), " + "\r" + "(REndStatement), 'bh'(RStringLiteral), " + "\n" + "(REndStatement), \"bi\"(RStringLiteral), " + "\r\n" + "(REndStatement), 'bj'(RStringLiteral), {(RBracket), \"bk\"(RStringLiteral), " + ",(RSeparator), 'bl'(RStringLiteral), ,(RSeparator), " + "\"bm\"(RStringLiteral), ,(RSeparator), 'bn'(RStringLiteral),  (RSpace), " + ",(RSeparator), \"bn\"(RStringLiteral), ,(RSeparator),  (RSpace), " + "'bo'(RStringLiteral),   (RSpace), ,(RSeparator), " + "\"bq\"(RStringLiteral),    (RSpace), ,(RSeparator),     (RSpace), " + "'br'(RStringLiteral),  (RSpace), " + "\r" + "(REndStatement),   (RSpace), \"bs\"(RStringLiteral),    (RSpace), " + "\n" + "(REndStatement),     (RSpace), 'bt'(RStringLiteral),    (RSpace), " + "\r\n" + "(REndStatement),   (RSpace), \"bu\"(RStringLiteral),  (RSpace), " + @"'~!@#$%^&*()_[] {} \|;:"",./<>? '(RStringLiteral), ";
-        strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - RComment 
         strInput = "#" + "\n" + "c#" + "\n" + "ca#" + "\n" + "d~#" + "\n" + " #" + "\n" + @"  #~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + "#cb" + "\n" + "#cba" + "\n" + "# \",\" cbaa " + "\n" + "#" + "\r" + "#cc" + "\r" + "#cca" + "\r\n" + "# ccaa " + "\r\n" + "#" + "\n" + "e+f#" + "\n" + " #not ignored comment";
-        lstInput = RScript.GetLstLexemes(strInput);
         strExpected = "#(RComment), " + "\n" + "(RNewLine), c(RSyntacticName), #(RComment), " + "\n" + "(REndStatement), ca(RSyntacticName), #(RComment), " + "\n" + "(REndStatement), d(RSyntacticName), ~(ROperatorUnaryLeft), #(RComment), " + "\n" + "(REndStatement),  (RSpace), #(RComment), " + "\n" + @"(RNewLine),   (RSpace), #~!@#$%^&*()_[] {} \|;:',./<>?(RComment), " + "\n" + "(RNewLine), #cb(RComment), " + "\n" + "(RNewLine), #cba(RComment), " + "\n" + "(RNewLine), # \",\" cbaa (RComment), " + "\n" + "(RNewLine), #(RComment), " + "\r" + "(RNewLine), #cc(RComment), " + "\r" + "(RNewLine), #cca(RComment), " + "\r\n" + "(RNewLine), # ccaa (RComment), " + "\r\n" + "(RNewLine), #(RComment), " + "\n" + "(RNewLine), e(RSyntacticName), +(ROperatorBinary), f(RSyntacticName), #(RComment), " + "\n" + "(REndScript),  (RSpace), #not ignored comment(RComment), ";
-
-        strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - standard operators ROperatorUnaryLeft, ROperatorUnaryRight, ROperatorBinary
         strInput = "a::b:::ba$c@d^e:ea%%f%/%g%*%h%o%i%x%j%in%k/l*m+n-o<p>q<=r>=s==t!=u!v&wx&&y|z" + "||a2~2b->c0a->>d0123456789a<-1234567890<<-e0a1b2=345f6789+a/(b)*((c))+(d-e)/f*g" + "+(((d-e)/f)*g)+f1(a,b~,c,~d,e~(f+g),h~!i)";
-        lstInput = RScript.GetLstLexemes(strInput);
         strExpected = "a(RSyntacticName), ::(ROperatorBinary), b(RSyntacticName), " + ":::(ROperatorBinary), ba(RSyntacticName), $(ROperatorBinary), " + "c(RSyntacticName), @(ROperatorBinary), d(RSyntacticName), ^(ROperatorBinary), " + "e(RSyntacticName), :(ROperatorBinary), ea(RSyntacticName), %%(ROperatorBinary), " + "f(RSyntacticName), %/%(ROperatorBinary), g(RSyntacticName), %*%(ROperatorBinary), " + "h(RSyntacticName), %o%(ROperatorBinary), i(RSyntacticName), %x%(ROperatorBinary), " + "j(RSyntacticName), %in%(ROperatorBinary), k(RSyntacticName), /(ROperatorBinary), " + "l(RSyntacticName), *(ROperatorBinary), m(RSyntacticName), +(ROperatorBinary), " + "n(RSyntacticName), -(ROperatorBinary), o(RSyntacticName), <(ROperatorBinary), " + "p(RSyntacticName), >(ROperatorBinary), q(RSyntacticName), <=(ROperatorBinary), " + "r(RSyntacticName), >=(ROperatorBinary), s(RSyntacticName), ==(ROperatorBinary), " + "t(RSyntacticName), !=(ROperatorBinary), u(RSyntacticName), !(ROperatorBinary), " + "v(RSyntacticName), &(ROperatorBinary), wx(RSyntacticName), &&(ROperatorBinary), " + "y(RSyntacticName), |(ROperatorBinary), z(RSyntacticName), ||(ROperatorBinary), " + "a2(RSyntacticName), ~(ROperatorBinary), 2b(RSyntacticName), ->(ROperatorBinary), " + "c0a(RSyntacticName), ->>(ROperatorBinary), d0123456789a(RSyntacticName), " + "<-(ROperatorBinary), 1234567890(RSyntacticName), <<-(ROperatorBinary), " + "e0a1b2(RSyntacticName), =(ROperatorBinary), 345f6789(RSyntacticName), " + "+(ROperatorBinary), a(RSyntacticName), /(ROperatorBinary), ((RBracket), " + "b(RSyntacticName), )(RBracket), *(ROperatorBinary), ((RBracket), ((RBracket), " + "c(RSyntacticName), )(RBracket), )(RBracket), +(ROperatorBinary), ((RBracket), " + "d(RSyntacticName), -(ROperatorBinary), e(RSyntacticName), )(RBracket), " + "/(ROperatorBinary), f(RSyntacticName), *(ROperatorBinary), g(RSyntacticName), " + "+(ROperatorBinary), ((RBracket), ((RBracket), ((RBracket), d(RSyntacticName), " + "-(ROperatorBinary), e(RSyntacticName), )(RBracket), /(ROperatorBinary), " + "f(RSyntacticName), )(RBracket), *(ROperatorBinary), g(RSyntacticName), " + ")(RBracket), +(ROperatorBinary), f1(RFunctionName), ((RBracket), " + "a(RSyntacticName), ,(RSeparator), b(RSyntacticName), ~(ROperatorUnaryLeft), " + ",(RSeparator), c(RSyntacticName), ,(RSeparator), ~(ROperatorUnaryRight), " + "d(RSyntacticName), ,(RSeparator), e(RSyntacticName), ~(ROperatorBinary), " + "((RBracket), f(RSyntacticName), +(ROperatorBinary), g(RSyntacticName), " + ")(RBracket), ,(RSeparator), h(RSyntacticName), ~(ROperatorBinary), " + "!(ROperatorUnaryRight), i(RSyntacticName), )(RBracket), ";
-        strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - user-defined operators
         strInput = ".a%%a_2ab%/%ac%*%aba%o%aba2%x%abaa%in%abaaa%>%abcdefg%mydefinedoperator%hijklmnopqrstuvwxyz";
-        lstInput = RScript.GetLstLexemes(strInput);
         strExpected = ".a(RSyntacticName), %%(ROperatorBinary), " + "a_2ab(RSyntacticName), %/%(ROperatorBinary), " + "ac(RSyntacticName), %*%(ROperatorBinary), " + "aba(RSyntacticName), %o%(ROperatorBinary), " + "aba2(RSyntacticName), %x%(ROperatorBinary), " + "abaa(RSyntacticName), %in%(ROperatorBinary), " + "abaaa(RSyntacticName), %>%(ROperatorBinary), " + "abcdefg(RSyntacticName), %mydefinedoperator%(ROperatorBinary), " + "hijklmnopqrstuvwxyz(RSyntacticName), ";
-        strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - ROperatorBracket
         strInput = "a[1]-b[c(d)+e]/f(g[2],h[3],i[4]*j[5])-k[l[m[6]]];df[[\"a\"]];lst[[\"a\"]]" + "[[\"b\"]]n[[[o][p]]]";
-        lstInput = RScript.GetLstLexemes(strInput);
         strExpected = "a(RSyntacticName), [(ROperatorBracket), 1(RSyntacticName), " + "](ROperatorBracket), -(ROperatorBinary), b(RSyntacticName), [(ROperatorBracket), " + "c(RFunctionName), ((RBracket), d(RSyntacticName), )(RBracket), +(ROperatorBinary), " + "e(RSyntacticName), ](ROperatorBracket), /(ROperatorBinary), f(RFunctionName), " + "((RBracket), g(RSyntacticName), [(ROperatorBracket), 2(RSyntacticName), " + "](ROperatorBracket), ,(RSeparator), h(RSyntacticName), [(ROperatorBracket), " + "3(RSyntacticName), ](ROperatorBracket), ,(RSeparator), i(RSyntacticName), " + "[(ROperatorBracket), 4(RSyntacticName), ](ROperatorBracket), *(ROperatorBinary), " + "j(RSyntacticName), [(ROperatorBracket), 5(RSyntacticName), ](ROperatorBracket), " + ")(RBracket), -(ROperatorBinary), k(RSyntacticName), [(ROperatorBracket), " + "l(RSyntacticName), [(ROperatorBracket), m(RSyntacticName), [(ROperatorBracket), " + "6(RSyntacticName), ](ROperatorBracket), ](ROperatorBracket), ](ROperatorBracket), " + ";(REndStatement), df(RSyntacticName), [[(ROperatorBracket), \"a\"(RStringLiteral), " + "]](ROperatorBracket), ;(REndStatement), lst(RSyntacticName), [[(ROperatorBracket), " + "\"a\"(RStringLiteral), ]](ROperatorBracket), [[(ROperatorBracket), " + "\"b\"(RStringLiteral), ]](ROperatorBracket), n(RSyntacticName), [[(ROperatorBracket), " + "[(ROperatorBracket), o(RSyntacticName), ](ROperatorBracket), [(ROperatorBracket), " + "p(RSyntacticName), ](ROperatorBracket), ]](ROperatorBracket), ";
-        strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - end statement excluding key words
         strInput = "complete" + "\n" + "complete()" + "\n" + "complete(a[b],c[[d]])" + "\n" + "complete #" + "\n" + "complete " + "\n" + "complete + !e" + "\n" + "complete() -f" + "\n" + "complete() * g~" + "\n" + "incomplete::" + "\n" + "\n" + "incomplete::h i::: " + "\n" + "ia" + "\n" + "incomplete %>% #comment" + "\n" + "ib" + "\n" + "incomplete(" + "\n" + "ic)" + "\n" + "incomplete()[id " + "\n" + "]" + "\n" + "incomplete([[j[k]]]  " + "\n" + ")" + "\n" + "incomplete >= " + "\n" + "  #comment " + "\n" + "\n" + "l" + "\n";
-        lstInput = RScript.GetLstLexemes(strInput);
         strExpected = "complete(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), a(RSyntacticName), " + "[(ROperatorBracket), b(RSyntacticName), ](ROperatorBracket), ,(RSeparator), " + "c(RSyntacticName), [[(ROperatorBracket), d(RSyntacticName), ]](ROperatorBracket), )(RBracket), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), #(RComment), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), +(ROperatorBinary), " + " (RSpace), !(ROperatorUnaryRight), e(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), -(ROperatorBinary), f(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), *(ROperatorBinary),  (RSpace), g(RSyntacticName), ~(ROperatorUnaryLeft), " + "\n" + "(REndStatement), incomplete(RSyntacticName), ::(ROperatorBinary), " + "\n" + "(RNewLine), " + "\n" + "(RNewLine), incomplete(RSyntacticName), ::(ROperatorBinary), " + "h(RSyntacticName),  (RSpace), i(RSyntacticName), :::(ROperatorBinary),  (RSpace), " + "\n" + "(RNewLine), ia(RSyntacticName), " + "\n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), %>%(ROperatorBinary), " + " (RSpace), #comment(RComment), " + "\n" + "(RNewLine), ib(RSyntacticName), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), " + "\n" + "(RNewLine), ic(RSyntacticName), )(RBracket), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), )(RBracket), " + "[(ROperatorBracket), id(RSyntacticName),  (RSpace), " + "\n" + "(RNewLine), ](ROperatorBracket), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), [[(ROperatorBracket), " + "j(RSyntacticName), [(ROperatorBracket), k(RSyntacticName), ](ROperatorBracket), " + "]](ROperatorBracket),   (RSpace), " + "\n" + "(RNewLine), )(RBracket), " + "\n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), >=(ROperatorBinary),  (RSpace), " + "\n" + "(RNewLine),   (RSpace), #comment (RComment), " + "\n" + "(RNewLine), " + "\n" + "(RNewLine), l(RSyntacticName), " + "\n" + "(REndScript), ";
-        strActual = GetLstTokensAsString(RScript.GetLstTokens(lstInput));
+        strActual = GetLstTokensAsString(RTokenList.GetLstTokens(strInput));
         Assert.Equal(strExpected, strActual);
 
         // test token list - key words with curly brackets
@@ -136,7 +126,7 @@ public class RInsightTestXUnit
         // vbLf & "    return(""odd"")" & vbLf & "}" &
         // vbLf & "for (i in val)" & vbLf & "{" & vbLf & "    if (i == 8)" &
         // vbLf & "        next" & vbLf & "    if(i == 5)" & vbLf & "        break" & vbLf & "}"
-        // lstInput = clsRScript.GetLstLexemes(strInput)
+        // lstInput = clsRTokenList.GetLstLexemes(strInput)
         // strExpected =
         // "if(RKeyWord), ((RBracket), x(RSyntacticName),  (RSpace), >(ROperatorBinary), " &
         // " (RSpace), 10(RSyntacticName), )(RBracket), {(RBracket), " &
@@ -192,7 +182,7 @@ public class RInsightTestXUnit
         // " (RSpace), ==(ROperatorBinary),  (RSpace), 5(RSyntacticName), )(RBracket), " &
         // vbLf & "(RNewLine),         (RSpace), break(RKeyWord), " &
         // vbLf & "(REndScript), }(REndScript), "
-        // strActual = GetLstTokensAsString(clsRScript.GetLstTokens(lstInput))
+        // strActual = GetLstTokensAsString(clsRTokenList.GetLstTokens(strInput))
         // Assert.Equal(strExpected, strActual)
 
         // test token list - if statement
@@ -212,7 +202,7 @@ public class RInsightTestXUnit
         // vbLf & "incomplete()[id " & vbLf & "]" &
         // vbLf & "incomplete([[j[k]]]  " & vbLf & ")" &
         // vbLf & "}" & vbLf
-        // lstInput = clsRScript.GetLstLexemes(strInput)
+        // lstInput = clsRTokenList.GetLstLexemes(strInput)
         // strExpected =
         // "if(RKeyWord), ((RBracket), a(RSyntacticName), <(ROperatorBinary), b(RSyntacticName), )(RBracket), {(RBracket), c(RSyntacticName), }(REndScript), " &
         // vbLf & "(REndStatement), if(RKeyWord), ((RBracket), d(RSyntacticName), <=(ROperatorBinary), e(RSyntacticName), )(RBracket), {(RBracket), f(RSyntacticName), }(REndScript), " &
@@ -234,7 +224,7 @@ public class RInsightTestXUnit
         // vbLf & "(RNewLine), )(RBracket), " &
         // vbLf & "(REndStatement), }(REndScript), " &
         // vbLf & "(REndStatement), "
-        // strActual = GetLstTokensAsString(clsRScript.GetLstTokens(lstInput))
+        // strActual = GetLstTokensAsString(clsRTokenList.GetLstTokens(strInput))
         // Assert.Equal(strExpected, strActual)
 
         // "f11(a,b)" & vbLf &
@@ -254,10 +244,10 @@ public class RInsightTestXUnit
         // vbLf & "                next" &
         // vbLf & "if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))))" &
         // vbLf & "    return(k)" & vbLf
-        // lstInput = clsRScript.GetLstLexemes(strInput)
+        // lstInput = clsRTokenList.GetLstLexemes(strInput)
         // strExpected =
         // ""
-        // strActual = GetLstTokensAsString(clsRScript.GetLstTokens(lstInput))
+        // strActual = GetLstTokensAsString(clsRTokenList.GetLstTokens(strInput))
         // Assert.Equal(strExpected, strActual)
 
     }
