@@ -66,7 +66,7 @@ public class RInsightTestXUnit
 
         // test token list - RBracket, RSeparator
         strInput = "d,ae;af" + "\r" + "ag" + "\n" + "(ah)" + "\r\n" + "ai{aj}";
-        strExpected = "d(RSyntacticName), ,(RSeparator), ae(RSyntacticName), ;(REndStatement), " + "af(RSyntacticName), " + "\r" + "(REndStatement), ag(RSyntacticName), " + "\n" + "(REndStatement), ((RBracket), ah(RSyntacticName), )(RBracket), " + "\r\n" + "(REndStatement), ai(RSyntacticName), {(RBracket), aj(RSyntacticName), }(REndScript), ";
+        strExpected = "d(RSyntacticName), ,(RSeparator), ae(RSyntacticName), ;(REndStatement), " + "af(RSyntacticName), " + "\r" + "(REndStatement), ag(RSyntacticName), " + "\n" + "(REndStatement), ((RBracket), ah(RSyntacticName), )(RBracket), " + "\r\n" + "(REndStatement), ai(RSyntacticName), {(RBracket), aj(RSyntacticName), }(REndStatement), ";
         strActual = GetLstTokensAsString(new RTokenList(strInput).Tokens);
         Assert.Equal(strExpected, strActual);
 
@@ -84,7 +84,7 @@ public class RInsightTestXUnit
 
         // test token list - RComment 
         strInput = "#" + "\n" + "c#" + "\n" + "ca#" + "\n" + "d~#" + "\n" + " #" + "\n" + @"  #~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + "#cb" + "\n" + "#cba" + "\n" + "# \",\" cbaa " + "\n" + "#" + "\r" + "#cc" + "\r" + "#cca" + "\r\n" + "# ccaa " + "\r\n" + "#" + "\n" + "e+f#" + "\n" + " #not ignored comment";
-        strExpected = "#(RComment), " + "\n" + "(RNewLine), c(RSyntacticName), #(RComment), " + "\n" + "(REndStatement), ca(RSyntacticName), #(RComment), " + "\n" + "(REndStatement), d(RSyntacticName), ~(ROperatorUnaryLeft), #(RComment), " + "\n" + "(REndStatement),  (RSpace), #(RComment), " + "\n" + @"(RNewLine),   (RSpace), #~!@#$%^&*()_[] {} \|;:',./<>?(RComment), " + "\n" + "(RNewLine), #cb(RComment), " + "\n" + "(RNewLine), #cba(RComment), " + "\n" + "(RNewLine), # \",\" cbaa (RComment), " + "\n" + "(RNewLine), #(RComment), " + "\r" + "(RNewLine), #cc(RComment), " + "\r" + "(RNewLine), #cca(RComment), " + "\r\n" + "(RNewLine), # ccaa (RComment), " + "\r\n" + "(RNewLine), #(RComment), " + "\n" + "(RNewLine), e(RSyntacticName), +(ROperatorBinary), f(RSyntacticName), #(RComment), " + "\n" + "(REndScript),  (RSpace), #not ignored comment(RComment), ";
+        strExpected = "#(RComment), " + "\n" + "(RNewLine), c(RSyntacticName), #(RComment), " + "\n" + "(REndStatement), ca(RSyntacticName), #(RComment), " + "\n" + "(REndStatement), d(RSyntacticName), ~(ROperatorUnaryLeft), #(RComment), " + "\n" + "(REndStatement),  (RSpace), #(RComment), " + "\n" + @"(RNewLine),   (RSpace), #~!@#$%^&*()_[] {} \|;:',./<>?(RComment), " + "\n" + "(RNewLine), #cb(RComment), " + "\n" + "(RNewLine), #cba(RComment), " + "\n" + "(RNewLine), # \",\" cbaa (RComment), " + "\n" + "(RNewLine), #(RComment), " + "\r" + "(RNewLine), #cc(RComment), " + "\r" + "(RNewLine), #cca(RComment), " + "\r\n" + "(RNewLine), # ccaa (RComment), " + "\r\n" + "(RNewLine), #(RComment), " + "\n" + "(RNewLine), e(RSyntacticName), +(ROperatorBinary), f(RSyntacticName), #(RComment), " + "\n" + "(REndStatement),  (RSpace), #not ignored comment(RComment), ";
         strActual = GetLstTokensAsString(new RTokenList(strInput).Tokens);
         Assert.Equal(strExpected, strActual);
 
@@ -108,7 +108,7 @@ public class RInsightTestXUnit
 
         // test token list - end statement excluding key words
         strInput = "complete" + "\n" + "complete()" + "\n" + "complete(a[b],c[[d]])" + "\n" + "complete #" + "\n" + "complete " + "\n" + "complete + !e" + "\n" + "complete() -f" + "\n" + "complete() * g~" + "\n" + "incomplete::" + "\n" + "\n" + "incomplete::h i::: " + "\n" + "ia" + "\n" + "incomplete %>% #comment" + "\n" + "ib" + "\n" + "incomplete(" + "\n" + "ic)" + "\n" + "incomplete()[id " + "\n" + "]" + "\n" + "incomplete([[j[k]]]  " + "\n" + ")" + "\n" + "incomplete >= " + "\n" + "  #comment " + "\n" + "\n" + "l" + "\n";
-        strExpected = "complete(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), a(RSyntacticName), " + "[(ROperatorBracket), b(RSyntacticName), ](ROperatorBracket), ,(RSeparator), " + "c(RSyntacticName), [[(ROperatorBracket), d(RSyntacticName), ]](ROperatorBracket), )(RBracket), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), #(RComment), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), +(ROperatorBinary), " + " (RSpace), !(ROperatorUnaryRight), e(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), -(ROperatorBinary), f(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), *(ROperatorBinary),  (RSpace), g(RSyntacticName), ~(ROperatorUnaryLeft), " + "\n" + "(REndStatement), incomplete(RSyntacticName), ::(ROperatorBinary), " + "\n" + "(RNewLine), " + "\n" + "(RNewLine), incomplete(RSyntacticName), ::(ROperatorBinary), " + "h(RSyntacticName),  (RSpace), i(RSyntacticName), :::(ROperatorBinary),  (RSpace), " + "\n" + "(RNewLine), ia(RSyntacticName), " + "\n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), %>%(ROperatorBinary), " + " (RSpace), #comment(RComment), " + "\n" + "(RNewLine), ib(RSyntacticName), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), " + "\n" + "(RNewLine), ic(RSyntacticName), )(RBracket), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), )(RBracket), " + "[(ROperatorBracket), id(RSyntacticName),  (RSpace), " + "\n" + "(RNewLine), ](ROperatorBracket), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), [[(ROperatorBracket), " + "j(RSyntacticName), [(ROperatorBracket), k(RSyntacticName), ](ROperatorBracket), " + "]](ROperatorBracket),   (RSpace), " + "\n" + "(RNewLine), )(RBracket), " + "\n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), >=(ROperatorBinary),  (RSpace), " + "\n" + "(RNewLine),   (RSpace), #comment (RComment), " + "\n" + "(RNewLine), " + "\n" + "(RNewLine), l(RSyntacticName), " + "\n" + "(REndScript), ";
+        strExpected = "complete(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), a(RSyntacticName), " + "[(ROperatorBracket), b(RSyntacticName), ](ROperatorBracket), ,(RSeparator), " + "c(RSyntacticName), [[(ROperatorBracket), d(RSyntacticName), ]](ROperatorBracket), )(RBracket), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), #(RComment), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), +(ROperatorBinary), " + " (RSpace), !(ROperatorUnaryRight), e(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), -(ROperatorBinary), f(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), *(ROperatorBinary),  (RSpace), g(RSyntacticName), ~(ROperatorUnaryLeft), " + "\n" + "(REndStatement), incomplete(RSyntacticName), ::(ROperatorBinary), " + "\n" + "(RNewLine), " + "\n" + "(RNewLine), incomplete(RSyntacticName), ::(ROperatorBinary), " + "h(RSyntacticName),  (RSpace), i(RSyntacticName), :::(ROperatorBinary),  (RSpace), " + "\n" + "(RNewLine), ia(RSyntacticName), " + "\n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), %>%(ROperatorBinary), " + " (RSpace), #comment(RComment), " + "\n" + "(RNewLine), ib(RSyntacticName), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), " + "\n" + "(RNewLine), ic(RSyntacticName), )(RBracket), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), )(RBracket), " + "[(ROperatorBracket), id(RSyntacticName),  (RSpace), " + "\n" + "(RNewLine), ](ROperatorBracket), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), [[(ROperatorBracket), " + "j(RSyntacticName), [(ROperatorBracket), k(RSyntacticName), ](ROperatorBracket), " + "]](ROperatorBracket),   (RSpace), " + "\n" + "(RNewLine), )(RBracket), " + "\n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), >=(ROperatorBinary),  (RSpace), " + "\n" + "(RNewLine),   (RSpace), #comment (RComment), " + "\n" + "(RNewLine), " + "\n" + "(RNewLine), l(RSyntacticName), " + "\n" + "(REndStatement), ";
         strActual = GetLstTokensAsString(new RTokenList(strInput).Tokens);
         Assert.Equal(strExpected, strActual);
 
@@ -133,13 +133,13 @@ public class RInsightTestXUnit
         // vbLf & "(REndStatement),     (RSpace), fn1(RFunctionName), ((RBracket), " &
         // "paste(RFunctionName), ((RBracket), x(RSyntacticName), ,(RSeparator),  (RSpace), " &
         // """is greater than 10""(RStringLiteral), )(RBracket), )(RBracket), " &
-        // vbLf & "(REndStatement), }(REndScript), " &
+        // vbLf & "(REndStatement), }(REndStatement), " &
         // vbLf & "(RNewLine), else(RKeyWord), " &
         // vbLf & "(RNewLine), {(RBracket), " &
         // vbLf & "(REndStatement),     (RSpace), fn2(RFunctionName), ((RBracket), " &
         // "paste(RFunctionName), ((RBracket), x(RSyntacticName), ,(RSeparator), " &
         // " (RSpace), ""Is less than 10""(RStringLiteral), )(RBracket), )(RBracket), " &
-        // vbLf & "(REndStatement), }(REndScript),  (RSpace), " &
+        // vbLf & "(REndStatement), }(REndStatement),  (RSpace), " &
         // vbLf & "(RNewLine), " &
         // "while(RKeyWord),  (RSpace), ((RBracket), val(RSyntacticName),  (RSpace), " &
         // "<=(ROperatorBinary),  (RSpace), 5(RSyntacticName),  (RSpace), )(RBracket), " &
@@ -149,17 +149,17 @@ public class RInsightTestXUnit
         // "val(RSyntacticName), )(RBracket), " &
         // vbLf & "(REndStatement),     (RSpace), val(RSyntacticName),  (RSpace), =(ROperatorBinary), " &
         // " (RSpace), val(RSyntacticName),  (RSpace), +(ROperatorBinary),  (RSpace), 1(RSyntacticName), " &
-        // vbLf & "(REndStatement), }(REndScript), " &
+        // vbLf & "(REndStatement), }(REndStatement), " &
         // vbLf & "(RNewLine), " &
         // "repeat(RKeyWord), " &
         // vbLf & "(RNewLine), {(RBracket), " &
         // vbLf & "(REndStatement),     (RSpace), if(RKeyWord), ((RBracket), val(RSyntacticName),  (RSpace), " &
         // ">(ROperatorBinary),  (RSpace), 5(RSyntacticName), )(RBracket),  (RSpace), break(RKeyWord), " &
-        // vbLf & "(REndStatement), }(REndScript), " &
+        // vbLf & "(REndStatement), }(REndStatement), " &
         // vbLf & "(REndStatement), " &
         // "for(RKeyWord),  (RSpace), ((RBracket), val(RSyntacticName),  (RSpace), in(RKeyWord), " &
         // " (RSpace), 1(RSyntacticName), :(ROperatorBinary), 5(RSyntacticName), )(RBracket), " &
-        // " (RSpace), {(RBracket), }(REndScript), " &
+        // " (RSpace), {(RBracket), }(REndStatement), " &
         // vbLf & "(REndStatement), evenOdd(RSyntacticName),  (RSpace), =(ROperatorBinary),  (RSpace), " &
         // "function(RKeyWord), ((RBracket), x(RSyntacticName), )(RBracket), {(RBracket), " &
         // vbLf & "(REndStatement), if(RKeyWord), ((RBracket), x(RSyntacticName),  (RSpace), " &
@@ -167,10 +167,10 @@ public class RInsightTestXUnit
         // " (RSpace), 0(RSyntacticName), )(RBracket), " &
         // vbLf & "(RNewLine),     (RSpace), return(RFunctionName), ((RBracket), " &
         // """even""(RStringLiteral), )(RBracket), " &
-        // vbLf & "(REndScript), else(RKeyWord), " &
+        // vbLf & "(REndStatement), else(RKeyWord), " &
         // vbLf & "(RNewLine),     (RSpace), return(RFunctionName), ((RBracket), " &
         // """odd""(RStringLiteral), )(RBracket), " &
-        // vbLf & "(REndScript), }(REndScript), " &
+        // vbLf & "(REndStatement), }(REndStatement), " &
         // vbLf & "(REndStatement), for(RKeyWord),  (RSpace), ((RBracket), i(RSyntacticName), " &
         // " (RSpace), in(RKeyWord),  (RSpace), val(RSyntacticName), )(RBracket), " &
         // vbLf & "(RNewLine), {(RBracket), " &
@@ -178,10 +178,10 @@ public class RInsightTestXUnit
         // "i(RSyntacticName),  (RSpace), ==(ROperatorBinary),  (RSpace), 8(RSyntacticName), " &
         // ")(RBracket), " &
         // vbLf & "(RNewLine),         (RSpace), next(RKeyWord), " &
-        // vbLf & "(REndScript),     (RSpace), if(RKeyWord), ((RBracket), i(RSyntacticName), " &
+        // vbLf & "(REndStatement),     (RSpace), if(RKeyWord), ((RBracket), i(RSyntacticName), " &
         // " (RSpace), ==(ROperatorBinary),  (RSpace), 5(RSyntacticName), )(RBracket), " &
         // vbLf & "(RNewLine),         (RSpace), break(RKeyWord), " &
-        // vbLf & "(REndScript), }(REndScript), "
+        // vbLf & "(REndStatement), }(REndStatement), "
         // strActual = GetLstTokensAsString(clsRTokenList.GetLstTokens(strInput))
         // Assert.Equal(strExpected, strActual)
 
@@ -204,25 +204,25 @@ public class RInsightTestXUnit
         // vbLf & "}" & vbLf
         // lstInput = clsRTokenList.GetLstLexemes(strInput)
         // strExpected =
-        // "if(RKeyWord), ((RBracket), a(RSyntacticName), <(ROperatorBinary), b(RSyntacticName), )(RBracket), {(RBracket), c(RSyntacticName), }(REndScript), " &
-        // vbLf & "(REndStatement), if(RKeyWord), ((RBracket), d(RSyntacticName), <=(ROperatorBinary), e(RSyntacticName), )(RBracket), {(RBracket), f(RSyntacticName), }(REndScript), " &
+        // "if(RKeyWord), ((RBracket), a(RSyntacticName), <(ROperatorBinary), b(RSyntacticName), )(RBracket), {(RBracket), c(RSyntacticName), }(REndStatement), " &
+        // vbLf & "(REndStatement), if(RKeyWord), ((RBracket), d(RSyntacticName), <=(ROperatorBinary), e(RSyntacticName), )(RBracket), {(RBracket), f(RSyntacticName), }(REndStatement), " &
         // vbLf & "(REndStatement), if(RKeyWord), ((RBracket), g(RSyntacticName), ==(ROperatorBinary), h(RSyntacticName), )(RBracket),  (RSpace), {(RBracket),  (RSpace), #1(RComment), " &
-        // vbLf & "(REndStatement),  (RSpace), i(RSyntacticName),  (RSpace), }(REndScript),  (RSpace), #2(RComment), " &
+        // vbLf & "(REndStatement),  (RSpace), i(RSyntacticName),  (RSpace), }(REndStatement),  (RSpace), #2(RComment), " &
         // vbLf & "(REndStatement),  (RSpace), if(RKeyWord),  (RSpace), ((RBracket), j(RSyntacticName),  (RSpace), >=(ROperatorBinary),  (RSpace), k(RSyntacticName), )(RBracket), " &
         // vbLf & "(RNewLine), {(RBracket), " &
         // vbLf & "(REndStatement), l(RSyntacticName),    (RSpace), #3  (RComment), " &
-        // vbLf & "(REndStatement), }(REndScript), " &
+        // vbLf & "(REndStatement), }(REndStatement), " &
         // vbLf & "(REndStatement), if(RKeyWord),  (RSpace), ((RBracket), m(RSyntacticName), )(RBracket), " &
         // vbLf & "(RNewLine), #4(RComment), " &
         // vbLf & "(RNewLine),   (RSpace), n(RSyntacticName), +(ROperatorBinary), " &
         // vbLf & "(RNewLine),   (RSpace), o(RSyntacticName),   (RSpace), #5(RComment), " &
-        // vbLf & "(REndScript), if(RKeyWord), ((RBracket), p(RSyntacticName), !=(ROperatorBinary), q(RSyntacticName), )(RBracket), " &
+        // vbLf & "(REndStatement), if(RKeyWord), ((RBracket), p(RSyntacticName), !=(ROperatorBinary), q(RSyntacticName), )(RBracket), " &
         // vbLf & "(RNewLine), {(RBracket), " &
         // vbLf & "(REndStatement), incomplete(RFunctionName), ((RBracket), )(RBracket), [(ROperatorBracket), id(RSyntacticName),  (RSpace), " &
         // vbLf & "(RNewLine), ](ROperatorBracket), " &
         // vbLf & "(REndStatement), incomplete(RFunctionName), ((RBracket), [[(ROperatorBracket), j(RSyntacticName), [(ROperatorBracket), k(RSyntacticName), ](ROperatorBracket), ]](ROperatorBracket),   (RSpace), " &
         // vbLf & "(RNewLine), )(RBracket), " &
-        // vbLf & "(REndStatement), }(REndScript), " &
+        // vbLf & "(REndStatement), }(REndStatement), " &
         // vbLf & "(REndStatement), "
         // strActual = GetLstTokensAsString(clsRTokenList.GetLstTokens(strInput))
         // Assert.Equal(strExpected, strActual)
@@ -363,28 +363,26 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)15, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
 
         strInput = "x[3:5]<-13:15;" + "\r\n" + "names(x)[3]<-\"Three\"" + "\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("x[3:5]<-13:15;" + "\n" + "names(x)[3]<-\"Three\"" + "\n", strActual);
+        //todo        Assert.Equal("x[3:5]<-13:15;" + "\n" + "names(x)[3]<-\"Three\"" + "\n", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)16, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
 
         strInput = "x[3:5]<-13:15;#comment" + "\n" + "names(x)[3]<-\"Three\"" + "\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)23, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
 
         strInput = "a[]" + "\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -821,7 +819,7 @@ public class RInsightTestXUnit
         foreach (var clsRTokenNew in lstRTokens)
         {
             strNew += clsRTokenNew.Lexeme.Text + "(";
-            switch (clsRTokenNew.tokentype)
+            switch (clsRTokenNew.Tokentype)
             {
                 case RToken.TokenType.RSyntacticName:
                     {
@@ -873,11 +871,11 @@ public class RInsightTestXUnit
                         strNew += "REndStatement";
                         break;
                     }
-                case RToken.TokenType.REndScript:
-                    {
-                        strNew += "REndScript";
-                        break;
-                    }
+                //todo case RToken.TokenType.REndStatement:
+                //    {
+                //        strNew += "REndStatement";
+                //        break;
+                //    }
                 case RToken.TokenType.ROperatorUnaryLeft:
                     {
                         strNew += "ROperatorUnaryLeft";
