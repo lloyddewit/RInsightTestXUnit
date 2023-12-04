@@ -258,6 +258,13 @@ public class RInsightTestXUnit
         string strInput, strActual;
         OrderedDictionary dctRStatements;
 
+        //todo
+        strInput = "a=b" + "\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+
+
         strInput = "x[3:5]<-13:15;names(x)[3]<-\" Three\"" + "\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
@@ -819,54 +826,54 @@ public class RInsightTestXUnit
         foreach (var clsRTokenNew in lstRTokens)
         {
             strNew += clsRTokenNew.Lexeme.Text + "(";
-            switch (clsRTokenNew.Tokentype)
+            switch (clsRTokenNew.TokenType)
             {
-                case RToken.TokenType.RSyntacticName:
+                case RToken.TokenTypes.RSyntacticName:
                     {
                         strNew += "RSyntacticName";
                         break;
                     }
-                case RToken.TokenType.RFunctionName:
+                case RToken.TokenTypes.RFunctionName:
                     {
                         strNew += "RFunctionName";
                         break;
                     }
-                case RToken.TokenType.RKeyWord:
+                case RToken.TokenTypes.RKeyWord:
                     {
                         strNew += "RKeyWord";
                         break;
                     }
-                case RToken.TokenType.RConstantString:
+                case RToken.TokenTypes.RConstantString:
                     {
                         strNew += "RStringLiteral";
                         break;
                     }
-                case RToken.TokenType.RComment:
+                case RToken.TokenTypes.RComment:
                     {
                         strNew += "RComment";
                         break;
                     }
-                case RToken.TokenType.RSpace:
+                case RToken.TokenTypes.RSpace:
                     {
                         strNew += "RSpace";
                         break;
                     }
-                case RToken.TokenType.RBracket:
+                case RToken.TokenTypes.RBracket:
                     {
                         strNew += "RBracket";
                         break;
                     }
-                case RToken.TokenType.RSeparator:
+                case RToken.TokenTypes.RSeparator:
                     {
                         strNew += "RSeparator";
                         break;
                     }
-                case RToken.TokenType.RNewLine:
+                case RToken.TokenTypes.RNewLine:
                     {
                         strNew += "RNewLine";
                         break;
                     }
-                case RToken.TokenType.REndStatement:
+                case RToken.TokenTypes.REndStatement:
                     {
                         strNew += "REndStatement";
                         break;
@@ -876,22 +883,22 @@ public class RInsightTestXUnit
                 //        strNew += "REndStatement";
                 //        break;
                 //    }
-                case RToken.TokenType.ROperatorUnaryLeft:
+                case RToken.TokenTypes.ROperatorUnaryLeft:
                     {
                         strNew += "ROperatorUnaryLeft";
                         break;
                     }
-                case RToken.TokenType.ROperatorUnaryRight:
+                case RToken.TokenTypes.ROperatorUnaryRight:
                     {
                         strNew += "ROperatorUnaryRight";
                         break;
                     }
-                case RToken.TokenType.ROperatorBinary:
+                case RToken.TokenTypes.ROperatorBinary:
                     {
                         strNew += "ROperatorBinary";
                         break;
                     }
-                case RToken.TokenType.ROperatorBracket:
+                case RToken.TokenTypes.ROperatorBracket:
                     {
                         strNew += "ROperatorBracket";
                         break;
