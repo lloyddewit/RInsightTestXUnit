@@ -36,22 +36,22 @@ public class RInsightTestXUnit
 
     //    // test lexeme list - separators, brackets, line feeds, user-defined operators and variable names with '.' and '_'
     //    lstExpected = new List<string>(new string[] { ",", "ae", ";", "af", "\r", "ag", "\n", "(", "ah", ")", "\r\n", "ai", "{", "aj", "}", "ak", "[", "al", "]", "al", "[[", "am", "]]", "_ao", "%>%", "|>", ".ap", "%aq%", ".ar_2", "%asat%", "au_av.awax" });
-    //    lstActual = new RLexemeList(",ae;af" + "\r" + "ag" + "\n" + "(ah)" + "\r\n" + "ai{aj}ak[al]al[[am]]_ao%>%|>.ap" + "%aq%.ar_2%asat%au_av.awax").Lexemes;
+    //    lstActual = new RLexemeList(",ae;af" + "\r" + "ag\n" + "(ah)" + "\r\n" + "ai{aj}ak[al]al[[am]]_ao%>%|>.ap" + "%aq%.ar_2%asat%au_av.awax").Lexemes;
     //    Assert.Equal(lstExpected, lstActual);
 
     //    // test lexeme list - spaces
     //    lstExpected = new List<string>(new string[] { " ", "+", "ay", "-", " ", "az", "  ", "::", "ba", "   ", "%*%", "   ", "bb", "   ", "<<-", "    ", "bc", " ", "\r", "  ", "bd", "   ", "\n", "    ", "be", "   ", "\r\n", "  ", "bf", " " });
-    //    lstActual = new RLexemeList(" +ay- az  ::ba   %*%   bb   <<-    bc " + "\r" + "  bd   " + "\n" + "    be   " + "\r\n" + "  bf ").Lexemes;
+    //    lstActual = new RLexemeList(" +ay- az  ::ba   %*%   bb   <<-    bc " + "\r" + "  bd   \n" + "    be   " + "\r\n" + "  bf ").Lexemes;
     //    Assert.Equal(lstExpected, lstActual);
 
     //    // test lexeme list - string literals
     //    lstExpected = new List<string>(new string[] { "\"a\"", "+", "\"bf\"", "%%", "\"bga\"", "%/%", "\"bgba\"", "%in%", "\"bgbaa\"", ">=", @"""~!@#$%^&*()_[] {} \|;:',./<>? """, ",", "\" bgbaaa\"", "\r", "\"bh\"", "\n", "\"bi\"", "\r\n", "\"bj\"", "{", "\"bk\"", "[[", "\"bl\"", "%>%", "\"bm\"", "%aq%", "\"bn\"", " ", "+", "\"bn\"", "-", " ", "\"bo\"", "  ", "::", "\"bq\"", "   ", "<<-", "    ", "\"br\"", " ", "\r", "  ", "\"bs\"", "   ", "\n", "    ", "\"bt\"", "   ", "\r\n", "  ", "\"bu\"", " " });
-    //    lstActual = new RLexemeList("\"a\"+\"bf\"%%\"bga\"%/%\"bgba\"%in%\"bgbaa\">=" + @"""~!@#$%^&*()_[] {} \|;:',./<>? "","" bgbaaa""" + "\r" + "\"bh\"" + "\n" + "\"bi\"" + "\r\n" + "\"bj\"{\"bk\"[[\"bl\"%>%\"bm\"%aq%\"bn\" +\"bn\"- \"bo\"  ::" + "\"bq\"   <<-    \"br\" " + "\r" + "  \"bs\"   " + "\n" + "    \"bt\"   " + "\r\n" + "  \"bu\" ").Lexemes;
+    //    lstActual = new RLexemeList("\"a\"+\"bf\"%%\"bga\"%/%\"bgba\"%in%\"bgbaa\">=" + @"""~!@#$%^&*()_[] {} \|;:',./<>? "","" bgbaaa""" + "\r" + "\"bh\"\n" + "\"bi\"" + "\r\n" + "\"bj\"{\"bk\"[[\"bl\"%>%\"bm\"%aq%\"bn\" +\"bn\"- \"bo\"  ::" + "\"bq\"   <<-    \"br\" " + "\r" + "  \"bs\"   \n" + "    \"bt\"   " + "\r\n" + "  \"bu\" ").Lexemes;
     //    Assert.Equal(lstExpected, lstActual);
 
     //    // test lexeme list - comments
     //    lstExpected = new List<string>(new string[] { "#", "\n", "c", "#", "\n", "ca", "#", "\n", "+", "#", "\n", "%/%", "#", "\n", "%in%", "#", "\n", ">=", @"#~!@#$%^&*()_[]{}\|;:',./<>?#", "\n", " ", "#", "\n", "  ", @"#~!@#$%^&*()_[] {} \|;:',./<>?", "\n", "#cb", "\n", "#cba", "\n", "# \",\" cbaa ", "\n", "#", "\r", "#cc", "\r", "#cca", "\r\n", "# ccaa ", "\r\n" });
-    //    lstActual = new RLexemeList("#" + "\n" + "c#" + "\n" + "ca#" + "\n" + "+#" + "\n" + "%/%#" + "\n" + "%in%#" + "\n" + @">=#~!@#$%^&*()_[]{}\|;:',./<>?#" + "\n" + " #" + "\n" + @"  #~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + "#cb" + "\n" + "#cba" + "\n" + "# \",\" cbaa " + "\n" + "#" + "\r" + "#cc" + "\r" + "#cca" + "\r\n" + "# ccaa " + "\r\n").Lexemes;
+    //    lstActual = new RLexemeList("#\n" + "c#\n" + "ca#\n" + "+#\n" + "%/%#\n" + "%in%#\n" + @">=#~!@#$%^&*()_[]{}\|;:',./<>?#\n" + " #\n" + @"  #~!@#$%^&*()_[] {} \|;:',./<>?\n" + "#cb\n" + "#cba\n" + "# \",\" cbaa \n" + "#" + "\r" + "#cc" + "\r" + "#cca" + "\r\n" + "# ccaa " + "\r\n").Lexemes;
     //    Assert.Equal(lstExpected, lstActual);
     //}
 
@@ -65,26 +65,26 @@ public class RInsightTestXUnit
         //Assert.Equal(strExpected, strActual);
 
         //// test token list - RBracket, RSeparator
-        //strInput = "d,ae;af" + "\r" + "ag" + "\n" + "(ah)" + "\r\n" + "ai{aj}";
-        //strExpected = "d(RSyntacticName), ,(RSeparator), ae(RSyntacticName), ;(REndStatement), " + "af(RSyntacticName), " + "\r" + "(REndStatement), ag(RSyntacticName), " + "\n" + "(REndStatement), ((RBracket), ah(RSyntacticName), )(RBracket), " + "\r\n" + "(REndStatement), ai(RSyntacticName), {(RBracket), aj(RSyntacticName), }(REndStatement), ";
+        //strInput = "d,ae;af" + "\r" + "ag\n" + "(ah)" + "\r\n" + "ai{aj}";
+        //strExpected = "d(RSyntacticName), ,(RSeparator), ae(RSyntacticName), ;(REndStatement), " + "af(RSyntacticName), " + "\r" + "(REndStatement), ag(RSyntacticName), \n" + "(REndStatement), ((RBracket), ah(RSyntacticName), )(RBracket), " + "\r\n" + "(REndStatement), ai(RSyntacticName), {(RBracket), aj(RSyntacticName), }(REndStatement), ";
         //strActual = GetLstTokensAsString(new RTokenList(strInput).Tokens);
         //Assert.Equal(strExpected, strActual);
 
         //// test token list - RSpace
-        //strInput = " + ay + az + ba   +   bb   +    bc " + "\r" + "  bd   " + "\n" + "    be   " + "\r\n" + "  bf ";
-        //strExpected = " (RSpace), +(ROperatorUnaryRight),  (RSpace), ay(RSyntacticName), " + " (RSpace), +(ROperatorBinary),  (RSpace), az(RSyntacticName),  (RSpace), " + "+(ROperatorBinary),  (RSpace), ba(RSyntacticName),    (RSpace), " + "+(ROperatorBinary),    (RSpace), bb(RSyntacticName),    (RSpace), " + "+(ROperatorBinary),     (RSpace), bc(RSyntacticName),  (RSpace), " + "\r" + "(REndStatement),   (RSpace), bd(RSyntacticName),    (RSpace), " + "\n" + "(REndStatement),     (RSpace), be(RSyntacticName),    (RSpace), " + "\r\n" + "(REndStatement),   (RSpace), bf(RSyntacticName),  (RSpace), ";
+        //strInput = " + ay + az + ba   +   bb   +    bc " + "\r" + "  bd   \n" + "    be   " + "\r\n" + "  bf ";
+        //strExpected = " (RSpace), +(ROperatorUnaryRight),  (RSpace), ay(RSyntacticName), " + " (RSpace), +(ROperatorBinary),  (RSpace), az(RSyntacticName),  (RSpace), " + "+(ROperatorBinary),  (RSpace), ba(RSyntacticName),    (RSpace), " + "+(ROperatorBinary),    (RSpace), bb(RSyntacticName),    (RSpace), " + "+(ROperatorBinary),     (RSpace), bc(RSyntacticName),  (RSpace), " + "\r" + "(REndStatement),   (RSpace), bd(RSyntacticName),    (RSpace), \n" + "(REndStatement),     (RSpace), be(RSyntacticName),    (RSpace), " + "\r\n" + "(REndStatement),   (RSpace), bf(RSyntacticName),  (RSpace), ";
         //strActual = GetLstTokensAsString(new RTokenList(strInput).Tokens);
         //Assert.Equal(strExpected, strActual);
 
         //// test token list - RStringLiteral
-        //strInput = "'a',\"bf\",'bga',\"bgba\",'bgbaa'," + @"""~!@#$%^&*()_[] {} \|;:',./<>? "","" bgbaaa""" + "\r" + "'bh'" + "\n" + "\"bi\"" + "\r\n" + "'bj'{\"bk\",'bl',\"bm\",'bn' ,\"bn\", 'bo'  ," + "\"bq\"   ,    'br' " + "\r" + "  \"bs\"   " + "\n" + "    'bt'   " + "\r\n" + @"  ""bu"" '~!@#$%^&*()_[] {} \|;:"",./<>? '";
-        //strExpected = "'a'(RStringLiteral), ,(RSeparator), \"bf\"(RStringLiteral), " + ",(RSeparator), 'bga'(RStringLiteral), ,(RSeparator), " + "\"bgba\"(RStringLiteral), ,(RSeparator), 'bgbaa'(RStringLiteral), " + @",(RSeparator), ""~!@#$%^&*()_[] {} \|;:',./<>? ""(RStringLiteral), " + ",(RSeparator), \" bgbaaa\"(RStringLiteral), " + "\r" + "(REndStatement), 'bh'(RStringLiteral), " + "\n" + "(REndStatement), \"bi\"(RStringLiteral), " + "\r\n" + "(REndStatement), 'bj'(RStringLiteral), {(RBracket), \"bk\"(RStringLiteral), " + ",(RSeparator), 'bl'(RStringLiteral), ,(RSeparator), " + "\"bm\"(RStringLiteral), ,(RSeparator), 'bn'(RStringLiteral),  (RSpace), " + ",(RSeparator), \"bn\"(RStringLiteral), ,(RSeparator),  (RSpace), " + "'bo'(RStringLiteral),   (RSpace), ,(RSeparator), " + "\"bq\"(RStringLiteral),    (RSpace), ,(RSeparator),     (RSpace), " + "'br'(RStringLiteral),  (RSpace), " + "\r" + "(REndStatement),   (RSpace), \"bs\"(RStringLiteral),    (RSpace), " + "\n" + "(REndStatement),     (RSpace), 'bt'(RStringLiteral),    (RSpace), " + "\r\n" + "(REndStatement),   (RSpace), \"bu\"(RStringLiteral),  (RSpace), " + @"'~!@#$%^&*()_[] {} \|;:"",./<>? '(RStringLiteral), ";
+        //strInput = "'a',\"bf\",'bga',\"bgba\",'bgbaa'," + @"""~!@#$%^&*()_[] {} \|;:',./<>? "","" bgbaaa""" + "\r" + "'bh'\n" + "\"bi\"" + "\r\n" + "'bj'{\"bk\",'bl',\"bm\",'bn' ,\"bn\", 'bo'  ," + "\"bq\"   ,    'br' " + "\r" + "  \"bs\"   \n" + "    'bt'   " + "\r\n" + @"  ""bu"" '~!@#$%^&*()_[] {} \|;:"",./<>? '";
+        //strExpected = "'a'(RStringLiteral), ,(RSeparator), \"bf\"(RStringLiteral), " + ",(RSeparator), 'bga'(RStringLiteral), ,(RSeparator), " + "\"bgba\"(RStringLiteral), ,(RSeparator), 'bgbaa'(RStringLiteral), " + @",(RSeparator), ""~!@#$%^&*()_[] {} \|;:',./<>? ""(RStringLiteral), " + ",(RSeparator), \" bgbaaa\"(RStringLiteral), " + "\r" + "(REndStatement), 'bh'(RStringLiteral), \n" + "(REndStatement), \"bi\"(RStringLiteral), " + "\r\n" + "(REndStatement), 'bj'(RStringLiteral), {(RBracket), \"bk\"(RStringLiteral), " + ",(RSeparator), 'bl'(RStringLiteral), ,(RSeparator), " + "\"bm\"(RStringLiteral), ,(RSeparator), 'bn'(RStringLiteral),  (RSpace), " + ",(RSeparator), \"bn\"(RStringLiteral), ,(RSeparator),  (RSpace), " + "'bo'(RStringLiteral),   (RSpace), ,(RSeparator), " + "\"bq\"(RStringLiteral),    (RSpace), ,(RSeparator),     (RSpace), " + "'br'(RStringLiteral),  (RSpace), " + "\r" + "(REndStatement),   (RSpace), \"bs\"(RStringLiteral),    (RSpace), \n" + "(REndStatement),     (RSpace), 'bt'(RStringLiteral),    (RSpace), " + "\r\n" + "(REndStatement),   (RSpace), \"bu\"(RStringLiteral),  (RSpace), " + @"'~!@#$%^&*()_[] {} \|;:"",./<>? '(RStringLiteral), ";
         //strActual = GetLstTokensAsString(new RTokenList(strInput).Tokens);
         //Assert.Equal(strExpected, strActual);
 
         //// test token list - RComment 
-        //strInput = "#" + "\n" + "c#" + "\n" + "ca#" + "\n" + "d~#" + "\n" + " #" + "\n" + @"  #~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + "#cb" + "\n" + "#cba" + "\n" + "# \",\" cbaa " + "\n" + "#" + "\r" + "#cc" + "\r" + "#cca" + "\r\n" + "# ccaa " + "\r\n" + "#" + "\n" + "e+f#" + "\n" + " #not ignored comment";
-        //strExpected = "#(RComment), " + "\n" + "(RNewLine), c(RSyntacticName), #(RComment), " + "\n" + "(REndStatement), ca(RSyntacticName), #(RComment), " + "\n" + "(REndStatement), d(RSyntacticName), ~(ROperatorUnaryLeft), #(RComment), " + "\n" + "(REndStatement),  (RSpace), #(RComment), " + "\n" + @"(RNewLine),   (RSpace), #~!@#$%^&*()_[] {} \|;:',./<>?(RComment), " + "\n" + "(RNewLine), #cb(RComment), " + "\n" + "(RNewLine), #cba(RComment), " + "\n" + "(RNewLine), # \",\" cbaa (RComment), " + "\n" + "(RNewLine), #(RComment), " + "\r" + "(RNewLine), #cc(RComment), " + "\r" + "(RNewLine), #cca(RComment), " + "\r\n" + "(RNewLine), # ccaa (RComment), " + "\r\n" + "(RNewLine), #(RComment), " + "\n" + "(RNewLine), e(RSyntacticName), +(ROperatorBinary), f(RSyntacticName), #(RComment), " + "\n" + "(REndStatement),  (RSpace), #not ignored comment(RComment), ";
+        //strInput = "#\n" + "c#\n" + "ca#\n" + "d~#\n" + " #\n" + @"  #~!@#$%^&*()_[] {} \|;:',./<>?\n" + "#cb\n" + "#cba\n" + "# \",\" cbaa \n" + "#" + "\r" + "#cc" + "\r" + "#cca" + "\r\n" + "# ccaa " + "\r\n" + "#\n" + "e+f#\n" + " #not ignored comment";
+        //strExpected = "#(RComment), \n" + "(RNewLine), c(RSyntacticName), #(RComment), \n" + "(REndStatement), ca(RSyntacticName), #(RComment), \n" + "(REndStatement), d(RSyntacticName), ~(ROperatorUnaryLeft), #(RComment), \n" + "(REndStatement),  (RSpace), #(RComment), \n" + @"(RNewLine),   (RSpace), #~!@#$%^&*()_[] {} \|;:',./<>?(RComment), \n" + "(RNewLine), #cb(RComment), \n" + "(RNewLine), #cba(RComment), \n" + "(RNewLine), # \",\" cbaa (RComment), \n" + "(RNewLine), #(RComment), " + "\r" + "(RNewLine), #cc(RComment), " + "\r" + "(RNewLine), #cca(RComment), " + "\r\n" + "(RNewLine), # ccaa (RComment), " + "\r\n" + "(RNewLine), #(RComment), \n" + "(RNewLine), e(RSyntacticName), +(ROperatorBinary), f(RSyntacticName), #(RComment), \n" + "(REndStatement),  (RSpace), #not ignored comment(RComment), ";
         //strActual = GetLstTokensAsString(new RTokenList(strInput).Tokens);
         //Assert.Equal(strExpected, strActual);
 
@@ -107,8 +107,8 @@ public class RInsightTestXUnit
         //Assert.Equal(strExpected, strActual);
 
         //// test token list - end statement excluding key words
-        //strInput = "complete" + "\n" + "complete()" + "\n" + "complete(a[b],c[[d]])" + "\n" + "complete #" + "\n" + "complete " + "\n" + "complete + !e" + "\n" + "complete() -f" + "\n" + "complete() * g~" + "\n" + "incomplete::" + "\n" + "\n" + "incomplete::h i::: " + "\n" + "ia" + "\n" + "incomplete %>% #comment" + "\n" + "ib" + "\n" + "incomplete(" + "\n" + "ic)" + "\n" + "incomplete()[id " + "\n" + "]" + "\n" + "incomplete([[j[k]]]  " + "\n" + ")" + "\n" + "incomplete >= " + "\n" + "  #comment " + "\n" + "\n" + "l" + "\n";
-        //strExpected = "complete(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), a(RSyntacticName), " + "[(ROperatorBracket), b(RSyntacticName), ](ROperatorBracket), ,(RSeparator), " + "c(RSyntacticName), [[(ROperatorBracket), d(RSyntacticName), ]](ROperatorBracket), )(RBracket), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), #(RComment), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), " + "\n" + "(REndStatement), complete(RSyntacticName),  (RSpace), +(ROperatorBinary), " + " (RSpace), !(ROperatorUnaryRight), e(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), -(ROperatorBinary), f(RSyntacticName), " + "\n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), *(ROperatorBinary),  (RSpace), g(RSyntacticName), ~(ROperatorUnaryLeft), " + "\n" + "(REndStatement), incomplete(RSyntacticName), ::(ROperatorBinary), " + "\n" + "(RNewLine), " + "\n" + "(RNewLine), incomplete(RSyntacticName), ::(ROperatorBinary), " + "h(RSyntacticName),  (RSpace), i(RSyntacticName), :::(ROperatorBinary),  (RSpace), " + "\n" + "(RNewLine), ia(RSyntacticName), " + "\n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), %>%(ROperatorBinary), " + " (RSpace), #comment(RComment), " + "\n" + "(RNewLine), ib(RSyntacticName), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), " + "\n" + "(RNewLine), ic(RSyntacticName), )(RBracket), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), )(RBracket), " + "[(ROperatorBracket), id(RSyntacticName),  (RSpace), " + "\n" + "(RNewLine), ](ROperatorBracket), " + "\n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), [[(ROperatorBracket), " + "j(RSyntacticName), [(ROperatorBracket), k(RSyntacticName), ](ROperatorBracket), " + "]](ROperatorBracket),   (RSpace), " + "\n" + "(RNewLine), )(RBracket), " + "\n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), >=(ROperatorBinary),  (RSpace), " + "\n" + "(RNewLine),   (RSpace), #comment (RComment), " + "\n" + "(RNewLine), " + "\n" + "(RNewLine), l(RSyntacticName), " + "\n" + "(REndStatement), ";
+        //strInput = "complete\n" + "complete()\n" + "complete(a[b],c[[d]])\n" + "complete #\n" + "complete \n" + "complete + !e\n" + "complete() -f\n" + "complete() * g~\n" + "incomplete::\n" + "\n" + "incomplete::h i::: \n" + "ia\n" + "incomplete %>% #comment\n" + "ib\n" + "incomplete(\n" + "ic)\n" + "incomplete()[id \n" + "]\n" + "incomplete([[j[k]]]  \n" + ")\n" + "incomplete >= \n" + "  #comment \n" + "\n" + "l\n";
+        //strExpected = "complete(RSyntacticName), \n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), \n" + "(REndStatement), complete(RFunctionName), ((RBracket), a(RSyntacticName), " + "[(ROperatorBracket), b(RSyntacticName), ](ROperatorBracket), ,(RSeparator), " + "c(RSyntacticName), [[(ROperatorBracket), d(RSyntacticName), ]](ROperatorBracket), )(RBracket), \n" + "(REndStatement), complete(RSyntacticName),  (RSpace), #(RComment), \n" + "(REndStatement), complete(RSyntacticName),  (RSpace), \n" + "(REndStatement), complete(RSyntacticName),  (RSpace), +(ROperatorBinary), " + " (RSpace), !(ROperatorUnaryRight), e(RSyntacticName), \n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), -(ROperatorBinary), f(RSyntacticName), \n" + "(REndStatement), complete(RFunctionName), ((RBracket), )(RBracket), " + " (RSpace), *(ROperatorBinary),  (RSpace), g(RSyntacticName), ~(ROperatorUnaryLeft), \n" + "(REndStatement), incomplete(RSyntacticName), ::(ROperatorBinary), \n" + "(RNewLine), \n" + "(RNewLine), incomplete(RSyntacticName), ::(ROperatorBinary), " + "h(RSyntacticName),  (RSpace), i(RSyntacticName), :::(ROperatorBinary),  (RSpace), \n" + "(RNewLine), ia(RSyntacticName), \n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), %>%(ROperatorBinary), " + " (RSpace), #comment(RComment), \n" + "(RNewLine), ib(RSyntacticName), \n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), \n" + "(RNewLine), ic(RSyntacticName), )(RBracket), \n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), )(RBracket), " + "[(ROperatorBracket), id(RSyntacticName),  (RSpace), \n" + "(RNewLine), ](ROperatorBracket), \n" + "(REndStatement), incomplete(RFunctionName), ((RBracket), [[(ROperatorBracket), " + "j(RSyntacticName), [(ROperatorBracket), k(RSyntacticName), ](ROperatorBracket), " + "]](ROperatorBracket),   (RSpace), \n" + "(RNewLine), )(RBracket), \n" + "(REndStatement), incomplete(RSyntacticName),  (RSpace), >=(ROperatorBinary),  (RSpace), \n" + "(RNewLine),   (RSpace), #comment (RComment), \n" + "(RNewLine), \n" + "(RNewLine), l(RSyntacticName), \n" + "(REndStatement), ";
         //strActual = GetLstTokensAsString(new RTokenList(strInput).Tokens);
         //Assert.Equal(strExpected, strActual);
 
@@ -258,80 +258,77 @@ public class RInsightTestXUnit
         string strInput, strActual;
         OrderedDictionary dctRStatements;
 
-        strInput = "x[3:5]<-13:15;names(x)[3]<-\" Three\"" + "\n";
+        //todo
+        strInput = "a[,c]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
-        Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
-        strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))" + "\n";
+        strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(" f1(f2(),f3(a),f4(b =1),f5(c =2,3),f6(4,d =5),f7(,),f8(,,),f9(,,,),f10(a,,))" + "\n", strActual);
+        Assert.Equal(" f1(f2(),f3(a),f4(b =1),f5(c =2,3),f6(4,d =5),f7(,),f8(,,),f9(,,,),f10(a,,))\n", strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Single(dctRStatements);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
 
-        strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))" + "\n";
+        strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))" + "\n";
+        strInput = "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("f0(o4a =o4b,o4c =(o8a+o8b)*(o8c-o8d),o4d =f4a(o6e =o6f,o6g =o6h))" + "\n", strActual);
+        Assert.Equal("f0(o4a =o4b,o4c =(o8a+o8b)*(o8c-o8d),o4d =f4a(o6e =o6f,o6g =o6h))\n", strActual);
 
-        strInput = "a+b+c" + "\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-
-        strInput = "2+1-10/5*3" + "\n";
+        strInput = "a+b+c\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "1+2-3*10/5" + "\n";
+        strInput = "2+1-10/5*3\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "(a-b)*(c+d)" + "\n";
+        strInput = "1+2-3*10/5\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a/(b)*((c))+(d-e)/f*g+(((d-e)/f)*g)" + "\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a/(b)*(c)+(d-e)/f*g+(((d-e)/f)*g)" + "\n", strActual);
-
-        strInput = "var1<-pkg1::var2" + "\n";
+        strInput = "(a-b)*(c+d)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "var1<-pkg1::obj1$obj2$var2" + "\n";
+        strInput = "a/(b)*((c))+(d-e)/f*g+(((d-e)/f)*g)\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal("a/(b)*(c)+(d-e)/f*g+(((d-e)/f)*g)\n", strActual);
+
+        strInput = "var1<-pkg1::var2\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "var1<-pkg1::obj1$fun1(para1,para2)" + "\n";
+        strInput = "var1<-pkg1::obj1$obj2$var2\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a<-b::c(d)+e" + "\n";
+        strInput = "var1<-pkg1::obj1$fun1(para1,para2)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "f1(~a,b~,-c,+d,e~(f+g),!h,i^(-j),k+(~l),m~(~n),o/-p,q*+r)" + "\n";
+        strInput = "a<-b::c(d)+e\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "f1(~a,b~,-c,+d,e~(f+g),!h,i^(-j),k+(~l),m~(~n),o/-p,q*+r)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
 
 
-        strInput = "a[1]-b[c(d)+e]/f(g[2],h[3],i[4]*j[5])-k[l[m[6]]]" + "\n";
+        strInput = "a[1]-b[c(d)+e]/f(g[2],h[3],i[4]*j[5])-k[l[m[6]]]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[[1]]-b[[c(d)+e]]/f(g[[2]],h[[3]],i[[4]]*j[[5]])-k[[l[[m[6]]]]]" + "\n";
+        strInput = "a[[1]]-b[[c(d)+e]]/f(g[[2]],h[[3]],i[[4]]*j[[5]])-k[[l[[m[6]]]]]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "df[[\"a\"]]" + "\n" + "lst[[\"a\"]][[\"b\"]]" + "\n"; // same as 'df$a' and 'lst$a$b'
+        strInput = "df[[\"a\"]]\n" + "lst[[\"a\"]][[\"b\"]]\n"; // same as 'df$a' and 'lst$a$b'
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -339,7 +336,7 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
-        strInput = "x<-\"a\";df[x]" + "\n"; // same as 'df$a' and 'lst$a$b'
+        strInput = "x<-\"a\";df[x]\n"; // same as 'df$a' and 'lst$a$b'
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -347,19 +344,11 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)7, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
-        strInput = "df<-data.frame(x = 1:10, y = 11:20, z = letters[1:10])" + "\n";
+        strInput = "df<-data.frame(x = 1:10, y = 11:20, z = letters[1:10])\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "x[3:5]<-13:15;names(x)[3]<-\"Three\"" + "\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
-        Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-
-        strInput = "x[3:5]<-13:15;" + "\n" + "names(x)[3]<-\"Three\"" + "\n";
+        strInput = "x[3:5]<-13:15;names(x)[3]<-\"Three\"\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -367,16 +356,7 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
-        strInput = "x[3:5]<-13:15;" + "\r\n" + "names(x)[3]<-\"Three\"" + "\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        //todo        Assert.Equal("x[3:5]<-13:15;" + "\n" + "names(x)[3]<-\"Three\"" + "\n", strActual);
-        Assert.Equal(strInput, strActual);
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
-        Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-
-        strInput = "x[3:5]<-13:15;#comment" + "\n" + "names(x)[3]<-\"Three\"" + "\n";
+        strInput = "x[3:5]<-13:15;\n" + "names(x)[3]<-\"Three\"\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -384,127 +364,144 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
-        strInput = "a[]" + "\n";
+        strInput = "x[3:5]<-13:15;" + "\r\n" + "names(x)[3]<-\"Three\"\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        //todo        Assert.Equal("x[3:5]<-13:15;\n" + "names(x)[3]<-\"Three\"\n", strActual);
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
+        Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+
+        strInput = "x[3:5]<-13:15;#comment\n" + "names(x)[3]<-\"Three\"\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
+        Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+
+        strInput = "a[]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[,]" + "\n";
+        strInput = "a[,]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[,,]" + "\n";
+        strInput = "a[,,]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[,,,]" + "\n";
+        strInput = "a[,,,]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[b,]" + "\n";
+        strInput = "a[b,]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[,c]" + "\n";
+        strInput = "a[,c]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[b,c]" + "\n";
+        strInput = "a[b,c]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[\"b\",]" + "\n";
+        strInput = "a[\"b\",]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[,\"c\",1]" + "\n";
+        strInput = "a[,\"c\",1]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[-1,1:2,,x<5|x>7]" + "\n";
+        strInput = "a[-1,1:2,,x<5|x>7]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = " a[]#comment" + "\n";
+        strInput = " a[]#comment\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a [,]" + "\n";
+        strInput = "a [,]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[ ,,] #comment" + "\n";
+        strInput = "a[ ,,] #comment\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal("a[,,] #comment\n", strActual);
+
+        strInput = "a[, ,,]\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal("a[,,,]\n", strActual);
+
+        strInput = "a[b, ]   #comment\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal("a[b,]   #comment\n", strActual);
+
+        strInput = "a [  ,   c    ]     \n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal("a [,   c]     \n", strActual);
+
+        strInput = "#comment\n" + "a[b,c]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a[, ,,]" + "\n";
+        strInput = "a[ \"b\"  ,]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
+        Assert.Equal("a[ \"b\",]\n", strActual);
 
-        strInput = "a[b, ]   #comment" + "\n";
+        strInput = "a[,#comment\n" + "\"c\",  1 ]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[b,]   #comment" + "\n", strActual);
+        Assert.Equal("a[,#comment\n" + "\"c\",  1]\n", strActual);
 
-        strInput = "a [  ,   c    ]     " + "\n";
+        strInput = "a[ -1 , 1  :   2    ,     ,      x <  5   |    x      > 7  ]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a [  ,   c]     " + "\n", strActual);
-
-        strInput = "#comment" + "\n" + "a[b,c]" + "\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-
-        strInput = "a[ \"b\"  ,]" + "\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-
-        strInput = "a[,#comment" + "\n" + "\"c\",  1 ]" + "\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[,#comment" + "\n" + "\"c\",  1]" + "\n", strActual);
-
-        strInput = "a[ -1 , 1  :   2    ,     ,      x <  5   |    x      > 7  ]" + "\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[ -1 , 1  :   2    ,     ,      x <  5   |    x      > 7]" + "\n", strActual);
+        Assert.Equal("a[ -1, 1  :   2,,      x <  5   |    x      > 7]\n", strActual);
 
         // https://github.com/lloyddewit/RScript/issues/18
-        strInput = "weather[,1]<-As.Date(weather[,1],format = \"%m/%d/%Y\")" + "\n";
+        strInput = "weather[,1]<-As.Date(weather[,1],format = \"%m/%d/%Y\")\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = " weather  [   ,  #comment" + "\n" + "  1     ] <-  As.Date   (weather     [#comment" + "\n" + " ,  1   ]    ,    format =  \"%m/%d/%Y\"    )     " + "\n";
+        strInput = " weather  [   ,  #comment\n" + "  1     ] <-  As.Date   (weather     [#comment\n" + " ,  1   ]    ,    format =  \"%m/%d/%Y\"    )     \n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(" weather  [   ,  #comment" + "\n" + "  1] <-  As.Date(weather     [#comment" + "\n" + " ,  1],    format =  \"%m/%d/%Y\")     " + "\n", strActual);
+        Assert.Equal(" weather  [,  #comment\n" + "  1] <-  As.Date(weather     [,  1],    format =  \"%m/%d/%Y\")     \n", strActual);
 
-        strInput = "dat <- dat[order(dat$tree, dat$dir), ]" + "\n";
+        strInput = "dat <- dat[order(dat$tree, dat$dir), ]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("dat <- dat[order(dat$tree, dat$dir),]" + "\n", strActual);
+        Assert.Equal("dat <- dat[order(dat$tree, dat$dir),]\n", strActual);
 
         // https://github.com/africanmathsinitiative/R-Instat/pull/8551
-        strInput = "d22 <- d22[order(d22$tree, d22$day),]" + "\n";
+        strInput = "d22 <- d22[order(d22$tree, d22$day),]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "res <- MCA(poison[,3:8],excl =c(1,3))" + "\n";
+        strInput = "res <- MCA(poison[,3:8],excl =c(1,3))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
 
 
-        strInput = "data_book$display_daily_table(data_name = \"dodoma\", climatic_element = \"rain\", " + "date_col = \"Date\", year_col = \"year\", Misscode = \"m\", monstats = c(sum = \"sum\"))" + "\n";
+        strInput = "data_book$display_daily_table(data_name = \"dodoma\", climatic_element = \"rain\", " + "date_col = \"Date\", year_col = \"year\", Misscode = \"m\", monstats = c(sum = \"sum\"))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "stringr::str_split_fixed(string = date,pattern = \" - \",n = \"5 \")" + "\n";
+        strInput = "stringr::str_split_fixed(string = date,pattern = \" - \",n = \"5 \")\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "ggplot2::ggplot(data = c(sum = \"sum\"),mapping = ggplot2::aes(x = fert,y = size,colour = variety))" + "\n";
+        strInput = "ggplot2::ggplot(data = c(sum = \"sum\"),mapping = ggplot2::aes(x = fert,y = size,colour = variety))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "last_graph<-ggplot2::ggplot(data = survey,mapping = ggplot2::aes(x = fert,y = size,colour = variety))" + "+ggplot2::geom_line()" + "+ggplot2::geom_rug(colour = \"orange\")" + "+theme_grey()" + "+ggplot2::theme(axis.text.x = ggplot2::element_text())" + "+ggplot2::facet_grid(facets = village~variety,space = \"fixed\")" + "\n";
+        strInput = "last_graph<-ggplot2::ggplot(data = survey,mapping = ggplot2::aes(x = fert,y = size,colour = variety))" + "+ggplot2::geom_line()" + "+ggplot2::geom_rug(colour = \"orange\")" + "+theme_grey()" + "+ggplot2::theme(axis.text.x = ggplot2::element_text())" + "+ggplot2::facet_grid(facets = village~variety,space = \"fixed\")\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "dodoma <- data_book$get_data_frame(data_name = \"dodoma\", stack_data = TRUE, measure.vars = c(\"rain\", \"tmax\", \"tmin\"), id.vars = c(\"Date\"))" + "\n" + "last_graph <- ggplot2::ggplot(data = dodoma, mapping = ggplot2::aes(x = date, y = value, colour = variable)) + ggplot2::geom_line() + " + "ggplot2::geom_rug(data = dodoma%>%filter(is.na(value)), colour = \"red\") + theme_grey() + ggplot2::theme(axis.text.x = ggplot2::element_text(), legend.position = \"none\") + " + "ggplot2::facet_wrap(scales = \"free_y\", ncol = 1, facet = ~variable) + ggplot2::xlab(NULL)" + "\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"dodoma\")" + "\n" + "data_book$get_graphs(data_name = \"dodoma\", graph_name = \"last_graph\")" + "\n";
+        strInput = "dodoma <- data_book$get_data_frame(data_name = \"dodoma\", stack_data = TRUE, measure.vars = c(\"rain\", \"tmax\", \"tmin\"), id.vars = c(\"Date\"))\n" + "last_graph <- ggplot2::ggplot(data = dodoma, mapping = ggplot2::aes(x = date, y = value, colour = variable)) + ggplot2::geom_line() + " + "ggplot2::geom_rug(data = dodoma%>%filter(is.na(value)), colour = \"red\") + theme_grey() + ggplot2::theme(axis.text.x = ggplot2::element_text(), legend.position = \"none\") + " + "ggplot2::facet_wrap(scales = \"free_y\", ncol = 1, facet = ~variable) + ggplot2::xlab(NULL)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"dodoma\")\n" + "data_book$get_graphs(data_name = \"dodoma\", graph_name = \"last_graph\")\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -514,7 +511,7 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)534, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
         Assert.Equal((UInt32)623, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
 
-        strInput = "a->b" + "\n" + "c->>d" + "\n" + "e<-f" + "\n" + "g<<-h" + "\n" + "i=j" + "\n";
+        strInput = "a->b\n" + "c->>d\n" + "e<-f\n" + "g<<-h\n" + "i=j\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -525,55 +522,55 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)16, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
         Assert.Equal((UInt32)22, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
 
-        strInput = "x<-df$`a b`" + "\n";
+        strInput = "x<-df$`a b`\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "names(x)<-c(\"a\",\"b\")" + "\n";
+        strInput = "names(x)<-c(\"a\",\"b\")\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "a<-b" + "\r" + "c(d)" + "\r\n" + "e->>f+g" + "\n";
+        strInput = "a<-b" + "\r" + "c(d)" + "\r\n" + "e->>f+g\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a<-b" + "\n" + "c(d)" + "\n" + "e->>f+g" + "\n", strActual);
+        Assert.Equal("a<-b\n" + "c(d)\n" + "e->>f+g\n", strActual);
 
-        strInput = " f1(  f2(),   f3( a),  f4(  b =1))" + "\n";
+        strInput = " f1(  f2(),   f3( a),  f4(  b =1))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h))" + "\n";
+        strInput = "  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = " a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)" + "\n";
+        strInput = " a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = " a  +   b    +     c" + "\n";
+        strInput = " a  +   b    +     c\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(" a  +   b  +     c" + "\n", strActual);
+        Assert.Equal(" a  +   b  +     c\n", strActual);
 
-        strInput = " var1  <-   pkg1::obj1$obj2$var2" + "\n";
+        strInput = " var1  <-   pkg1::obj1$obj2$var2\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "    pkg ::obj1 $obj2$fn1 (a ,b=1, c    = 2 )" + "\n";
+        strInput = "    pkg ::obj1 $obj2$fn1 (a ,b=1, c    = 2 )\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("    pkg::obj1$obj2$fn1(a,b =1, c = 2)" + "\n", strActual);
+        Assert.Equal("    pkg::obj1$obj2$fn1(a,b =1, c = 2)\n", strActual);
 
-        strInput = " f1(  ~   a,    b ~,  -   c,    + d,  e   ~(    f +  g),   !    h, i  ^(   -    j), k  +(   ~    l), m  ~(   ~    n), o  /   -    p, q  *   +    r)" + "\n";
+        strInput = " f1(  ~   a,    b ~,  -   c,    + d,  e   ~(    f +  g),   !    h, i  ^(   -    j), k  +(   ~    l), m  ~(   ~    n), o  /   -    p, q  *   +    r)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = " a  [" + "\r" + "   1" + "\n" + "] -  b   [c (  d   )+ e  ]   /f (  g   [2 ]  ,   h[ " + "\r\n" + "3  ]  " + "\n" + " ,i [  4   ]* j  [   5] )  -   k[ l  [   m[ 6  ]   ]   ]" + "\n";
+        strInput = " a  [" + "\r" + "   1\n" + "] -  b   [c (  d   )+ e  ]   /f (  g   [2 ]  ,   h[ " + "\r\n" + "3  ]  \n" + " ,i [  4   ]* j  [   5] )  -   k[ l  [   m[ 6  ]   ]   ]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(" a  [" + "\r" + "   1] -  b   [c(  d)+ e]   /f(  g   [2],   h[ " + "\r\n" + "3],i [  4]* j  [   5]) -   k[ l  [   m[ 6]]]" + "\n", strActual);
-        dctRStatements = new RScript(strInput + "x" + "\n").statements;
+        Assert.Equal(" a  [" + "\r" + "   1] -  b   [c(  d)+ e]   /f(  g   [2],   h[ " + "\r\n" + "3],i [  4]* j  [   5]) -   k[ l  [   m[ 6]]]\n", strActual);
+        dctRStatements = new RScript(strInput + "x\n").statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)129, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
-        strInput = "#precomment1" + "\n" + " # precomment2" + "\n" + "  #  precomment3" + "\n" + @" f1(  f2(),   f3( a),  f4(  b =1))#comment1~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + "  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h)) # comment2\",\" cbaa " + "\n" + " a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)   #comment3" + "\n" + "#comment 4" + "\n" + " a  +   b  +     c" + "\n" + "\n" + "\n" + "  #comment5" + "\n" + "   # comment6 #comment7" + "\n" + "endSyntacticName" + "\n";
+        strInput = "#precomment1\n" + " # precomment2\n" + "  #  precomment3\n" + @" f1(  f2(),   f3( a),  f4(  b =1))#comment1~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + "  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h)) # comment2\",\" cbaa \n" + " a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)   #comment3\n" + "#comment 4\n" + " a  +   b  +     c\n" + "\n\n" + "  #comment5\n" + "   # comment6 #comment7\n" + "endSyntacticName\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -585,11 +582,11 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)343, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("f1(f2(),f3(a),f4(b =1))" + "\n" + "f0(o4a =o4b,o4c =(o8a+o8b)*(o8c-o8d),o4d =f4a(o6e =o6f,o6g =o6h))" + "\n" + "a/(b)*(c)+(d-e)/f*g+(((d-e)/f)*g)" + "\n" + "a+b+c" + "\n" + "endSyntacticName" + "\n", strActual);
+        Assert.Equal("f1(f2(),f3(a),f4(b =1))\n" + "f0(o4a =o4b,o4c =(o8a+o8b)*(o8c-o8d),o4d =f4a(o6e =o6f,o6g =o6h))\n" + "a/(b)*(c)+(d-e)/f*g+(((d-e)/f)*g)\n" + "a+b+c\n" + "endSyntacticName\n", strActual);
 
-        strInput = "#comment1" + "\n" + "a#comment2" + "\r" + " b #comment3" + "\r\n" + "#comment4" + "\n" + "  c  " + "\r\n";
+        strInput = "#comment1\n" + "a#comment2" + "\r" + " b #comment3" + "\r\n" + "#comment4\n" + "  c  " + "\r\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("#comment1" + "\n" + "a#comment2" + "\n" + " b #comment3" + "\n" + "#comment4" + "\n" + "  c  " + "\n", strActual);
+        Assert.Equal("#comment1\n" + "a#comment2\n" + " b #comment3\n" + "#comment4\n" + "  c  \n", strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
@@ -597,7 +594,7 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)35, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("a" + "\n" + "b" + "\n" + "c" + "\n", strActual);
+        Assert.Equal("a\n" + "b\n" + "c\n", strActual);
 
         strInput = "#not ignored comment";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -610,7 +607,7 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strActual).statements;
         Assert.Equal((UInt32)1, (UInt32)dctRStatements.Count);
 
-        strInput = "#not ignored comment" + "\n";
+        strInput = "#not ignored comment\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -619,7 +616,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript(false);
         Assert.Equal("\n", strActual);
 
-        strInput = "f1()" + "\n" + "# not ignored comment" + "\r\n";
+        strInput = "f1()\n" + "# not ignored comment" + "\r\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -628,9 +625,9 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)5, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("f1()" + "\n" + "\n", strActual);
+        Assert.Equal("f1()\n" + "\n", strActual);
 
-        strInput = "f1()" + "\n" + "# not ignored comment" + "\n" + "# not ignored comment2" + "\r" + " " + "\r\n" + "# not ignored comment3";
+        strInput = "f1()\n" + "# not ignored comment\n" + "# not ignored comment2" + "\r" + " " + "\r\n" + "# not ignored comment3";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput + "\n", strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -671,7 +668,7 @@ public class RInsightTestXUnit
         Assert.Equal("", strActual);
 
         // Test string constants that contain line breaks
-        strInput = "x <- \"a" + "\n" + "\"" + "\n" + "fn1(\"bc " + "\n" + "d\", e)" + "\n" + "fn2( \"f gh" + "\n" + "\",i)" + "\n" + "x <- 'a" + "\r" + "\r" + "'" + "\n" + "fn1('bc " + "\r" + "\r" + "\r" + "\r" + "d', e)" + "\n" + "fn2( 'f gh" + "\r" + "',i)" + "\n" + "x <- `a" + "\r\n" + "`" + "\n" + "fn1(`bc " + "\r\n" + "j" + "\r\n" + "d`, e)" + "\n" + "fn2( `f gh" + "\r\n" + "kl" + "\r\n" + "mno" + "\r\n" + "`,i)" + "\n";
+        strInput = "x <- \"a\n" + "\"\n" + "fn1(\"bc \n" + "d\", e)\n" + "fn2( \"f gh\n" + "\",i)\n" + "x <- 'a" + "\r" + "\r" + "'\n" + "fn1('bc " + "\r" + "\r" + "\r" + "\r" + "d', e)\n" + "fn2( 'f gh" + "\r" + "',i)\n" + "x <- `a" + "\r\n" + "`\n" + "fn1(`bc " + "\r\n" + "j" + "\r\n" + "d`, e)\n" + "fn2( `f gh" + "\r\n" + "kl" + "\r\n" + "mno" + "\r\n" + "`,i)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -687,15 +684,15 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)119, dctRStatements.Cast<DictionaryEntry>().ElementAt(8).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("x<-\"a" + "\n" + "\"" + "\n" + "fn1(\"bc " + "\n" + "d\",e)" + "\n" + "fn2(\"f gh" + "\n" + "\",i)" + "\n" + "x<-'a" + "\r" + "\r" + "'" + "\n" + "fn1('bc " + "\r" + "\r" + "\r" + "\r" + "d',e)" + "\n" + "fn2('f gh" + "\r" + "',i)" + "\n" + "x<-`a" + "\r\n" + "`" + "\n" + "fn1(`bc " + "\r\n" + "j" + "\r\n" + "d`,e)" + "\n" + "fn2(`f gh" + "\r\n" + "kl" + "\r\n" + "mno" + "\r\n" + "`,i)" + "\n", strActual);
+        Assert.Equal("x<-\"a\n" + "\"\n" + "fn1(\"bc \n" + "d\",e)\n" + "fn2(\"f gh\n" + "\",i)\n" + "x<-'a" + "\r" + "\r" + "'\n" + "fn1('bc " + "\r" + "\r" + "\r" + "\r" + "d',e)\n" + "fn2('f gh" + "\r" + "',i)\n" + "x<-`a" + "\r\n" + "`\n" + "fn1(`bc " + "\r\n" + "j" + "\r\n" + "d`,e)\n" + "fn2(`f gh" + "\r\n" + "kl" + "\r\n" + "mno" + "\r\n" + "`,i)\n", strActual);
 
         // https://github.com/africanmathsinitiative/R-Instat/issues/7095  
-        strInput = "data_book$import_data(data_tables =list(data3 =clipr::read_clip_tbl(x =\"Category    Feature    Ease_of_Use     Operating Systems" + "\n" + "\", header =TRUE)))" + "\n";
+        strInput = "data_book$import_data(data_tables =list(data3 =clipr::read_clip_tbl(x =\"Category    Feature    Ease_of_Use     Operating Systems\n" + "\", header =TRUE)))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
         // https://github.com/africanmathsinitiative/R-Instat/issues/7095  
-        strInput = "Data <- data_book$get_data_frame(data_name = \"Data\")" + "\n" + "last_graph <- ggplot2::ggplot(data = Data |> dplyr::filter(rain > 0.85), mapping = ggplot2::aes(y = rain, x = make_factor(\"\")))" + " + ggplot2::geom_boxplot(varwidth = TRUE, coef = 2) + theme_grey()" + " + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))" + " + ggplot2::xlab(NULL) + ggplot2::facet_wrap(facets = ~ Name, drop = FALSE)" + "\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"Data\")" + "\n" + "data_book$get_graphs(data_name = \"Data\", graph_name = \"last_graph\")" + "\n";
+        strInput = "Data <- data_book$get_data_frame(data_name = \"Data\")\n" + "last_graph <- ggplot2::ggplot(data = Data |> dplyr::filter(rain > 0.85), mapping = ggplot2::aes(y = rain, x = make_factor(\"\")))" + " + ggplot2::geom_boxplot(varwidth = TRUE, coef = 2) + theme_grey()" + " + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))" + " + ggplot2::xlab(NULL) + ggplot2::facet_wrap(facets = ~ Name, drop = FALSE)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"Data\")\n" + "data_book$get_graphs(data_name = \"Data\", graph_name = \"last_graph\")\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         Assert.Equal(strInput, strActual);
@@ -707,12 +704,12 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)499, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
 
         // https://github.com/africanmathsinitiative/R-Instat/issues/7095  
-        strInput = "ifelse(year_2 > 30, 1, 0)" + "\n";
+        strInput = "ifelse(year_2 > 30, 1, 0)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
         // https://github.com/africanmathsinitiative/R-Instat/issues/7377
-        strInput = "(year-1900)*(year<2000)+(year-2000)*(year>1999)" + "\n";
+        strInput = "(year-1900)*(year<2000)+(year-2000)*(year>1999)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
@@ -729,55 +726,55 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "x<-\"she said 'hello'\"" + "\n";
+        strInput = "x<-\"she said 'hello'\"\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "read_clip_tbl(x = \"Ease_of_Use" + "\t" + @"Hides R by default to prevent \""code shock\""" + "\t" + "  1\", header = TRUE)" + "\n";
+        strInput = "read_clip_tbl(x = \"Ease_of_Use" + "\t" + @"Hides R by default to prevent \""code shock\""" + "\t" + "  1\", header = TRUE)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
         // issue lloyddewit/rscript#17
-        strInput = "?log" + "\n";
+        strInput = "?log\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
         // issue lloyddewit/rscript#21
-        strInput = "?a" + "\n" + "? b" + "\n" + " +  c" + "\n" + "  -   d +#comment1" + "\n" + "(!e) - #comment2" + "\n" + "(~f) +" + "\n" + "(+g) - " + "\n" + "(-h)" + "\n";
+        strInput = "?a\n" + "? b\n" + " +  c\n" + "  -   d +#comment1\n" + "(!e) - #comment2\n" + "(~f) +\n" + "(+g) - \n" + "(-h)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("?a" + "\n" + "? b" + "\n" + " +  c" + "\n" + "  -   d +(!e) -(~f) +(+g) -(-h)" + "\n", strActual);
+        Assert.Equal("?a\n" + "? b\n" + " +  c\n" + "  -   d +(!e) -(~f) +(+g) -(-h)\n", strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)4, (UInt32)dctRStatements.Count);
 
         // issue lloyddewit/rscript#32
-        strInput = "??log" + "\n";
+        strInput = "??log\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "??a" + "\n" + "?? b" + "\n";
+        strInput = "??a\n" + "?? b\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
         // issue lloyddewit/rscript#16
-        strInput = "\"a\"+\"b\"" + "\n";
+        strInput = "\"a\"+\"b\"\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "  tfrmt(" + "\n" + "  # specify columns in the data" + "\n" + "  group = c(rowlbl1, grp)," + "\n" + "  label = rowlbl2," + "\n" + "  column = column, " + "\n" + "  param = param," + "\n" + "  value = value," + "\n" + "  sorting_cols = c(ord1, ord2)," + "\n" + "  # specify value formatting " + "\n" + "  body_plan = body_plan(" + "\n" + "  frmt_structure(group_val = \".default\", label_val = \".default\", frmt_combine(\"{n} ({pct} %)\"," + "\n" + "                                                                    n = frmt(\"xxx\")," + "\n" + "                                                                                pct = frmt(\"xx.x\")))," + "\n" + "    frmt_structure(group_val = \".default\", label_val = \"n\", frmt(\"xxx\"))," + "\n" + "    frmt_structure(group_val = \".default\", label_val = c(\"Mean\", \"Median\", \"Min\", \"Max\"), frmt(\"xxx.x\"))," + "\n" + "    frmt_structure(group_val = \".default\", label_val = \"SD\", frmt(\"xxx.xx\"))," + "\n" + "    frmt_structure(group_val = \".default\", label_val = \".default\", p = frmt_when(\">0.99\" ~ \">0.99\"," + "\n" + "                                                                                 \"<0.001\" ~ \"<0.001\"," + "\n" + "                                                                                 TRUE ~ frmt(\"x.xxx\", missing = \"\"))))) %>% " + "\n" + "  print_to_gt(data_demog) %>% " + "\n" + "  tab_options(" + "\n" + "    container.width = 900)" + "\n";
+        strInput = "  tfrmt(\n" + "  # specify columns in the data\n" + "  group = c(rowlbl1, grp),\n" + "  label = rowlbl2,\n" + "  column = column, \n" + "  param = param,\n" + "  value = value,\n" + "  sorting_cols = c(ord1, ord2),\n" + "  # specify value formatting \n" + "  body_plan = body_plan(\n" + "  frmt_structure(group_val = \".default\", label_val = \".default\", frmt_combine(\"{n} ({pct} %)\",\n" + "                                                                    n = frmt(\"xxx\"),\n" + "                                                                                pct = frmt(\"xx.x\"))),\n" + "    frmt_structure(group_val = \".default\", label_val = \"n\", frmt(\"xxx\")),\n" + "    frmt_structure(group_val = \".default\", label_val = c(\"Mean\", \"Median\", \"Min\", \"Max\"), frmt(\"xxx.x\")),\n" + "    frmt_structure(group_val = \".default\", label_val = \"SD\", frmt(\"xxx.xx\")),\n" + "    frmt_structure(group_val = \".default\", label_val = \".default\", p = frmt_when(\">0.99\" ~ \">0.99\",\n" + "                                                                                 \"<0.001\" ~ \"<0.001\",\n" + "                                                                                 TRUE ~ frmt(\"x.xxx\", missing = \"\"))))) %>% \n" + "  print_to_gt(data_demog) %>% \n" + "  tab_options(\n" + "    container.width = 900)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
         // issue lloyddewit/rscript#14
         // Examples from https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/
-        strInput = "x %>% f(1, .)" + "\n";
+        strInput = "x %>% f(1, .)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "x |> f(1, y = _)" + "\n";
+        strInput = "x |> f(1, y = _)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "df %>% split(.$var)" + "\n";
+        strInput = "df %>% split(.$var)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
@@ -786,25 +783,25 @@ public class RInsightTestXUnit
         // strActual = new clsRScript(strInput).GetAsExecutableScript()
         // Assert.Equal(strInput, strActual)
 
-        strInput = "mtcars %>% .$cyl" + "\n";
+        strInput = "mtcars %>% .$cyl\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
 
         // Examples from https://stackoverflow.com/questions/67744604/what-does-pipe-greater-than-mean-in-r
-        strInput = "c(1:3, NA_real_) |> sum(na.rm = TRUE)" + "\n";
+        strInput = "c(1:3, NA_real_) |> sum(na.rm = TRUE)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "split(x = iris[-5], f = iris$Species) |> lapply(min) |> Do.call(what = rbind)" + "\n";
+        strInput = "split(x = iris[-5], f = iris$Species) |> lapply(min) |> Do.call(what = rbind)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "iris[iris$Sepal.Length > 7,] %>% subset(.$Species==\"virginica\")" + "\n";
+        strInput = "iris[iris$Sepal.Length > 7,] %>% subset(.$Species==\"virginica\")\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "1:3 |> sum" + "\n";
+        strInput = "1:3 |> sum\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
