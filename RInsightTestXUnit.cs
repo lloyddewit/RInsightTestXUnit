@@ -259,7 +259,7 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //todo
-        strInput = "a[,c]\n";
+        strInput = "a[b][c]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
