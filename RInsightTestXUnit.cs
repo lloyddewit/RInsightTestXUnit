@@ -421,6 +421,10 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
+        strInput = "a[-1,1:2,,f1(b,c[d], f2(e)[,,f3(f,g),,]),x<5|x>7]\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
         strInput = " a[]#comment\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
