@@ -258,18 +258,17 @@ public class RInsightTestXUnit
         string strInput, strActual;
         OrderedDictionary dctRStatements;
 
-        //todo
-        //strInput = "for(a in b)\n"
-        //         + "    while(c<d)\n"
-        //         + "        repeat\n"
-        //         + "            if(e=f)\n"
-        //         + "                break\n"
-        //         + "            else\n"
-        //         + "                next\n"
-        //         + "if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))))\n"
-        //         + "    return(k)";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
+        //TODO
+        //strInput = "Nightingale <- within(Nightingale, {\n" +
+        //           "Total <- Disease + Wounds + Other\n" +
+        //           "Disease.pct <- 100*Disease/Total\n" +
+        //           "Wounds.pct <- 100*Wounds/Total\n" +
+        //           "Other.pct <- 100*Other/Total\n" +
+        //           "})\n";
+        strInput = "a<-within(b,{c})\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
         //Assert.Equal(strInput, strActual);
+
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
