@@ -265,8 +265,8 @@ public class RInsightTestXUnit
         //           "Wounds.pct <- 100*Wounds/Total\n" +
         //           "Other.pct <- 100*Other/Total\n" +
         //           "})\n";
-        strInput = "a<-within(b,{c})\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
+        //strInput = "a<-within(b,{c})\n";
+        //strActual = new RScript(strInput).GetAsExecutableScript();
         //Assert.Equal(strInput, strActual);
 
 
@@ -491,6 +491,19 @@ public class RInsightTestXUnit
         Assert.Equal(strInput, strActual);
 
         strInput = "res <- MCA(poison[,3:8],excl =c(1,3))\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        // https://github.com/africanmathsinitiative/R-Instat/pull/8707
+        strInput = "a[][b]\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "a[][]\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "output[][-1]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
