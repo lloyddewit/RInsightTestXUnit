@@ -265,9 +265,10 @@ public class RInsightTestXUnit
         //           "Wounds.pct <- 100*Wounds/Total\n" +
         //           "Other.pct <- 100*Other/Total\n" +
         //           "})\n";
-        //strInput = "a<-within(b,{c})\n";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
-        //Assert.Equal(strInput, strActual);
+        //strInput = "a<-b(c,{d})\n";
+        strInput = "{a}\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
 
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
