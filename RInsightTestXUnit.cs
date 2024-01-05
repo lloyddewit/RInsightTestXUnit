@@ -258,22 +258,18 @@ public class RInsightTestXUnit
         string strInput, strActual;
         OrderedDictionary dctRStatements;
 
-        //todo
-        //strInput = "for(a in b)\n"
-        //         + "    while(c<d)\n"
-        //         + "        repeat\n"
-        //         + "            if(e=f)\n"
-        //         + "                break\n"
-        //         + "            else\n"
-        //         + "                next\n"
-        //         + "if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))))\n"
-        //         + "    return(k)";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
-        //Assert.Equal(strInput, strActual);
+        //TODO
+        //means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))
+        strInput = "means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(" f1(f2(),f3(a),f4(b =1),f5(c =2,3),f6(4,d =5),f7(,),f8(,,),f9(,,,),f10(a,,))\n", strActual);
+        //Assert.Equal(" f1(f2(),f3(a),f4(b =1),f5(c =2,3),f6(4,d =5),f7(,),f8(,,),f9(,,,),f10(a,,))\n", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Single(dctRStatements);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
@@ -284,7 +280,8 @@ public class RInsightTestXUnit
 
         strInput = "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("f0(o4a =o4b,o4c =(o8a+o8b)*(o8c-o8d),o4d =f4a(o6e =o6f,o6g =o6h))\n", strActual);
+        //Assert.Equal("f0(o4a =o4b,o4c =(o8a+o8b)*(o8c-o8d),o4d =f4a(o6e =o6f,o6g =o6h))\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "a+b+c\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -304,7 +301,8 @@ public class RInsightTestXUnit
 
         strInput = "a/(b)*((c))+(d-e)/f*g+(((d-e)/f)*g)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a/(b)*(c)+(d-e)/f*g+(((d-e)/f)*g)\n", strActual);
+        //Assert.Equal("a/(b)*(c)+(d-e)/f*g+(((d-e)/f)*g)\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "var1<-pkg1::var2\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -443,19 +441,23 @@ public class RInsightTestXUnit
 
         strInput = "a[ ,,] #comment\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[,,] #comment\n", strActual);
+        //Assert.Equal("a[,,] #comment\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "a[, ,,]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[,,,]\n", strActual);
+        //Assert.Equal("a[,,,]\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "a[b, ]   #comment\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[b,]   #comment\n", strActual);
+        //Assert.Equal("a[b,]   #comment\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "a [  ,   c    ]     \n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a [,   c]     \n", strActual);
+        //Assert.Equal("a [,   c]     \n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "#comment\n" + "a[b,c]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -463,15 +465,18 @@ public class RInsightTestXUnit
 
         strInput = "a[ \"b\"  ,]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[ \"b\",]\n", strActual);
+        //Assert.Equal("a[ \"b\",]\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "a[,#comment\n" + "\"c\",  1 ]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[,#comment\n" + "\"c\",  1]\n", strActual);
+        //Assert.Equal("a[,#comment\n" + "\"c\",  1]\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "a[ -1 , 1  :   2    ,     ,      x <  5   |    x      > 7  ]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a[ -1, 1  :   2,,      x <  5   |    x      > 7]\n", strActual);
+        //Assert.Equal("a[ -1, 1  :   2,,      x <  5   |    x      > 7]\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         // https://github.com/lloyddewit/RScript/issues/18
         strInput = "weather[,1]<-As.Date(weather[,1],format = \"%m/%d/%Y\")\n";
@@ -480,11 +485,13 @@ public class RInsightTestXUnit
 
         strInput = " weather  [   ,  #comment\n" + "  1     ] <-  As.Date   (weather     [#comment\n" + " ,  1   ]    ,    format =  \"%m/%d/%Y\"    )     \n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(" weather  [,  #comment\n" + "  1] <-  As.Date(weather     [,  1],    format =  \"%m/%d/%Y\")     \n", strActual);
+        //Assert.Equal(" weather  [,  #comment\n" + "  1] <-  As.Date(weather     [,  1],    format =  \"%m/%d/%Y\")     \n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "dat <- dat[order(dat$tree, dat$dir), ]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("dat <- dat[order(dat$tree, dat$dir),]\n", strActual);
+        //Assert.Equal("dat <- dat[order(dat$tree, dat$dir),]\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         // https://github.com/africanmathsinitiative/R-Instat/pull/8551
         strInput = "d22 <- d22[order(d22$tree, d22$day),]\n";
@@ -492,6 +499,19 @@ public class RInsightTestXUnit
         Assert.Equal(strInput, strActual);
 
         strInput = "res <- MCA(poison[,3:8],excl =c(1,3))\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        // https://github.com/africanmathsinitiative/R-Instat/pull/8707
+        strInput = "a[][b]\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "a[][]\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "output[][-1]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
@@ -544,7 +564,8 @@ public class RInsightTestXUnit
 
         strInput = "a<-b" + "\r" + "c(d)" + "\r\n" + "e->>f+g\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("a<-b\n" + "c(d)\n" + "e->>f+g\n", strActual);
+        //Assert.Equal("a<-b\n" + "c(d)\n" + "e->>f+g\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = " f1(  f2(),   f3( a),  f4(  b =1))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -560,7 +581,8 @@ public class RInsightTestXUnit
 
         strInput = " a  +   b    +     c\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(" a  +   b  +     c\n", strActual);
+        //Assert.Equal(" a  +   b  +     c\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = " var1  <-   pkg1::obj1$obj2$var2\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -568,7 +590,8 @@ public class RInsightTestXUnit
 
         strInput = "    pkg ::obj1 $obj2$fn1 (a ,b=1, c    = 2 )\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("    pkg::obj1$obj2$fn1(a,b =1, c = 2)\n", strActual);
+        //Assert.Equal("    pkg::obj1$obj2$fn1(a,b =1, c = 2)\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = " f1(  ~   a,    b ~,  -   c,    + d,  e   ~(    f +  g),   !    h, i  ^(   -    j), k  +(   ~    l), m  ~(   ~    n), o  /   -    p, q  *   +    r)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -576,7 +599,8 @@ public class RInsightTestXUnit
 
         strInput = " a  [" + "\r" + "   1\n" + "] -  b   [c (  d   )+ e  ]   /f (  g   [2 ]  ,   h[ " + "\r\n" + "3  ]  \n" + " ,i [  4   ]* j  [   5] )  -   k[ l  [   m[ 6  ]   ]   ]\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(" a  [" + "\r" + "   1] -  b   [c(  d)+ e]   /f(  g   [2],   h[ " + "\r\n" + "3],i [  4]* j  [   5]) -   k[ l  [   m[ 6]]]\n", strActual);
+        //Assert.Equal(" a  [" + "\r" + "   1] -  b   [c(  d)+ e]   /f(  g   [2],   h[ " + "\r\n" + "3],i [  4]* j  [   5]) -   k[ l  [   m[ 6]]]\n", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput + "x\n").statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
@@ -594,11 +618,15 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)343, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("f1(f2(),f3(a),f4(b =1))\n" + "f0(o4a =o4b,o4c =(o8a+o8b)*(o8c-o8d),o4d =f4a(o6e =o6f,o6g =o6h))\n" + "a/(b)*(c)+(d-e)/f*g+(((d-e)/f)*g)\n" + "a+b+c\n" + "endSyntacticName\n", strActual);
+        Assert.Equal("f1(f2(),f3(a),f4(b=1))\n" 
+            + "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))\n" 
+            + "a/(b)*(c)+(d-e)/f*g+(((d-e)/f)*g)\n" + "a+b+c\n" 
+            + "endSyntacticName\n", strActual);
 
         strInput = "#comment1\n" + "a#comment2" + "\r" + " b #comment3" + "\r\n" + "#comment4\n" + "  c  " + "\r\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("#comment1\n" + "a#comment2\n" + " b #comment3\n" + "#comment4\n" + "  c  \n", strActual);
+        //Assert.Equal("#comment1\n" + "a#comment2\n" + " b #comment3\n" + "#comment4\n" + "  c  \n", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
@@ -606,18 +634,19 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)35, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("a\n" + "b\n" + "c\n", strActual);
+        Assert.Equal("a\r" + "b\r\n" + "c\r\n", strActual);
 
         strInput = "#not ignored comment";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput + "\n", strActual);
+        //Assert.Equal(strInput + "\n", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)1, (UInt32)dctRStatements.Count);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("\n", strActual);
+        Assert.Equal("", strActual);
         dctRStatements = new RScript(strActual).statements;
-        Assert.Equal((UInt32)1, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)0, (UInt32)dctRStatements.Count);
 
         strInput = "#not ignored comment\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -626,7 +655,7 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)1, (UInt32)dctRStatements.Count);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("\n", strActual);
+        Assert.Equal("", strActual);
 
         strInput = "f1()\n" + "# not ignored comment" + "\r\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -637,11 +666,11 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)5, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("f1()\n" + "\n", strActual);
+        Assert.Equal("f1()\n", strActual);
 
         strInput = "f1()\n" + "# not ignored comment\n" + "# not ignored comment2" + "\r" + " " + "\r\n" + "# not ignored comment3";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput + "\n", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
@@ -650,20 +679,22 @@ public class RInsightTestXUnit
         // issue lloyddewit/rscript#20
         strInput = "# Code run from Script Window (all text)" + Environment.NewLine + "1";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput + "\n", strActual);
+        Assert.Equal(strInput, strActual);
 
         strInput = "\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("\n", strActual);
+        //Assert.Equal("\n", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)1, (UInt32)dctRStatements.Count);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("\n", strActual);
+        Assert.Equal("", strActual);
 
         strInput = "";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("", strActual);
+        //Assert.Equal("", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)0, (UInt32)dctRStatements.Count);
 
@@ -672,12 +703,12 @@ public class RInsightTestXUnit
 
         //strInput = null;
         //strActual = new clsRScript(strInput).GetAsExecutableScript();
-        //Assert.Equal("", strActual);
+        ////Assert.Equal("", strActual);
         //dctRStatements = new clsRScript(strInput).dctRStatements;
         //Assert.Equal((UInt32)0, (UInt32)dctRStatements.Count);
 
-        strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("", strActual);
+        //strActual = new RScript(strInput).GetAsExecutableScript(false);
+        //Assert.Equal("", strActual);
 
         // Test string constants that contain line breaks
         strInput = "x <- \"a\n" + "\"\n" + "fn1(\"bc \n" + "d\", e)\n" + "fn2( \"f gh\n" + "\",i)\n" + "x <- 'a" + "\r" + "\r" + "'\n" + "fn1('bc " + "\r" + "\r" + "\r" + "\r" + "d', e)\n" + "fn2( 'f gh" + "\r" + "',i)\n" + "x <- `a" + "\r\n" + "`\n" + "fn1(`bc " + "\r\n" + "j" + "\r\n" + "d`, e)\n" + "fn2( `f gh" + "\r\n" + "kl" + "\r\n" + "mno" + "\r\n" + "`,i)\n";
@@ -754,7 +785,8 @@ public class RInsightTestXUnit
         // issue lloyddewit/rscript#21
         strInput = "?a\n" + "? b\n" + " +  c\n" + "  -   d +#comment1\n" + "(!e) - #comment2\n" + "(~f) +\n" + "(+g) - \n" + "(-h)\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal("?a\n" + "? b\n" + " +  c\n" + "  -   d +(!e) -(~f) +(+g) -(-h)\n", strActual);
+        //Assert.Equal("?a\n" + "? b\n" + " +  c\n" + "  -   d +(!e) -(~f) +(+g) -(-h)\n", strActual);
+        Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)4, (UInt32)dctRStatements.Count);
 
@@ -817,6 +849,41 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
+        // https://github.com/africanmathsinitiative/R-Instat/issues/8533
+        strInput = "{a}\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "a<-b(c,{d})";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "Nightingale <- within(Nightingale, {\n" +
+                   "Total <- Disease + Wounds + Other\n" +
+                   "Disease.pct <- 100*Disease/Total\n" +
+                   "Wounds.pct <- 100*Wounds/Total\n" +
+                   "Other.pct <- 100*Other/Total\n" +
+                   "})\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "colors <- c(\"blue\", \"red\", \"black\")\r\n"
+            + "with(Nightingale, {\r\n"
+            + "\tplot(Date, Disease.pct, type=\"n\",  ylim=c(0,100), cex.lab=1.25,\r\n"
+            + "\t\tylab=\"Percent deaths\", xlab=\"Date\", xaxt=\"n\",\r\n"
+            + "\t\tmain=\"Percentage of Deaths by Cause\");\r\n"
+            + "\t# background, to separate before, after\r\n"
+            + "\trect(as.Date(\"1854/4/1\"), -10, as.Date(\"1855/3/1\"), \r\n"
+            + "\t\t1.02*max(Disease.rate), col=gray(.90), border=\"transparent\");\r\n"
+            + "\ttext( as.Date(\"1854/4/1\"), .98*max(Disease.pct), \"Before Sanitary\\nCommission\", pos=4);\r\n"
+            + "\ttext( as.Date(\"1855/4/1\"), .98*max(Disease.pct), \"After Sanitary\\nCommission\", pos=4);\r\n"
+            + "\t# plot the data\r\n"
+            + "\tpoints(Date, Disease.pct, type=\"b\", col=colors[1], lwd=3);\r\n"
+            + "\tpoints(Date, Wounds.pct, type=\"b\", col=colors[2], lwd=2);\r\n"
+            + "\tpoints(Date, Other.pct, type=\"b\", col=colors[3], lwd=2)\r\n"
+            + "\t}\r\n)";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
     }
 
     private static string GetLstTokensAsString(List<RToken>? lstRTokens)
