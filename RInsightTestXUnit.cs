@@ -634,7 +634,7 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)35, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("a\r" + "b\r\n" + "c\r\n", strActual);
+        Assert.Equal("a\n" + "b\n" + "c\n", strActual);
 
         strInput = "#not ignored comment";
         strActual = new RScript(strInput).GetAsExecutableScript();
