@@ -259,11 +259,105 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //TODO
-        //means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))
-        strInput = "means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))";
+        strInput = "if(a)\n" +
+                   "{b}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+
+        strInput = "if(a)b";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
+        strInput = "if(x>10){fn1(paste(x,\"is greater than 10\"))}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "if(val > 5) break";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "if (x %% 2 == 0) \n    return(\"even\")";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "    if (i == 8)\r\n        next\n    if(i == 5)\n        break";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "if(a<b){c}\n" +
+            "        if(d<=e){f}\n" + 
+            "        if(g==h) { #1\n" + 
+            "          i } #2\n" + 
+            "          if (j >= k)\n" + 
+            "        {\n" + 
+            "          l   #3  \n" + 
+            "        }\n" + 
+            "        if (m)\n" +
+            "              #4\n" + 
+            "          n+\n" +
+            "            o  #5\n" + 
+            "        if(p!=q)\n" + 
+            "        {\n" + 
+            "        q1()[id \n" + 
+            "                       ]\n" + 
+            "        q2([[j[k]]])  \n\n" + 
+            "        }\r\n\r\n" +
+            "        if(e=f)\n" + 
+            "                        break\n" + 
+            "        next\n" + 
+            "        if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100))))\n" + 
+            "            return(k)\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal((UInt32)9, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
+        Assert.Equal((UInt32)11, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)31, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)70, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)131, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
+        Assert.Equal((UInt32)194, dctRStatements.Cast<DictionaryEntry>().ElementAt(5).Key);
+        Assert.Equal((UInt32)298, dctRStatements.Cast<DictionaryEntry>().ElementAt(6).Key);
+        Assert.Equal((UInt32)346, dctRStatements.Cast<DictionaryEntry>().ElementAt(7).Key);
+        Assert.Equal((UInt32)359, dctRStatements.Cast<DictionaryEntry>().ElementAt(8).Key);
+
+        // strInput = "if(x > 10){" & vbLf & "    fn1(paste(x, ""is greater than 10""))" & vbLf & "}" &
+        // vbLf & "else" & vbLf & "{" & vbLf & "    fn2(paste(x, ""Is less than 10""))" &
+        // vbLf & "} " &
+        // vbLf & "while (val <= 5 )" & vbLf & "{" & vbLf & "    # statements" &
+        // vbLf & "    fn3(val)" & vbLf & "    val = val + 1" & vbLf & "}" &
+        // vbLf & "repeat" & vbLf & "{" & vbLf & "    if(val > 5) break" & vbLf & "}" &
+        // vbLf & "for (val in 1:5) {}" &
+        // vbLf & "evenOdd = function(x){" &
+        // vbLf & "if(x %% 2 == 0)" & vbLf & "    return(""even"")" & vbLf & "else" &
+        // vbLf & "    return(""odd"")" & vbLf & "}" &
+        // vbLf & "for (i in val)" & vbLf & "{" & vbLf & "    if (i == 8)" &
+        // vbLf & "        next" & vbLf & "    if(i == 5)" & vbLf & "        break" & vbLf & "}"
+
+        // strInput = "if(a<b){c}" &
+        // vbLf & "if(d<=e){f}" &
+        // vbLf & "if(g==h) { #1" &
+        // vbLf & " i } #2" &
+        // vbLf & " if (j >= k)" &
+        // vbLf & "{" &
+        // vbLf & "l   #3  " &
+        // vbLf & "}" &
+        // vbLf & "if (m)" & vbLf & "#4" &
+        // vbLf & "  n+" & vbLf & "  o  #5" &
+        // vbLf & "if(p!=q)" &
+        // vbLf & "{" &
+        // vbLf & "incomplete()[id " & vbLf & "]" &
+        // vbLf & "incomplete([[j[k]]]  " & vbLf & ")" &
+        // vbLf & "}" & vbLf
+
+        // vbLf & "            if(e=f)" &
+        // vbLf & "                break" &
+        // vbLf & "            else" &
+        // vbLf & "                next" &
+        // vbLf & "if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))))" &
+        // vbLf & "    return(k)" & vbLf
 
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
@@ -882,6 +976,10 @@ public class RInsightTestXUnit
             + "\tpoints(Date, Wounds.pct, type=\"b\", col=colors[2], lwd=2);\r\n"
             + "\tpoints(Date, Other.pct, type=\"b\", col=colors[3], lwd=2)\r\n"
             + "\t}\r\n)";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
     }
