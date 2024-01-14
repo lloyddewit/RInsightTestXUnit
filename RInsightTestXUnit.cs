@@ -19,6 +19,8 @@ using RInsight;
 using System.Collections.Specialized;
 using System.Collections;
 using Microsoft.VisualStudio.TestPlatform.CoreUtilities;
+using static System.Reflection.Metadata.BlobBuilder;
+using System.Diagnostics;
 
 namespace RInsightTestXUnit;
 
@@ -259,6 +261,41 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //TODO
+        strInput = "if(a)b else c";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        // key word snippets from https://github.com/africanmathsinitiative/R-Instat/pull/8707
+        strInput = "## Don't show: \n" +
+            "if (requireNamespace(\"dplyr\", quietly = TRUE)) (if (getRversion() >= \"3.4\") withAutoprint else force)({ # examplesIf\n" +
+            "## End(Don't show)\n\n" +
+            "library(dplyr)\n\n" +
+            "austen_books() %>%\n" +
+            "    group_by(book) %>%\n" +
+            "    summarise(total_lines = n())\n" +
+            "## Don't show: \n" +
+            "}) # examplesIf\n" +
+            "## End(Don't show)\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+
+        strInput = "dim(plots) < -c(k, s, r)\n" +
+            "for (i in 1:k) for (j in 1:s)\n" +
+            "outdesign$sketch\n";
+
+        strInput = "npoints < -length(w)\n" +
+            "for (i in 1:npoints)\n" +
+            "{\n" +
+            "segments(w[i], Min[i], w[i], Max[i], lwd = 1.5, col = \"blue\")\n" +
+            "}\n" +
+            "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\n";
+
+        strInput = "for (i in 1:r) print(t(plots[,,i]))";
+
+
+
         strInput = "if(a)\n" +
                    "{b}";
         strActual = new RScript(strInput).GetAsExecutableScript();
