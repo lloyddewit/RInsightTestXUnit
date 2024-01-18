@@ -261,38 +261,6 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //TODO
-        strInput = "if(x > 10){\n" +
-            "fn1(paste(x, \"is greater than 10\"))\n" +
-            "} else\n" +
-            "{\n" +
-            "    fn2(paste(x, \"Is less than 10\"))\n" +
-            "} \n" +
-            "if(x %% 2 == 0)\n" +
-            "    return(\"even\") else\n" +
-            "    return(\"odd\")";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Equal(2, dctRStatements.Count);
-        Assert.Equal("if(x>10){fn1(paste(x,\"is greater than 10\"));} else {fn2(paste(x,\"Is less than 10\"));}", (dctRStatements[0] as RStatement).TextNoFormatting);
-        Assert.Equal("if(x%%2==0)return(\"even\") else return(\"odd\")", (dctRStatements[1] as RStatement).TextNoFormatting);
-
-        strInput = "if(a<b){c}" +
-        "\nif(d<=e){f}" +
-        "\nif(g==h) { #1" +
-        "\n i } #2" +
-        "\n if (j >= k)" +
-        "\n{" +
-        "\nl   #3  " +
-        "\n}" +
-        "\nif (m)\n#4" +
-        "\n  n+\n  o  #5" +
-        "\nif(p!=q)" +
-        "\n{" +
-        "\nincomplete()[id \n]" +
-        "\nincomplete([[j[k]]]  \n)" +
-        "\n}";
-
         strInput = "\n            if(e=f)" +
         "\n                break" +
         "\n            else" +
@@ -1103,7 +1071,47 @@ public class RInsightTestXUnit
         Assert.Equal("({library(dplyr);austen_books()%>%group_by(book)%>%summarise(total_lines=n());})", (dctRStatements[1] as RStatement).TextNoFormatting);
         Assert.Equal("", (dctRStatements[2] as RStatement).TextNoFormatting);
 
+        strInput = "if(x > 10){\n" +
+            "fn1(paste(x, \"is greater than 10\"))\n" +
+            "} else\n" +
+            "{\n" +
+            "    fn2(paste(x, \"Is less than 10\"))\n" +
+            "} \n" +
+            "if(x %% 2 == 0)\n" +
+            "    return(\"even\") else\n" +
+            "    return(\"odd\")";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("if(x>10){fn1(paste(x,\"is greater than 10\"));} else {fn2(paste(x,\"Is less than 10\"));}", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("if(x%%2==0)return(\"even\") else return(\"odd\")", (dctRStatements[1] as RStatement).TextNoFormatting);
 
+        strInput = "if(a<b){c}" +
+        "\nif(d<=e){f}" +
+        "\nif(g==h) { #1" +
+        "\n i } #2" +
+        "\n if (j >= k)" +
+        "\n{" +
+        "\nl   #3  " +
+        "\n}" +
+        "\nif (m)\n#4" +
+        "\n  n+\n  o  #5" +
+        "\nif(p!=q)" +
+        "\n{" +
+        "\nincomplete()[id \n]" +
+        "\nincomplete([[j[k]]]  \n)" +
+        "\n}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(6, dctRStatements.Count);
+        Assert.Equal("if(a<b){c}", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("if(d<=e){f}", (dctRStatements[1] as RStatement).TextNoFormatting);
+        Assert.Equal("if(g==h){i}", (dctRStatements[2] as RStatement).TextNoFormatting);
+        Assert.Equal("if(j>=k){l;}", (dctRStatements[3] as RStatement).TextNoFormatting);
+        Assert.Equal("if(m)n+o", (dctRStatements[4] as RStatement).TextNoFormatting);
+        Assert.Equal("if(p!=q){incomplete()[id];incomplete([[j[k]]]);}", (dctRStatements[5] as RStatement).TextNoFormatting);
     }
 
     private static string GetLstTokensAsString(List<RToken>? lstRTokens)
