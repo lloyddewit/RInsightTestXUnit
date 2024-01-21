@@ -19,6 +19,8 @@ using RInsight;
 using System.Collections.Specialized;
 using System.Collections;
 using Microsoft.VisualStudio.TestPlatform.CoreUtilities;
+using static System.Reflection.Metadata.BlobBuilder;
+using System.Diagnostics;
 
 namespace RInsightTestXUnit;
 
@@ -259,10 +261,35 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //TODO
-        //means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))
-        strInput = "means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
+        strInput = "\n            if(e=f)" +
+        "\n                break" +
+        "\n            else" +
+        "\n                next" +
+        "\nif (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))))" +
+        "\n    return(k)";
+
+        strInput = "for (i in 1:r) print(t(plots[,,i]))";
+
+        strInput = "\nwhile (val <= 5 )\n{\n    # statements" +
+        "\n    fn3(val)\n    val = val + 1\n}" +
+        "\nrepeat\n{\n    if(val > 5) break\n}" +
+        "\nfor (val in 1:5) {}" +
+        "\nevenOdd = function(x){" +
+        "\nfor (i in val)\n{\n    if (i == 8)" +
+        "\n        next\n    if(i == 5)\n        break\n}";
+
+
+        // key word snippets from https://github.com/africanmathsinitiative/R-Instat/pull/8707 todo
+        strInput = "dim(plots) < -c(k, s, r)\n" +
+            "for (i in 1:k) for (j in 1:s)\n" +
+            "outdesign$sketch\n";
+
+        strInput = "npoints < -length(w)\n" +
+            "for (i in 1:npoints)\n" +
+            "{\n" +
+            "segments(w[i], Min[i], w[i], Max[i], lwd = 1.5, col = \"blue\")\n" +
+            "}\n" +
+            "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\n";
 
 
 
@@ -822,10 +849,19 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        // TODO curly brackets not yet supported
-        // strInput = "df %>% {split(.$x, .$y)}" & vbLf
-        // strActual = new clsRScript(strInput).GetAsExecutableScript()
-        // Assert.Equal(strInput, strActual)
+        strInput = "{a\nb}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("{a;b}", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "df %>% {split(.$x, .$y)}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("df%>%{split(.$x,.$y)}", (dctRStatements[0] as RStatement).TextNoFormatting);
 
         strInput = "mtcars %>% .$cyl\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -884,6 +920,198 @@ public class RInsightTestXUnit
             + "\t}\r\n)";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
+
+        strInput = "means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+
+        // if-else statements
+        strInput = "if(a)b";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "if\n(a)b";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(a)b", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "if\n(a)\nb";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(a)b", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+
+        strInput = "if(a){b}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "if\n(a){b}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(a){b}", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "if\n(a)\n{b}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(a){b}", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+
+        strInput = "if(x>10){fn1(paste(x,\"is greater than 10\"))}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "if(val > 5) break";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "if (x %% 2 == 0) \n    return(\"even\")";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "    if (i == 8)\r\n        next\n    if(i == 5)\n        break";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "if(a<b){c}\n" +
+            "        if(d<=e){f}\n" +
+            "        if(g==h) { #1\n" +
+            "          i } #2\n" +
+            "          if (j >= k)\n" +
+            "        {\n" +
+            "          l   #3  \n" +
+            "        }\n" +
+            "        if (m)\n" +
+            "              #4\n" +
+            "          n+\n" +
+            "            o  #5\n" +
+            "        if(p!=q)\n" +
+            "        {\n" +
+            "        q1()[id \n" +
+            "                       ]\n" +
+            "        q2([[j[k]]])  \n\n" +
+            "        }\r\n\r\n" +
+            "        if(e=f)\n" +
+            "                        break\n" +
+            "        next\n" +
+            "        if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100))))\n" +
+            "            return(k)\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal((UInt32)9, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
+        Assert.Equal((UInt32)11, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)31, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)70, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)131, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
+        Assert.Equal((UInt32)194, dctRStatements.Cast<DictionaryEntry>().ElementAt(5).Key);
+        Assert.Equal((UInt32)298, dctRStatements.Cast<DictionaryEntry>().ElementAt(6).Key);
+        Assert.Equal((UInt32)346, dctRStatements.Cast<DictionaryEntry>().ElementAt(7).Key);
+        Assert.Equal((UInt32)359, dctRStatements.Cast<DictionaryEntry>().ElementAt(8).Key);
+
+        strInput = "if(a)b else c";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "if\n(d)e else f";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(d)e else f", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "if\n(g)\nh else i";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(g)h else i", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "if\n(j)\nk else\nl";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(j)k else l", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        // key word snippets from https://github.com/africanmathsinitiative/R-Instat/pull/8707
+        strInput = "## Don't show: \n" +
+            "if (requireNamespace(\"dplyr\", quietly = TRUE)) (if (getRversion() >= \"3.4\") withAutoprint else force)({ # examplesIf\n" +
+            "## End(Don't show)\n\n" +
+            "library(dplyr)\n\n" +
+            "austen_books() %>%\n" +
+            "    group_by(book) %>%\n" +
+            "    summarise(total_lines = n())\n" +
+            "## Don't show: \n" +
+            "}) # examplesIf\n" +
+            "## End(Don't show)\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(3, dctRStatements.Count);
+        Assert.Equal("if(requireNamespace(\"dplyr\",quietly=TRUE))(if(getRversion()>=\"3.4\")withAutoprint else force)", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("({library(dplyr);austen_books()%>%group_by(book)%>%summarise(total_lines=n());})", (dctRStatements[1] as RStatement).TextNoFormatting);
+        Assert.Equal("", (dctRStatements[2] as RStatement).TextNoFormatting);
+
+        strInput = "if(x > 10){\n" +
+            "fn1(paste(x, \"is greater than 10\"))\n" +
+            "} else\n" +
+            "{\n" +
+            "    fn2(paste(x, \"Is less than 10\"))\n" +
+            "} \n" +
+            "if(x %% 2 == 0)\n" +
+            "    return(\"even\") else\n" +
+            "    return(\"odd\")";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("if(x>10){fn1(paste(x,\"is greater than 10\"));} else {fn2(paste(x,\"Is less than 10\"));}", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("if(x%%2==0)return(\"even\") else return(\"odd\")", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+        strInput = "if(a<b){c}" +
+        "\nif(d<=e){f}" +
+        "\nif(g==h) { #1" +
+        "\n i } #2" +
+        "\n if (j >= k)" +
+        "\n{" +
+        "\nl   #3  " +
+        "\n}" +
+        "\nif (m)\n#4" +
+        "\n  n+\n  o  #5" +
+        "\nif(p!=q)" +
+        "\n{" +
+        "\nincomplete()[id \n]" +
+        "\nincomplete([[j[k]]]  \n)" +
+        "\n}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(6, dctRStatements.Count);
+        Assert.Equal("if(a<b){c}", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("if(d<=e){f}", (dctRStatements[1] as RStatement).TextNoFormatting);
+        Assert.Equal("if(g==h){i}", (dctRStatements[2] as RStatement).TextNoFormatting);
+        Assert.Equal("if(j>=k){l;}", (dctRStatements[3] as RStatement).TextNoFormatting);
+        Assert.Equal("if(m)n+o", (dctRStatements[4] as RStatement).TextNoFormatting);
+        Assert.Equal("if(p!=q){incomplete()[id];incomplete([[j[k]]]);}", (dctRStatements[5] as RStatement).TextNoFormatting);
     }
 
     private static string GetLstTokensAsString(List<RToken>? lstRTokens)
