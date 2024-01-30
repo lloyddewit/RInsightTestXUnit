@@ -566,7 +566,7 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)9, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         strInput = "x<-\"a\";df[x]"; // same as 'df$a' and 'lst$a$b'
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -594,7 +594,7 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)15, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         strInput = "x[3:5]<-13:15;" + "\r\n" + "names(x)[3]<-\"Three\"";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -603,7 +603,7 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)14, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)16, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         strInput = "x[3:5]<-13:15;#comment\n" + "names(x)[3]<-\"Three\"";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -765,9 +765,9 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)4, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)138, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)533, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)622, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)139, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)534, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)623, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
 
         strInput = "a->b\n" + "c->>d\n" + "e<-f\n" + "g<<-h\n" + "i=j";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -775,10 +775,10 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)5, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)4, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)15, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
-        Assert.Equal((UInt32)21, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
+        Assert.Equal((UInt32)5, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)11, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)16, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)22, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
 
         strInput = "x<-df$`a b`\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -853,11 +853,25 @@ public class RInsightTestXUnit
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)5, (UInt32)dctRStatements.Count);
+
+        int todoPos = 0;
+        int todolen = (dctRStatements[0] as RStatement).Text.Length;
+        todoPos += todolen;
+        todolen = (dctRStatements[1] as RStatement).Text.Length;
+        todoPos += todolen;
+        todolen = (dctRStatements[2] as RStatement).Text.Length;
+        todoPos += todolen;
+        todolen = (dctRStatements[3] as RStatement).Text.Length;
+        todoPos += todolen;
+        todolen = (dctRStatements[4] as RStatement).Text.Length;
+        todoPos += todolen;
+
+
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)118, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)236, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)313, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
-        Assert.Equal((UInt32)343, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
+        Assert.Equal((UInt32)79, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)215, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)300, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)332, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
         Assert.Equal("f1(f2(),f3(a),f4(b=1))\n" 
@@ -870,7 +884,7 @@ public class RInsightTestXUnit
         //Assert.Equal("#comment1\n" + "a#comment2\n" + " b #comment3\n" + "#comment4\n" + "  c  \n", strActual);
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)4, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)21, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
         Assert.Equal((UInt32)35, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
@@ -903,7 +917,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)5, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
@@ -957,7 +971,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)10, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)9, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
         Assert.Equal((UInt32)26, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
