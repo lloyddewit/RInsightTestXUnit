@@ -262,65 +262,6 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //TODO
-        //"## Don't show: \n" +
-        //"if (requireNamespace(\"dplyr\", quietly = TRUE)) (if (getRversion() >= \"3.4\") withAutoprint else force)({ # examplesIf\n" +
-        //"## End(Don't show)\n\n" +
-        //"library(dplyr)\n\n" +
-        //"austen_books() %>%\n" +
-        //"    group_by(book) %>%\n" +
-        //"    summarise(total_lines = n())\n" +
-        //"## Don't show: \n" +
-        //"}) # examplesIf\n" +
-        //"## End(Don't show)\n"
-        //"({library(dplyr);austen_books()%>%group_by(book)%>%summarise(total_lines=n());})"
-        strInput = "c\n" +
-            "d %>% e";
-
-        strInput = "{c\n" +
-            "d+e}";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-        strActual = new RScript(strInput).GetAsExecutableScript(false);
-        Assert.Equal("{c;d+e}", strActual);
-
-        strInput = "## Don't show: \n" +
-            "if (requireNamespace(\"dplyr\", quietly = TRUE)) (if (getRversion() >= \"3.4\") withAutoprint else force)({ # examplesIf\n" +
-            "## End(Don't show)\n\n" +
-            "library(dplyr)\n\n" +
-            "austen_books() %>%\n" +
-            "    group_by(book) %>%\n" +
-            "    summarise(total_lines = n())\n" +
-            "## Don't show: \n" +
-            "}) # examplesIf\n" +
-            "## End(Don't show)\n";
-
-        strInput = "({ # examplesIf\n" +
-            "## End(Don't show)\n\n" +
-            "library(dplyr)\n\n" +
-            "austen_books() %>%\n" +
-            "    group_by(book) %>%\n" +
-            "    summarise(total_lines = n())\n" +
-            "## Don't show: \n" +
-            "}) # examplesIf\n" +
-            "## End(Don't show)\n";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
-        //Assert.Equal(strInput, strActual);
-        //strActual = new RScript(strInput).GetAsExecutableScript(false);
-        //Assert.Equal("({library(dplyr);austen_books()%>%group_by(book)%>%summarise(total_lines=n());})", strActual);
-
-
-
-        strInput = "a;\nb";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Equal(2, dctRStatements.Count);
-        Assert.Equal("a;", (dctRStatements[0] as RStatement).Text);
-        Assert.Equal("\nb", (dctRStatements[1] as RStatement).Text);
-        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
-        Assert.Equal(2, (int)(dctRStatements[1] as RStatement).StartPos);
-        Assert.Equal(strInput, strActual);
-
-
         strInput = "for(a in 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
@@ -528,6 +469,7 @@ public class RInsightTestXUnit
             "  segments(w[i], Min[i], w[i], Max[i], lwd = 1.5, col = \"blue\")\n" +
             "}\n" +
             "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\n";
+
 
 
 
@@ -1416,6 +1358,93 @@ public class RInsightTestXUnit
         Assert.Equal("if(j>=k){;l;}", (dctRStatements[3] as RStatement).TextNoFormatting);
         Assert.Equal("if(m)n+o", (dctRStatements[4] as RStatement).TextNoFormatting);
         Assert.Equal("if(p!=q){;incomplete()[id];incomplete([[j[k]]]);}", (dctRStatements[5] as RStatement).TextNoFormatting);
+
+        // test correct identification of end statements
+        strInput = "a;b";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("b", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+        strInput = "a;\nb";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("b", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+        strInput = "a\rb";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("b", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+        strInput = "a#1\r\nb";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("b", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+        strInput = "a#1\n\rb";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("b", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+        strInput = "a#1\r\n\r\n#2 b";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+        Assert.Equal("", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+        strInput = " a";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(1, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = " \na";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(1, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = " \n\r\r\na";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(1, dctRStatements.Count);
+        Assert.Equal("a", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+        strInput = "{c\n" +
+            "d+e}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        strActual = new RScript(strInput).GetAsExecutableScript(false);
+        Assert.Equal("{c;d+e}", strActual);
+
+        strInput = "a;\nb";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("a;", (dctRStatements[0] as RStatement).Text);
+        Assert.Equal("\nb", (dctRStatements[1] as RStatement).Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(2, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(strInput, strActual);
     }
 
     private static string GetLstTokensAsString(List<RToken>? lstRTokens)
