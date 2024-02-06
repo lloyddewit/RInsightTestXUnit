@@ -261,7 +261,30 @@ public class RInsightTestXUnit
         string strInput, strActual;
         OrderedDictionary dctRStatements;
 
-        //TODO
+        //TODO       
+        strInput = "dim(plots) <-c(k, s, r)\n" +
+            "for (i in 1:k) for (j in 1:s)\n" +
+            "outdesign$sketch\n";
+
+        strInput = "if(a)b else if(c)d else e";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        Assert.Single(new RScript(strInput).statements);
+
+        strInput = "for(a in 1:2)if(b)c else d";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        Assert.Single(new RScript(strInput).statements);
+
+        strInput = "for(a in 1:2)if(b)for(c in 5:6)d";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+        strInput = "for(a in 1:2)for(b in 3:4)for(c in 5:6)d";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+
+
         strInput = "for(a in 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
@@ -422,12 +445,22 @@ public class RInsightTestXUnit
             "{\n" + 
             "  print(fruit)" + 
             "\n}\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("for(fruit in vec){;print(fruit);}", (dctRStatements[1] as RStatement).TextNoFormatting);
 
-        strActual =
+        strInput =
             "for (i in 1:3) {\r\n" +
             "  for (j in 1:3) {\r\n" +
             "    print(paste(\"i is\", i, \"and j is\", j))\r\n" +
             "  }\r\n}\r\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(1, dctRStatements.Count);
+        Assert.Equal("for(i in 1:3){;for(j in 1:3){;print(paste(\"i is\",i,\"and j is\",j));};}", (dctRStatements[0] as RStatement).TextNoFormatting);
 
         strInput =
             "for (i in val)\n" +
@@ -437,17 +470,58 @@ public class RInsightTestXUnit
             "    if(i == 5)\n" +
             "        break\n" +
             "}\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(1, dctRStatements.Count);
+        Assert.Equal("for(i in val){;if(i==8)next;if(i==5)break;}", (dctRStatements[0] as RStatement).TextNoFormatting);
 
         strInput = "for (i in 1:r) print(t(plots[,,i]))";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(1, dctRStatements.Count);
+        Assert.Equal("for(i in 1:r)print(t(plots[,,i]))", (dctRStatements[0] as RStatement).TextNoFormatting);
 
         strInput = 
             "\nfor (i in val)\n" +
             "{\n" +
             "    if (i == 8)\n" +
             "        next\n" +
-            "    if(i == 5)\n + " +
+            "    if(i == 5)\n" +
             "        break\n" + 
             "}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(1, dctRStatements.Count);
+        Assert.Equal("for(i in val){;if(i==8)next;if(i==5)break;}", (dctRStatements[0] as RStatement).TextNoFormatting);
+
+
+        // key word snippets from https://github.com/africanmathsinitiative/R-Instat/pull/8707
+        strInput = "dim(plots) <-c(k, s, r)\n" +
+            "for (i in 1:k) for (j in 1:s)\n" +
+            "outdesign$sketch\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("for(i in 1:k)for(j in 1:s)outdesign$sketch", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+        strInput = "npoints < -length(w)\n" +
+            "for (i in 1:npoints)\n" +
+            "{\n" +
+            "  segments(w[i], Min[i], w[i], Max[i], lwd = 1.5, col = \"blue\")\n" +
+            "}\n" +
+            "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(3, dctRStatements.Count);
+        Assert.Equal("for(i in 1:npoints){;segments(w[i],Min[i],w[i],Max[i],lwd=1.5,col=\"blue\");}", (dctRStatements[1] as RStatement).TextNoFormatting);
+
+
+
 
         strInput =
             "for(a in b)\n" +
@@ -457,21 +531,6 @@ public class RInsightTestXUnit
             "                break\n" +
             "            else\n" +
             "                next\n";
-
-        // key word snippets from https://github.com/africanmathsinitiative/R-Instat/pull/8707
-        strInput = "dim(plots) < -c(k, s, r)\n" +
-            "for (i in 1:k) for (j in 1:s)\n" +
-            "outdesign$sketch\n";
-
-        strInput = "npoints < -length(w)\n" +
-            "for (i in 1:npoints)\n" +
-            "{\n" +
-            "  segments(w[i], Min[i], w[i], Max[i], lwd = 1.5, col = \"blue\")\n" +
-            "}\n" +
-            "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\n";
-
-
-
 
         strInput = 
             "evenOdd = function(x){\n" +
