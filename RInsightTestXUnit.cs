@@ -29,10 +29,6 @@ public class RInsightTestXUnit
         string strInput, strActual;
         OrderedDictionary dctRStatements;
 
-        //TODO       
-
-
-
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
@@ -1373,5 +1369,14 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Single(dctRStatements);
         Assert.Equal("y<-if(any(x<=0))log(1+x) else log(x)", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        //todo this test passes but the internal token tree it generates is incorrect. See https://github.com/lloyddewit/RInsight/issues/12
+        strInput = "a/if(b)c else d+e";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
     }
 }
