@@ -18,10 +18,6 @@
 using RInsight;
 using System.Collections.Specialized;
 using System.Collections;
-using Microsoft.VisualStudio.TestPlatform.CoreUtilities;
-using static System.Reflection.Metadata.BlobBuilder;
-using System.Diagnostics;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace RInsightTestXUnit;
 
@@ -34,122 +30,6 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //TODO       
-        //"        if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))fnBody)\n" +
-        //"            return(k)"
-        //fails
-        strInput =
-            "function(" +
-                     "fn1(a,fn2=function(b)" +
-                                       "fn3(c/fn3(d)*e)" +
-                        ")" +
-                    ")" +
-                    "f";
-        //passes
-        strInput =
-            "function(function(a)b)c";
-        //passes
-        strInput =
-            "function(" +
-             "fn1(a,b" +
-                ")" +
-            ")" +
-            "c";
-        //fails
-        strInput =
-            "function(" +
-                     "fn1(fn2=function(a)b" +
-                        ")" +
-                    ")" +
-                    "c";
-        //passes
-        strInput =
-            "function(" +
-                     "a(function(b)c" +
-                        ")" +
-                    ")" +
-                    "d";
-        //fails
-        strInput =
-            "function(" +
-                     "a(b=function(c)d" +
-                        ")" +
-                    ")" +
-                    "e";
-        strInput = "a=function(b)c";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
-        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
-
-
-
-        strInput =
-            "for(a in b)\n" +
-            "    while(c<d)\n" +
-            "        repeat\n" +
-            "            if(e=f)\n" +
-            "                break\n" +
-            "            else\n" +
-            "                next\n";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
-        Assert.Equal("for(a in b)while(c<d) repeat if(e=f)break else next", (dctRStatements[0] as RStatement)?.TextNoFormatting);
-
-        strInput = 
-            "evenOdd = function(x){\n" +
-            "  if(x %% 2 == 0)\n" + 
-            "    return(\"even\")\n" + 
-            "  else\n" +
-            "    return(\"odd\")\n" + 
-            "}";
-
-        strInput =
-            "\nfunction(fn1(g,fn2=function(h)fn3(i/sum(j)*100))))";
-
-        strInput =
-            "\nif (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))))" +
-            "\n    return(k)";
-
-        strInput = "\nwhile (val <= 5 )\n" +
-            "{\n    # statements\n" +
-            "    fn3(val)\n" +
-            "    val = val + 1\n" +
-            "}" +
-            "\nrepeat\n" +
-            "{\n" +
-            "    if(val > 5) break\n" +
-            "}\n" +
-            "evenOdd = function(x){";
-
-        strInput = "if(x > 10){\n" + 
-            "    fn1(paste(x, \"is greater than 10\"))}else\n" + 
-            "{\n" + 
-            "    fn2(paste(x, \"Is less than 10\"))\n" +
-            "} while (val <= 5 )\n" + 
-            "{\n" + 
-            "    # statements\n" +
-            "    fn3(val)\n" + 
-            "    val = val + 1\n" + 
-            "}repeat\n" + 
-            "{\n" + 
-            "    if(val > 5) break\n" + 
-            "}for (val in 1:5) {}\n" +
-            "evenOdd = function(x){if(x %% 2 == 0)\n" + 
-            "    return(\"even\")\n" + 
-            "else    return(\"odd\")\n" + 
-            "}for (i in val)\n" + 
-            "{\n" + 
-            "    if (i == 8)        next\n" + 
-            "    if(i == 5)\n" + 
-            "        break\n" + 
-            "}";
-
-        strInput = "function(x, label = deparse(x)) {\nlabel\nx <- x + 1\nprint(label)\n}";
-
-        strInput = "y <- if( any(x <= 0) ) log(1+x) else log(x)";
 
 
 
@@ -1355,5 +1235,143 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal(3, dctRStatements.Count);
         Assert.Equal("for(i in 1:npoints){;segments(w[i],Min[i],w[i],Max[i],lwd=1.5,col=\"blue\");}", (dctRStatements[1] as RStatement)?.TextNoFormatting);
+
+        strInput =
+        "function(" +
+                 "fn1(a,fn2=function(b)" +
+                                   "fn3(c/fn3(d)*e)" +
+                    ")" +
+                ")" +
+                "f";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "a=function(b)c";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput =
+            "for(a in b)\n" +
+            "    while(c<d)\n" +
+            "        repeat\n" +
+            "            if(e=f)\n" +
+            "                break\n" +
+            "            else\n" +
+            "                next\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("for(a in b)while(c<d) repeat if(e=f)break else next", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput =
+            "evenOdd = function(x){\n" +
+            "  if(x %% 2 == 0)\n" +
+            "    return(\"even\")\n" +
+            "  else\n" +
+            "    return(\"odd\")\n" +
+            "}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("evenOdd=function(x){;" +
+            "if(x%%2==0)" +
+            "return(\"even\")" +
+            " else " +
+            "return(\"odd\");" +
+            "}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput =
+            "function(fn1(g,fn2=function(h)fn3(i/sum(j)*100))))";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput =
+            "if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100))))" +
+            "\n    return(k)";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(function(fn1(g,fn2=function(h)fn3(i/sum(j)*100))))" +
+            "return(k)", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "while (val <= 5 )\n" +
+            "{\n    # statements\n" +
+            "    fn3(val)\n" +
+            "    val = val + 1\n" +
+            "}" +
+            "\nrepeat\n" +
+            "{\n" +
+            "    if(val > 5) break\n" +
+            "}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("while(val<=5)" +
+            "{;fn3(val);val=val+1;" +
+            "}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+        Assert.Equal(" repeat " +
+            "{" +
+            ";if(val>5)break;" +
+            "}", (dctRStatements[1] as RStatement)?.TextNoFormatting);
+
+        strInput = "if(x > 10){\n" +
+            "    fn1(paste(x, \"is greater than 10\"))}else\n" +
+            "{\n" +
+            "    fn2(paste(x, \"Is less than 10\"))\n" +
+            "} while (val <= 5 )\n" +
+            "{\n" +
+            "    # statements\n" +
+            "    fn3(val)\n" +
+            "    val = val + 1\n" +
+            "}repeat\n" +
+            "{\n" +
+            "    if(val > 5) break\n" +
+            "}for (val in 1:5) {}\n" +
+            "evenOdd = function(x){if(x %% 2 == 0)\n" +
+            "    return(\"even\")\n" +
+            "else    return(\"odd\")\n" +
+            "}for (i in val)\n" +
+            "{\n" +
+            "    if (i == 8)        next\n" +
+            "    if(i == 5)\n" +
+            "        break\n" +
+            "}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(6, dctRStatements.Count);
+        Assert.Equal("if(x>10){;fn1(paste(x,\"is greater than 10\"))} else {fn2(paste(x,\"Is less than 10\"))}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+        Assert.Equal("while(val<=5){;fn3(val);val=val+1;}", (dctRStatements[1] as RStatement)?.TextNoFormatting);
+        Assert.Equal(" repeat {;if(val>5)break;}", (dctRStatements[2] as RStatement)?.TextNoFormatting);
+        Assert.Equal("for(val in 1:5){}", (dctRStatements[3] as RStatement)?.TextNoFormatting);
+        Assert.Equal("evenOdd=function(x){if(x%%2==0)return(\"even\") else return(\"odd\");}", (dctRStatements[4] as RStatement)?.TextNoFormatting);
+        Assert.Equal("for(i in val){;if(i==8)next;if(i==5)break;}", (dctRStatements[5] as RStatement)?.TextNoFormatting);
+
+        strInput = "function(x, label = deparse(x)) {\nlabel\nx <- x + 1\nprint(label)\n}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("function(x,label=deparse(x)){;label;x<-x+1;print(label);}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "y <- if( any(x <= 0) ) log(1+x) else log(x)";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("y<-if(any(x<=0))log(1+x) else log(x)", (dctRStatements[0] as RStatement)?.TextNoFormatting);
     }
 }
