@@ -18,6 +18,8 @@
 using RInsight;
 using System.Collections.Specialized;
 using System.Collections;
+using static System.Collections.Specialized.BitVector32;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RInsightTestXUnit;
 
@@ -28,6 +30,23 @@ public class RInsightTestXUnit
     {
         string strInput, strActual;
         OrderedDictionary dctRStatements;
+
+        //todo
+
+        strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(i==1){;tmp_prev<-tmp_prev;tmp<-cnt[i];} else {tmp_prev<-tmp_prev+cnt[i-1];tmp<-tmp+cnt[i]}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "if(!is.null(station)){data<-data%>%group_by(!!sym(station))}"; // '!!' causes issue
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
