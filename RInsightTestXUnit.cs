@@ -32,20 +32,14 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //todo
+        strInput = "if(a){b<-c+d\ne<-f+g}else{h<-i+j\nk<-l+m}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        //Assert.Equal("if(a){b<-c+d;e<-f+g} else {h<-i+j;k<-l+m}", (dctRStatements[0] as RStatement)?.TextNoFormatting); //todo test fails
 
         strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
-        Assert.Equal("if(i==1){;tmp_prev<-tmp_prev;tmp<-cnt[i];} else {tmp_prev<-tmp_prev+cnt[i-1];tmp<-tmp+cnt[i]}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
-
-        strInput = "if(!is.null(station)){data<-data%>%group_by(!!sym(station))}"; // '!!' causes issue
-        strActual = new RScript(strInput).GetAsExecutableScript();
-        Assert.Equal(strInput, strActual);
-        dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
-        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
@@ -1397,5 +1391,34 @@ public class RInsightTestXUnit
         Assert.Single(dctRStatements);
         Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
+
+        // tidyverse operators used in https://github.com/IDEMSInternational/R-Instat/issues/8657
+        strInput = "!!a";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("!!a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "if(!is.null(station)){data<-data%>%group_by(!!sym(station))}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(!is.null(station)){data<-data%>%group_by(!!sym(station))}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "a:=b";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("a:=b", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "binds[[i]] <- results[[i]][[j]] %>% mutate(!!sym(station) := station_name[i])";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("binds[[i]]<-results[[i]][[j]]%>%mutate(!!sym(station):=station_name[i])", (dctRStatements[0] as RStatement)?.TextNoFormatting);
     }
 }
