@@ -32,6 +32,20 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
 
         //todo
+        strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(a){b;c;if(d){e;f;if(g){h;k;l}m};n;o}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}else{p\nq}";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("if(a){b;c;if(d){e;f;if(g){h;k;l}m};n;o} else {p;q}", (dctRStatements[0] as RStatement)?.TextNoFormatting); //todo test fails
+
         strInput = "if(a){b<-c+d\ne<-f+g}else{h<-i+j\nk<-l+m}";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
