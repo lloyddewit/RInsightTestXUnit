@@ -31,12 +31,6 @@ public class RInsightTestXUnit
         string strInput, strActual;
         OrderedDictionary dctRStatements;
 
-        //todo
-        strInput = "if(a)b else if(c)d else e";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
-        //Assert.Equal(strInput, strActual);
-
-
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
@@ -1097,20 +1091,19 @@ public class RInsightTestXUnit
         Assert.Single(dctRStatements);
         Assert.Equal("for(a in 1:5){a;b}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
-        //todo tests fail
-        //strInput = "if(a)b else if(c)d else e";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
-        //Assert.Equal(strInput, strActual);
-        //dctRStatements = new RScript(strInput).statements;
-        //Assert.Single(dctRStatements);
-        //Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
+        strInput = "if(a)b else if(c)d else e";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
-        //strInput = "for(a in 1:2)if(b)c else d";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
-        //Assert.Equal(strInput, strActual);
-        //dctRStatements = new RScript(strInput).statements;
-        //Assert.Single(dctRStatements);
-        //Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
+        strInput = "for(a in 1:2)if(b)c else d";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for(a in 1:2)if(b)for(c in 5:6)d";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -1248,20 +1241,19 @@ public class RInsightTestXUnit
         Assert.Single(dctRStatements);
         Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
-        //todo test fails
-        //strInput =
-        //    "for(a in b)\n" +
-        //    "    while(c<d)\n" +
-        //    "        repeat\n" +
-        //    "            if(e=f)\n" +
-        //    "                break\n" +
-        //    "            else\n" +
-        //    "                next\n";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
-        //Assert.Equal(strInput, strActual);
-        //dctRStatements = new RScript(strInput).statements;
-        //Assert.Single(dctRStatements);
-        //Assert.Equal("for(a in b)while(c<d) repeat if(e=f)break else next", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+        strInput =
+            "for(a in b)\n" +
+            "    while(c<d)\n" +
+            "        repeat\n" +
+            "            if(e=f)\n" +
+            "                break\n" +
+            "            else\n" +
+            "                next\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("for(a in b)while(c<d) repeat if(e=f)break else next", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput =
             "evenOdd = function(x){\n" +
@@ -1360,13 +1352,12 @@ public class RInsightTestXUnit
         Assert.Single(dctRStatements);
         Assert.Equal("function(x,label=deparse(x)){label;x<-x+1;print(label)}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
-        //todo test fails
-        //strInput = "y <- if( any(x <= 0) ) log(1+x) else log(x)";
-        //strActual = new RScript(strInput).GetAsExecutableScript();
-        //Assert.Equal(strInput, strActual);
-        //dctRStatements = new RScript(strInput).statements;
-        //Assert.Single(dctRStatements);
-        //Assert.Equal("y<-if(any(x<=0))log(1+x) else log(x)", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+        strInput = "y <- if( any(x <= 0) ) log(1+x) else log(x)";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("y<-if(any(x<=0))log(1+x) else log(x)", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         //todo See https://github.com/lloyddewit/RInsight/issues/12
         //strInput = "a/if(b)c else d+e";
