@@ -1471,54 +1471,45 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
 
         statement = dctRStatements[0] as RStatement;
-        token = statement?.GetToken("get_data_frame", 0);
-        Assert.Equal("\"_dataFrame\"", token?.Lexeme.Text);
+        statement?.SetToken("get_data_frame", 0, "a");
+        Assert.Equal("# Dialog: Enter\n" +
+                "_dataFrame <-data_book$get_data_frame(data_name=a)\n", statement?.Text);
 
         statement = dctRStatements[1] as RStatement;
-        token = statement?.GetToken("attach", 0);
-        Assert.Equal("_dataFrame", token?.Lexeme.Text);
+        statement?.SetToken("attach", 0, "a");
+        Assert.Equal("attach(what=_dataFrame)\n", statement?.Text);
 
         statement = dctRStatements[2] as RStatement;
-        token = statement?.GetToken("<-", 0);
-        Assert.Equal("_columnName", token?.Lexeme.Text);
-        token = statement?.GetToken("<-", 1);
-        Assert.Equal("_columnValue", token?.Lexeme.Text);
+        statement?.SetToken("<-", 0, "a");
+        statement?.SetToken("<-", 1, "a");
+        Assert.Equal("_columnName <- _columnValue\n", statement?.Text);
 
         statement = dctRStatements[3] as RStatement;
-        token = statement?.GetToken("add_columns_to_data", 0);
-        Assert.Equal("\"_dataFrame\"", token?.Lexeme.Text);
-        token = statement?.GetToken("add_columns_to_data", 1);
-        Assert.Equal("\"_columnName\"", token?.Lexeme.Text);
-        token = statement?.GetToken("add_columns_to_data", 2);
-        Assert.Equal("_columnName", token?.Lexeme.Text);
+        statement?.SetToken("add_columns_to_data", 0, "a");
+        statement?.SetToken("add_columns_to_data", 1, "a");
+        statement?.SetToken("add_columns_to_data", 2, "a");
+        Assert.Equal("", statement?.Text);
 
         statement = dctRStatements[4] as RStatement;
-        token = statement?.GetToken("get_columns_from_data", 0);
-        Assert.Equal("\"_dataFrame\"", token?.Lexeme.Text);
-        token = statement?.GetToken("get_columns_from_data", 1);
-        Assert.Equal("\"_columnName\"", token?.Lexeme.Text);
+        statement?.SetToken("get_columns_from_data", 0, "a");
+        statement?.SetToken("get_columns_from_data", 1, "a");
+        Assert.Equal("", statement?.Text);
 
         statement = dctRStatements[5] as RStatement;
-        token = statement?.GetToken("get_data_frame", 0);
-        Assert.Equal("\"_dataFrame\"", token?.Lexeme.Text);
+        statement?.SetToken("get_data_frame", 0, "a");
+        Assert.Equal("", statement?.Text);
 
         statement = dctRStatements[6] as RStatement;
-        token = statement?.GetToken("detach", 0);
-        Assert.Equal("_dataFrame", token?.Lexeme.Text);
+        statement?.SetToken("detach", 0, "a");
+        Assert.Equal("", statement?.Text);
 
         statement = dctRStatements[7] as RStatement;
-        token = statement?.GetToken("c", 0);
-        Assert.Equal("\"_columnName\"", token?.Lexeme.Text);
-        token = statement?.GetToken("c", 1);
-        Assert.Equal("\"_dataFrame\"", token?.Lexeme.Text);
+        statement?.SetToken("c", 0, "a");
+        statement?.SetToken("c", 1, "a");
+        Assert.Equal("", statement?.Text);
 
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
-        dctRStatements = new RScript(strInput).statements;
-        statement = dctRStatements[0] as RStatement;
-        token = statement?.GetToken("f1", 0);
-        Assert.Equal("f2", token?.Lexeme.Text);
-
         strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))\n";
         strInput = "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))\n";
         strInput = "a+b+c\n";
