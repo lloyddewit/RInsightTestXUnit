@@ -1457,7 +1457,6 @@ public class RInsightTestXUnit
         string strInput;
         OrderedDictionary dctRStatements;
         RStatement? statement;
-        RToken? token;
 
         strInput = "# Dialog: Enter\n" +
                 "_dataFrame <-data_book$get_data_frame(data_name=\"_dataFrame\")\n" +
@@ -1471,42 +1470,44 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
 
         statement = dctRStatements[0] as RStatement;
-        statement?.SetToken("get_data_frame", 0, "a");
+        statement?.SetToken("<-", 0, "a");
+        statement?.SetToken("get_data_frame", 0, "aa", true);
         Assert.Equal("# Dialog: Enter\n" +
-                "_dataFrame <-data_book$get_data_frame(data_name=a)\n", statement?.Text);
+                "a <-data_book$get_data_frame(data_name=\"aa\")\n", statement?.Text);
 
         statement = dctRStatements[1] as RStatement;
-        statement?.SetToken("attach", 0, "a");
-        Assert.Equal("attach(what=_dataFrame)\n", statement?.Text);
+        statement?.SetToken("attach", 0, "b");
+        Assert.Equal("attach(what=b)\n", statement?.Text);
 
         statement = dctRStatements[2] as RStatement;
-        statement?.SetToken("<-", 0, "a");
-        statement?.SetToken("<-", 1, "a");
-        Assert.Equal("_columnName <- _columnValue\n", statement?.Text);
+        statement?.SetToken("<-", 0, "c");
+        statement?.SetToken("<-", 1, "d");
+        Assert.Equal("c <- d\n", statement?.Text);
 
         statement = dctRStatements[3] as RStatement;
-        statement?.SetToken("add_columns_to_data", 0, "a");
-        statement?.SetToken("add_columns_to_data", 1, "a");
-        statement?.SetToken("add_columns_to_data", 2, "a");
-        Assert.Equal("", statement?.Text);
+        statement?.SetToken("add_columns_to_data", 0, "e", true);
+        statement?.SetToken("add_columns_to_data", 1, "f", true);
+        statement?.SetToken("add_columns_to_data", 2, "g");
+        Assert.Equal("data_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)\n", statement?.Text);
 
         statement = dctRStatements[4] as RStatement;
-        statement?.SetToken("get_columns_from_data", 0, "a");
-        statement?.SetToken("get_columns_from_data", 1, "a");
-        Assert.Equal("", statement?.Text);
+        statement?.SetToken("get_columns_from_data", 0, "h", true);
+        statement?.SetToken("get_columns_from_data", 1, "i", true);
+        Assert.Equal("data_book$get_columns_from_data(data_name = \"h\", col_names = \"i\") \n", statement?.Text);
 
         statement = dctRStatements[5] as RStatement;
-        statement?.SetToken("get_data_frame", 0, "a");
-        Assert.Equal("", statement?.Text);
+        statement?.SetToken("<-", 0, "j");
+        statement?.SetToken("get_data_frame", 0, "jj", true);
+        Assert.Equal("j <- data_book$get_data_frame(data_name=\"jj\")\n", statement?.Text);
 
         statement = dctRStatements[6] as RStatement;
-        statement?.SetToken("detach", 0, "a");
-        Assert.Equal("", statement?.Text);
+        statement?.SetToken("detach", 0, "k");
+        Assert.Equal("detach(Name = k, unload = True)\n", statement?.Text);
 
         statement = dctRStatements[7] as RStatement;
-        statement?.SetToken("c", 0, "a");
-        statement?.SetToken("c", 1, "a");
-        Assert.Equal("", statement?.Text);
+        statement?.SetToken("c", 0, "l", true);
+        statement?.SetToken("c", 1, "m", true);
+        Assert.Equal("rm(list=c(\"l\", \"m\"))", statement?.Text);
 
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
@@ -1576,8 +1577,6 @@ public class RInsightTestXUnit
         strInput = " var1  <-   pkg1::obj1$obj2$var2\n";
         strInput = "    pkg ::obj1 $obj2$fn1 (a ,b=1, c    = 2 )\n";
         strInput = " f1(  ~   a,    b ~,  -   c,    + d,  e   ~(    f +  g),   !    h, i  ^(   -    j), k  +(   ~    l), m  ~(   ~    n), o  /   -    p, q  *   +    r)\n";
-        strInput =
-        strInput =
         strInput = "#comment1\n" + "a#comment2" + "\r" + " b #comment3" + "\r\n" + "#comment4\n" + "  c  " + "\r\n";
         strInput = "#not ignored comment";
         strInput = "#not ignored comment\n";
@@ -1676,8 +1675,6 @@ public class RInsightTestXUnit
         strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}else{p\nq}";
         strInput = "if(a){b<-c+d\ne<-f+g}else{h<-i+j\nk<-l+m}";
         strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
-        strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
-
     }
 
 
