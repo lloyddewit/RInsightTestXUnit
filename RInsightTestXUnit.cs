@@ -35,7 +35,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
 
         strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))\n";
@@ -393,7 +393,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)4, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)21, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
         Assert.Equal((UInt32)35, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
@@ -477,7 +477,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)9, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)10, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
         Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
         Assert.Equal((UInt32)26, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
@@ -962,91 +962,91 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a in 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for ( a in 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a  in  1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for ( a  in  1 :5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for(a in  1  : 5 ) a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for\n(a in 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a \nin 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for ( a in 1\n:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a  in  1:5\n)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for ( a  in  1 :5)\na\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for\n(\na \nin  \n1  \n: \n5 \n) \na\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for(a in 1:5){a}\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5){a}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a in 1:5){a\n}";
@@ -1074,7 +1074,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5){a}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a in 1:5)\n{\na\n}";
@@ -1137,7 +1137,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal(3, dctRStatements.Count);
+        Assert.Equal(4, dctRStatements.Count);
         Assert.Equal("for(i in 1:length(cnt)){for(j in 1:cnt[i]){length=length+1};for(inner in 1:length){print(inner)}}", (dctRStatements[2] as RStatement)?.TextNoFormatting);
 
         strInput =
@@ -1149,7 +1149,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal(3, dctRStatements.Count);
         Assert.Equal("for(fruit in vec){print(fruit)}", (dctRStatements[1] as RStatement)?.TextNoFormatting);
 
         strInput =
@@ -1160,7 +1160,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(i in 1:3){for(j in 1:3){print(paste(\"i is\",i,\"and j is\",j))}}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput =
@@ -1174,7 +1174,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(i in val){if(i==8)next;if(i==5)break}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (i in 1:r) print(t(plots[,,i]))";
@@ -1206,7 +1206,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal(3, dctRStatements.Count);
         Assert.Equal("for(i in 1:k)for(j in 1:s)outdesign$sketch", (dctRStatements[1] as RStatement)?.TextNoFormatting);
 
         strInput = "npoints < -length(w)\n" +
@@ -1214,7 +1214,7 @@ public class RInsightTestXUnit
             "{\n" +
             "  segments(w[i], Min[i], w[i], Max[i], lwd = 1.5, col = \"blue\")\n" +
             "}\n" +
-            "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\n";
+            "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\r\ntitle=\"Description\",lty=1,pch=c(3,19),col=c(\"black\",\"blue\"))";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -1252,7 +1252,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in b)while(c<d) repeat if(e=f)break else next", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput =
@@ -1502,7 +1502,7 @@ public class RInsightTestXUnit
         Assert.Equal(417, (int)(dctRStatements[7] as RStatement).StartPos);
 
         Assert.Equal("# Dialog: Enter\n" +
-                "a <-data_book$get_data_frame(data_name=\"aa\")\n", statement?.Text);
+                "a <-data_book$get_data_frame(data_name=\"aa\")", statement?.Text);
 
         statement = dctRStatements[1] as RStatement;
         script.SetToken(1, "attach", 0, "b");
