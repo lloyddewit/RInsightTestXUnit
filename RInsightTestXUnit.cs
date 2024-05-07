@@ -1464,7 +1464,7 @@ public class RInsightTestXUnit
                 "attach(what=_dataFrame)\n" +
                 "_columnName <- _columnValue\n" +
                 "data_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE)\n" +
-                "data_book$get_columns_from_data(data_name = \"_dataFrame\", col_names = \"_columnName\") \n" +
+                "data_book$get_columns_from_data(data_name = \"_dataFrame\", col_names = \"_columnName\")\n" +
                 "_dataFrame <- data_book$get_data_frame(data_name=\"_dataFrame\")\n" +
                 "detach(Name = _dataFrame, unload = True)\n" +
                 "rm(list=c(\"_columnName\", \"_dataFrame\"))";
@@ -1476,9 +1476,9 @@ public class RInsightTestXUnit
         Assert.Equal(102, (int)(dctRStatements[2] as RStatement).StartPos);
         Assert.Equal(130, (int)(dctRStatements[3] as RStatement).StartPos);
         Assert.Equal(244, (int)(dctRStatements[4] as RStatement).StartPos);
-        Assert.Equal(330, (int)(dctRStatements[5] as RStatement).StartPos);
-        Assert.Equal(393, (int)(dctRStatements[6] as RStatement).StartPos);
-        Assert.Equal(434, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.Equal(329, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(392, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(433, (int)(dctRStatements[7] as RStatement).StartPos);
 
         statement = dctRStatements[0] as RStatement;
         script.SetToken(0, "<-", 0, "a");
@@ -1487,9 +1487,9 @@ public class RInsightTestXUnit
         Assert.Equal(93, (int)(dctRStatements[2] as RStatement).StartPos);
         Assert.Equal(121, (int)(dctRStatements[3] as RStatement).StartPos);
         Assert.Equal(235, (int)(dctRStatements[4] as RStatement).StartPos);
-        Assert.Equal(321, (int)(dctRStatements[5] as RStatement).StartPos);
-        Assert.Equal(384, (int)(dctRStatements[6] as RStatement).StartPos);
-        Assert.Equal(425, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.Equal(320, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(383, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(424, (int)(dctRStatements[7] as RStatement).StartPos);
 
         script.SetToken(0, "get_data_frame", 0, "aa", true);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
@@ -1497,46 +1497,46 @@ public class RInsightTestXUnit
         Assert.Equal(85, (int)(dctRStatements[2] as RStatement).StartPos);
         Assert.Equal(113, (int)(dctRStatements[3] as RStatement).StartPos);
         Assert.Equal(227, (int)(dctRStatements[4] as RStatement).StartPos);
-        Assert.Equal(313, (int)(dctRStatements[5] as RStatement).StartPos);
-        Assert.Equal(376, (int)(dctRStatements[6] as RStatement).StartPos);
-        Assert.Equal(417, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.Equal(312, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(375, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(416, (int)(dctRStatements[7] as RStatement).StartPos);
 
         Assert.Equal("# Dialog: Enter\n" +
                 "a <-data_book$get_data_frame(data_name=\"aa\")", statement?.Text);
 
         statement = dctRStatements[1] as RStatement;
         script.SetToken(1, "attach", 0, "b");
-        Assert.Equal("attach(what=b)\n", statement?.Text);
+        Assert.Equal("\nattach(what=b)", statement?.Text);
 
         statement = dctRStatements[2] as RStatement;
         script.SetToken(2, "<-", 0, "c");
         script.SetToken(2, "<-", 1, "d");
-        Assert.Equal("c <- d\n", statement?.Text);
+        Assert.Equal("\nc <- d", statement?.Text);
 
         statement = dctRStatements[3] as RStatement;
         script.SetToken(3, "add_columns_to_data", 0, "e", true);
         script.SetToken(3, "add_columns_to_data", 1, "f", true);
         script.SetToken(3, "add_columns_to_data", 2, "g");
-        Assert.Equal("data_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)\n", statement?.Text);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
 
         statement = dctRStatements[4] as RStatement;
         script.SetToken(4, "get_columns_from_data", 0, "h", true);
         script.SetToken(4, "get_columns_from_data", 1, "i", true);
-        Assert.Equal("data_book$get_columns_from_data(data_name = \"h\", col_names = \"i\") \n", statement?.Text);
+        Assert.Equal("\ndata_book$get_columns_from_data(data_name = \"h\", col_names = \"i\")", statement?.Text);
 
         statement = dctRStatements[5] as RStatement;
         script.SetToken(5, "<-", 0, "j");
         script.SetToken(5, "get_data_frame", 0, "jj", true);
-        Assert.Equal("j <- data_book$get_data_frame(data_name=\"jj\")\n", statement?.Text);
+        Assert.Equal("\nj <- data_book$get_data_frame(data_name=\"jj\")", statement?.Text);
 
         statement = dctRStatements[6] as RStatement;
         script.SetToken(6, "detach", 0, "k");
-        Assert.Equal("detach(Name = k, unload = True)\n", statement?.Text);
+        Assert.Equal("\ndetach(Name = k, unload = True)", statement?.Text);
 
         statement = dctRStatements[7] as RStatement;
         script.SetToken(7, "c", 0, "l", true);
         script.SetToken(7, "c", 1, "m", true);
-        Assert.Equal("rm(list=c(\"l\", \"m\"))", statement?.Text);
+        Assert.Equal("\nrm(list=c(\"l\", \"m\"))", statement?.Text);
 
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
