@@ -20,6 +20,7 @@ using System.Collections.Specialized;
 using System.Collections;
 using static System.Collections.Specialized.BitVector32;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections.Generic;
 
 namespace RInsightTestXUnit;
 
@@ -1467,7 +1468,7 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
         RStatement? statement;
 
-        strInput = 
+        strInput =
                 "# Dialog: Enter" +
                 "\n_dataFrame <-data_book$get_data_frame(data_name=\"_dataFrame\")" +
                 "\nattach(what=_dataFrame)" +
@@ -1488,6 +1489,7 @@ public class RInsightTestXUnit
         Assert.Equal(328, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(391, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(432, (int)(dctRStatements[7] as RStatement).StartPos);
+        TestDictionaryKeysConsistent(script.statements);
 
         statement = dctRStatements[0] as RStatement;
         script.SetToken(0, "<-", 0, "a");
@@ -1499,6 +1501,7 @@ public class RInsightTestXUnit
         Assert.Equal(319, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(382, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(423, (int)(dctRStatements[7] as RStatement).StartPos);
+        TestDictionaryKeysConsistent(script.statements);
 
         script.SetToken(0, "get_data_frame", 0, "aa", true);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
@@ -1509,6 +1512,7 @@ public class RInsightTestXUnit
         Assert.Equal(311, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(374, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(415, (int)(dctRStatements[7] as RStatement).StartPos);
+        TestDictionaryKeysConsistent(script.statements);
 
         Assert.Equal("# Dialog: Enter\n" +
                 "a <-data_book$get_data_frame(data_name=\"aa\")", statement?.Text);
@@ -1724,5 +1728,13 @@ public class RInsightTestXUnit
         strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
     }
 
-
+    private static void TestDictionaryKeysConsistent(OrderedDictionary dctRStatements)
+    {
+        foreach (System.Collections.DictionaryEntry entry in dctRStatements)
+        {
+            uint startPosKey = (uint)entry.Key;
+            uint startPosValue = (entry.Value as RStatement).StartPos;
+            Assert.Equal(startPosKey, startPosValue);
+        }
+    }
 }
