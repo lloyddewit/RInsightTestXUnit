@@ -1514,8 +1514,17 @@ public class RInsightTestXUnit
                 "a <-data_book$get_data_frame(data_name=\"aa\")", statement?.Text);
 
         statement = dctRStatements[1] as RStatement;
-        script.SetToken(1, "attach", 0, "b");
-        Assert.Equal("\nattach(what=b)", statement?.Text);
+        script.SetToken(1, "attach", 0, "b2345678901");
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(113, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(227, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(312, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(375, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(416, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        Assert.Equal("\nattach(what=b2345678901)", statement?.Text);
 
         statement = dctRStatements[2] as RStatement;
         script.SetToken(2, "<-", 0, "c");
