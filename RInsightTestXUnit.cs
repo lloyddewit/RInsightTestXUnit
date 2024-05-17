@@ -20,6 +20,7 @@ using System.Collections.Specialized;
 using System.Collections;
 using static System.Collections.Specialized.BitVector32;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections.Generic;
 
 namespace RInsightTestXUnit;
 
@@ -35,7 +36,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
 
         strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))\n";
@@ -102,7 +103,7 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)9, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         strInput = "x<-\"a\";df[x]"; // same as 'df$a' and 'lst$a$b'
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -285,15 +286,18 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
 
-        strInput = "dodoma <- data_book$get_data_frame(data_name = \"dodoma\", stack_data = TRUE, measure.vars = c(\"rain\", \"tmax\", \"tmin\"), id.vars = c(\"Date\"))\n" + "last_graph <- ggplot2::ggplot(data = dodoma, mapping = ggplot2::aes(x = date, y = value, colour = variable)) + ggplot2::geom_line() + " + "ggplot2::geom_rug(data = dodoma%>%filter(is.na(value)), colour = \"red\") + theme_grey() + ggplot2::theme(axis.text.x = ggplot2::element_text(), legend.position = \"none\") + " + "ggplot2::facet_wrap(scales = \"free_y\", ncol = 1, facet = ~variable) + ggplot2::xlab(NULL)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"dodoma\")\n" + "data_book$get_graphs(data_name = \"dodoma\", graph_name = \"last_graph\")";
+        strInput = "dodoma <- data_book$get_data_frame(data_name = \"dodoma\", stack_data = TRUE, measure.vars = c(\"rain\", \"tmax\", \"tmin\"), id.vars = c(\"Date\"))\n" + 
+            "last_graph <- ggplot2::ggplot(data = dodoma, mapping = ggplot2::aes(x = date, y = value, colour = variable)) + ggplot2::geom_line() + ggplot2::geom_rug(data = dodoma%>%filter(is.na(value)), colour = \"red\") + theme_grey() + ggplot2::theme(axis.text.x = ggplot2::element_text(), legend.position = \"none\") + ggplot2::facet_wrap(scales = \"free_y\", ncol = 1, facet = ~variable) + ggplot2::xlab(NULL)\n" + 
+            "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"dodoma\")\n" + 
+            "data_book$get_graphs(data_name = \"dodoma\", graph_name = \"last_graph\")";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)4, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)139, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)534, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)623, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)138, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)533, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)622, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
 
         strInput = "a->b\n" + "c->>d\n" + "e<-f\n" + "g<<-h\n" + "i=j";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -301,10 +305,10 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)5, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)5, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)11, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)16, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
-        Assert.Equal((UInt32)22, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
+        Assert.Equal((UInt32)4, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)15, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)21, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
 
         strInput = "x<-df$`a b`\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -360,28 +364,21 @@ public class RInsightTestXUnit
         Assert.Equal((UInt32)128, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         strInput = 
-            "#precomment1\n" + 
-            " # precomment2\n" + 
-            "  #  precomment3\n" + 
-            @" f1(  f2(),   f3( a),  f4(  b =1))#comment1~!@#$%^&*()_[] {} \|;:',./<>?" + "\n" + 
-            "  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h)) # comment2\",\" cbaa \n" + 
-            " a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)   #comment3\n" + 
-            "#comment 4\n" + 
-            " a  +   b  +     c\n" + 
-            "\n\n" + 
-            "  #comment5\n" + 
-            "   # comment6 #comment7\n" + 
-            "endSyntacticName";
+            "#precomment1\n # precomment2\n  #  precomment3\n f1(  f2(),   f3( a),  f4(  b =1))" +
+            "#comment1~!@#$%^&*()_[] {} \\|;:',./<>?\n  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h))" +
+            "# comment2\",\" cbaa \n a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)" +
+            "#comment3\n#comment 4\n a  +   b  +     c" +
+            "\n\n\n  #comment5\n   # comment6 #comment7\nendSyntacticName";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)5, (UInt32)dctRStatements.Count);
 
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)118, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)236, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)313, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
-        Assert.Equal((UInt32)343, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
+        Assert.Equal((UInt32)79, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)215, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)299, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)338, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
         Assert.Equal("f1(f2(),f3(a),f4(b=1));" 
@@ -393,10 +390,10 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)3, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)4, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)21, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)35, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)11, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)23, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
         Assert.Equal("a;b;c", strActual);
@@ -427,7 +424,7 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)5, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)4, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
         Assert.Equal("f1()", strActual);
@@ -438,7 +435,7 @@ public class RInsightTestXUnit
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)2, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)5, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)4, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
 
         // issue lloyddewit/rscript#20
         strInput = "# Code run from Script Window (all text)" + Environment.NewLine + "1";
@@ -477,16 +474,16 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal((UInt32)9, (UInt32)dctRStatements.Count);
+        Assert.Equal((UInt32)10, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)26, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)42, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
-        Assert.Equal((UInt32)53, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
-        Assert.Equal((UInt32)72, dctRStatements.Cast<DictionaryEntry>().ElementAt(5).Key);
-        Assert.Equal((UInt32)88, dctRStatements.Cast<DictionaryEntry>().ElementAt(6).Key);
-        Assert.Equal((UInt32)99, dctRStatements.Cast<DictionaryEntry>().ElementAt(7).Key);
-        Assert.Equal((UInt32)119, dctRStatements.Cast<DictionaryEntry>().ElementAt(8).Key);
+        Assert.Equal((UInt32)9, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)25, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)41, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)52, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
+        Assert.Equal((UInt32)71, dctRStatements.Cast<DictionaryEntry>().ElementAt(5).Key);
+        Assert.Equal((UInt32)87, dctRStatements.Cast<DictionaryEntry>().ElementAt(6).Key);
+        Assert.Equal((UInt32)98, dctRStatements.Cast<DictionaryEntry>().ElementAt(7).Key);
+        Assert.Equal((UInt32)118, dctRStatements.Cast<DictionaryEntry>().ElementAt(8).Key);
 
         strActual = new RScript(strInput).GetAsExecutableScript(false);
         Assert.Equal("x<-\"a\n\";"
@@ -505,16 +502,19 @@ public class RInsightTestXUnit
         Assert.Equal(strInput, strActual);
 
         // https://github.com/africanmathsinitiative/R-Instat/issues/7095  
-        strInput = "Data <- data_book$get_data_frame(data_name = \"Data\")\n" + "last_graph <- ggplot2::ggplot(data = Data |> dplyr::filter(rain > 0.85), mapping = ggplot2::aes(y = rain, x = make_factor(\"\")))" + " + ggplot2::geom_boxplot(varwidth = TRUE, coef = 2) + theme_grey()" + " + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))" + " + ggplot2::xlab(NULL) + ggplot2::facet_wrap(facets = ~ Name, drop = FALSE)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"Data\")\n" + "data_book$get_graphs(data_name = \"Data\", graph_name = \"last_graph\")";
+        strInput = "Data <- data_book$get_data_frame(data_name = \"Data\")\n" + 
+            "last_graph <- ggplot2::ggplot(data = Data |> dplyr::filter(rain > 0.85), mapping = ggplot2::aes(y = rain, x = make_factor(\"\")))" + " + ggplot2::geom_boxplot(varwidth = TRUE, coef = 2) + theme_grey()" + " + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))" + " + ggplot2::xlab(NULL) + ggplot2::facet_wrap(facets = ~ Name, drop = FALSE)\n" + 
+            "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"Data\")\n" + 
+            "data_book$get_graphs(data_name = \"Data\", graph_name = \"last_graph\")";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)4, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)53, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)412, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)499, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)52, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)411, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)498, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
 
         // https://github.com/africanmathsinitiative/R-Instat/issues/7095  
         strInput = "ifelse(year_2 > 30, 1, 0)\n";
@@ -743,42 +743,51 @@ public class RInsightTestXUnit
         Assert.Equal("if(i==8)next", (dctRStatements[0] as RStatement)?.TextNoFormatting);
         Assert.Equal("if(i==5)break", (dctRStatements[1] as RStatement)?.TextNoFormatting);
 
-        strInput = "if(a<b){c}\n" +
-            "        if(d<=e){f}\n" +
-            "        if(g==h) { #1\n" +
-            "          i } #2\n" +
-            "          if (j >= k)\n" +
+        strInput = 
+            "if(a<b){c}" +
+
+            "\n        if(d<=e){f}" +
+
+            "\n        if(g==h) { #1\n" +
+            "          i }" +
+
+            "#2\n          if (j >= k)\n" +
             "        {\n" +
             "          l   #3  \n" +
-            "        }\n" +
-            "        if (m)\n" +
+            "        }" +
+
+            "\n        if (m)\n" +
             "              #4\n" +
             "          n+\n" +
-            "            o  #5\n" +
-            "        if(p!=q)\n" +
+            "            o" +
+
+            "  #5\n        if(p!=q)\n" +
             "        {\n" +
             "        q1()[id \n" +
             "                       ]\n" +
             "        q2([[j[k]]])  \n\n" +
-            "        }\r\n\r\n" +
-            "        if(e=f)\n" +
-            "                        break\n" +
-            "        next\n" +
-            "        if (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))fnBody)\n" +
+            "        }" +
+
+            "\r\n\r\n        if(e=f)\n" +
+            "                        break" +
+
+            "\n        next" +
+
+            "\nif (function(fn1(g,fn2=function(h)fn3(i/sum(j)*100)))fnBody)\n" +
             "            return(k)";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
         Assert.Equal((UInt32)9, (UInt32)dctRStatements.Count);
         Assert.Equal((UInt32)0, dctRStatements.Cast<DictionaryEntry>().ElementAt(0).Key);
-        Assert.Equal((UInt32)11, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
-        Assert.Equal((UInt32)31, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
-        Assert.Equal((UInt32)70, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
-        Assert.Equal((UInt32)131, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
-        Assert.Equal((UInt32)194, dctRStatements.Cast<DictionaryEntry>().ElementAt(5).Key);
-        Assert.Equal((UInt32)298, dctRStatements.Cast<DictionaryEntry>().ElementAt(6).Key);
-        Assert.Equal((UInt32)346, dctRStatements.Cast<DictionaryEntry>().ElementAt(7).Key);
-        Assert.Equal((UInt32)359, dctRStatements.Cast<DictionaryEntry>().ElementAt(8).Key);
+        Assert.Equal((UInt32)10, dctRStatements.Cast<DictionaryEntry>().ElementAt(1).Key);
+        Assert.Equal((UInt32)30, dctRStatements.Cast<DictionaryEntry>().ElementAt(2).Key);
+        Assert.Equal((UInt32)66, dctRStatements.Cast<DictionaryEntry>().ElementAt(3).Key);
+        Assert.Equal((UInt32)129, dctRStatements.Cast<DictionaryEntry>().ElementAt(4).Key);
+        Assert.Equal((UInt32)188, dctRStatements.Cast<DictionaryEntry>().ElementAt(5).Key);
+        Assert.Equal((UInt32)295, dctRStatements.Cast<DictionaryEntry>().ElementAt(6).Key);
+        Assert.Equal((UInt32)344, dctRStatements.Cast<DictionaryEntry>().ElementAt(7).Key);
+        Assert.Equal((UInt32)357, dctRStatements.Cast<DictionaryEntry>().ElementAt(8).Key);
 
         strInput = "if(a)b else c";
         strActual = new RScript(strInput).GetAsExecutableScript();
@@ -962,91 +971,91 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a in 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for ( a in 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a  in  1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for ( a  in  1 :5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for(a in  1  : 5 ) a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for\n(a in 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a \nin 1:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for ( a in 1\n:5)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a  in  1:5\n)a\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for ( a  in  1 :5)\na\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for\n(\na \nin  \n1  \n: \n5 \n) \na\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5)a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for(a in 1:5){a}\n";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5){a}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a in 1:5){a\n}";
@@ -1074,7 +1083,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in 1:5){a}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (a in 1:5)\n{\na\n}";
@@ -1137,7 +1146,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal(3, dctRStatements.Count);
+        Assert.Equal(4, dctRStatements.Count);
         Assert.Equal("for(i in 1:length(cnt)){for(j in 1:cnt[i]){length=length+1};for(inner in 1:length){print(inner)}}", (dctRStatements[2] as RStatement)?.TextNoFormatting);
 
         strInput =
@@ -1149,7 +1158,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal(3, dctRStatements.Count);
         Assert.Equal("for(fruit in vec){print(fruit)}", (dctRStatements[1] as RStatement)?.TextNoFormatting);
 
         strInput =
@@ -1160,7 +1169,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(i in 1:3){for(j in 1:3){print(paste(\"i is\",i,\"and j is\",j))}}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput =
@@ -1174,7 +1183,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(i in val){if(i==8)next;if(i==5)break}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput = "for (i in 1:r) print(t(plots[,,i]))";
@@ -1206,7 +1215,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal(3, dctRStatements.Count);
         Assert.Equal("for(i in 1:k)for(j in 1:s)outdesign$sketch", (dctRStatements[1] as RStatement)?.TextNoFormatting);
 
         strInput = "npoints < -length(w)\n" +
@@ -1214,7 +1223,7 @@ public class RInsightTestXUnit
             "{\n" +
             "  segments(w[i], Min[i], w[i], Max[i], lwd = 1.5, col = \"blue\")\n" +
             "}\n" +
-            "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\n";
+            "legend(\"topleft\", c(\"Disease progress curves\", \"Weather-Severity\"),\r\ntitle=\"Description\",lty=1,pch=c(3,19),col=c(\"black\",\"blue\"))";
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
@@ -1252,7 +1261,7 @@ public class RInsightTestXUnit
         strActual = new RScript(strInput).GetAsExecutableScript();
         Assert.Equal(strInput, strActual);
         dctRStatements = new RScript(strInput).statements;
-        Assert.Single(dctRStatements);
+        Assert.Equal(2, dctRStatements.Count);
         Assert.Equal("for(a in b)while(c<d) repeat if(e=f)break else next", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
         strInput =
@@ -1449,5 +1458,283 @@ public class RInsightTestXUnit
         Assert.Single(dctRStatements);
         Assert.Equal("if(i==1){tmp_prev<-tmp_prev;tmp<-cnt[i]} else {tmp_prev<-tmp_prev+cnt[i-1];tmp<-tmp+cnt[i]}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
+    }
+
+    [Fact]
+    public void TestGetToken()
+    {
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
+
+        strInput =
+                "# Dialog: Enter" +
+                "\n_dataFrame <-data_book$get_data_frame(data_name=\"_dataFrame\")" +
+                "\nattach(what=_dataFrame)" +
+                "\n_columnName <- _columnValue" +
+                "\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE)" +
+                "\ndata_book$get_columns_from_data(data_name = \"_dataFrame\", col_names = \"_columnName\")" +
+                "\n_dataFrame <- data_book$get_data_frame(data_name=\"_dataFrame\")" +
+                "\ndetach(Name = _dataFrame, unload = True)" +
+                "\nrm(list=c(\"_columnName\", \"_dataFrame\"))";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(243, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(328, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(391, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(432, (int)(dctRStatements[7] as RStatement).StartPos);
+        TestDictionaryKeysConsistent(script.statements);
+
+        statement = dctRStatements[0] as RStatement;
+        script.SetToken(0, "<-", 0, "a");
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(68, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(92, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(120, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(234, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(319, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(382, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(423, (int)(dctRStatements[7] as RStatement).StartPos);
+        TestDictionaryKeysConsistent(script.statements);
+
+        script.SetToken(0, "get_data_frame", 0, "aa", true);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(84, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(112, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(226, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(311, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(374, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(415, (int)(dctRStatements[7] as RStatement).StartPos);
+        TestDictionaryKeysConsistent(script.statements);
+
+        Assert.Equal("# Dialog: Enter\n" +
+                "a <-data_book$get_data_frame(data_name=\"aa\")", statement?.Text);
+
+        statement = dctRStatements[1] as RStatement;
+        script.SetToken(1, "attach", 0, "b2345678901");
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(113, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(227, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(312, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(375, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(416, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        Assert.Equal("\nattach(what=b2345678901)", statement?.Text);
+
+        statement = dctRStatements[2] as RStatement;
+        script.SetToken(2, "<-", 0, "c");
+        script.SetToken(2, "<-", 1, "d");
+        Assert.Equal("\nc <- d", statement?.Text);
+
+        statement = dctRStatements[3] as RStatement;
+        script.SetToken(3, "add_columns_to_data", 0, "e", true);
+        script.SetToken(3, "add_columns_to_data", 1, "f", true);
+        script.SetToken(3, "add_columns_to_data", 2, "g");
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
+
+        statement = dctRStatements[4] as RStatement;
+        script.SetToken(4, "get_columns_from_data", 0, "h", true);
+        script.SetToken(4, "get_columns_from_data", 1, "i", true);
+        Assert.Equal("\ndata_book$get_columns_from_data(data_name = \"h\", col_names = \"i\")", statement?.Text);
+
+        statement = dctRStatements[5] as RStatement;
+        script.SetToken(5, "<-", 0, "j");
+        script.SetToken(5, "get_data_frame", 0, "jj", true);
+        Assert.Equal("\nj <- data_book$get_data_frame(data_name=\"jj\")", statement?.Text);
+
+        statement = dctRStatements[6] as RStatement;
+        script.SetToken(6, "detach", 0, "k");
+        Assert.Equal("\ndetach(Name = k, unload = True)", statement?.Text);
+
+        statement = dctRStatements[7] as RStatement;
+        script.SetToken(7, "c", 0, "l", true);
+        script.SetToken(7, "c", 1, "m", true);
+        Assert.Equal("\nrm(list=c(\"l\", \"m\"))", statement?.Text);
+
+
+        strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
+        strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))\n";
+        strInput = "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))\n";
+        strInput = "a+b+c\n";
+        strInput = "2+1-10/5*3\n";
+        strInput = "1+2-3*10/5\n";
+        strInput = "(a-b)*(c+d)\n";
+        strInput = "a/(b)*((c))+(d-e)/f*g+(((d-e)/f)*g)\n";
+        strInput = "var1<-pkg1::var2\n";
+        strInput = "var1<-pkg1::obj1$obj2$var2\n";
+        strInput = "var1<-pkg1::obj1$fun1(para1,para2)\n";
+        strInput = "a<-b::c(d)+e\n";
+        strInput = "f1(~a,b~,-c,+d,e~(f+g),!h,i^(-j),k+(~l),m~(~n),o/-p,q*+r)\n";
+        strInput = "a[1]-b[c(d)+e]/f(g[2],h[3],i[4]*j[5])-k[l[m[6]]]\n";
+        strInput = "a[[1]]-b[[c(d)+e]]/f(g[[2]],h[[3]],i[[4]]*j[[5]])-k[[l[[m[6]]]]]\n";
+        strInput = "df[[\"a\"]]\n" + "lst[[\"a\"]][[\"b\"]]"; // same as 'df$a' and 'lst$a$b'
+        strInput = "x<-\"a\";df[x]"; // same as 'df$a' and 'lst$a$b'
+        strInput = "df<-data.frame(x = 1:10, y = 11:20, z = letters[1:10])\n";
+        strInput = "x[3:5]<-13:15;names(x)[3]<-\"Three\"";
+        strInput = "x[3:5]<-13:15;\n" + "names(x)[3]<-\"Three\"";
+        strInput = "x[3:5]<-13:15;" + "\r\n" + "names(x)[3]<-\"Three\"";
+        strInput = "x[3:5]<-13:15;#comment\n" + "names(x)[3]<-\"Three\"";
+        strInput = "a[]\n";
+        strInput = "a[,]\n";
+        strInput = "a[,,]\n";
+        strInput = "a[,,,]\n";
+        strInput = "a[b,]\n";
+        strInput = "a[,c]\n";
+        strInput = "a[b,c]\n";
+        strInput = "a[\"b\",]\n";
+        strInput = "a[,\"c\",1]\n";
+        strInput = "a[-1,1:2,,x<5|x>7]\n";
+        strInput = "a[-1,1:2,,f1(b,c[d], f2(e)[,,f3(f,g),,]),x<5|x>7]\n";
+        strInput = " a[]#comment\n";
+        strInput = "a [,]\n";
+        strInput = "a[ ,,] #comment\n";
+        strInput = "a[, ,,]\n";
+        strInput = "a[b, ]   #comment\n";
+        strInput = "a [  ,   c    ]     \n";
+        strInput = "#comment\n" + "a[b,c]\n";
+        strInput = "a[ \"b\"  ,]\n";
+        strInput = "a[,#comment\n" + "\"c\",  1 ]\n";
+        strInput = "a[ -1 , 1  :   2    ,     ,      x <  5   |    x      > 7  ]\n";
+        strInput = "weather[,1]<-As.Date(weather[,1],format = \"%m/%d/%Y\")\n";
+        strInput = " weather  [   ,  #comment\n" + "  1     ] <-  As.Date   (weather     [#comment\n" + " ,  1   ]    ,    format =  \"%m/%d/%Y\"    )     \n";
+        strInput = "dat <- dat[order(dat$tree, dat$dir), ]\n";
+        strInput = "d22 <- d22[order(d22$tree, d22$day),]\n";
+        strInput = "res <- MCA(poison[,3:8],excl =c(1,3))\n";
+        strInput = "a[][b]\n";
+        strInput = "a[][]\n";
+        strInput = "output[][-1]\n";
+        strInput = "data_book$display_daily_table(data_name = \"dodoma\", climatic_element = \"rain\", " + "date_col = \"Date\", year_col = \"year\", Misscode = \"m\", monstats = c(sum = \"sum\"))\n";
+        strInput = "stringr::str_split_fixed(string = date,pattern = \" - \",n = \"5 \")\n";
+        strInput = "ggplot2::ggplot(data = c(sum = \"sum\"),mapping = ggplot2::aes(x = fert,y = size,colour = variety))\n";
+        strInput = "last_graph<-ggplot2::ggplot(data = survey,mapping = ggplot2::aes(x = fert,y = size,colour = variety))" + "+ggplot2::geom_line()" + "+ggplot2::geom_rug(colour = \"orange\")" + "+theme_grey()" + "+ggplot2::theme(axis.text.x = ggplot2::element_text())" + "+ggplot2::facet_grid(facets = village~variety,space = \"fixed\")\n";
+        strInput = "dodoma <- data_book$get_data_frame(data_name = \"dodoma\", stack_data = TRUE, measure.vars = c(\"rain\", \"tmax\", \"tmin\"), id.vars = c(\"Date\"))\n" + "last_graph <- ggplot2::ggplot(data = dodoma, mapping = ggplot2::aes(x = date, y = value, colour = variable)) + ggplot2::geom_line() + " + "ggplot2::geom_rug(data = dodoma%>%filter(is.na(value)), colour = \"red\") + theme_grey() + ggplot2::theme(axis.text.x = ggplot2::element_text(), legend.position = \"none\") + " + "ggplot2::facet_wrap(scales = \"free_y\", ncol = 1, facet = ~variable) + ggplot2::xlab(NULL)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"dodoma\")\n" + "data_book$get_graphs(data_name = \"dodoma\", graph_name = \"last_graph\")";
+        strInput = "a->b\n" + "c->>d\n" + "e<-f\n" + "g<<-h\n" + "i=j";
+        strInput = "x<-df$`a b`\n";
+        strInput = "names(x)<-c(\"a\",\"b\")\n";
+        strInput = "a<-b" + "\r" + "c(d)" + "\r\n" + "e->>f+g\n";
+        strInput = " f1(  f2(),   f3( a),  f4(  b =1))\n";
+        strInput = "  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h))\n";
+        strInput = " a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)\n";
+        strInput = " a  +   b    +     c\n";
+        strInput = " var1  <-   pkg1::obj1$obj2$var2\n";
+        strInput = "    pkg ::obj1 $obj2$fn1 (a ,b=1, c    = 2 )\n";
+        strInput = " f1(  ~   a,    b ~,  -   c,    + d,  e   ~(    f +  g),   !    h, i  ^(   -    j), k  +(   ~    l), m  ~(   ~    n), o  /   -    p, q  *   +    r)\n";
+        strInput = "#comment1\n" + "a#comment2" + "\r" + " b #comment3" + "\r\n" + "#comment4\n" + "  c  " + "\r\n";
+        strInput = "#not ignored comment";
+        strInput = "#not ignored comment\n";
+        strInput = "f1()\n" + "# not ignored comment" + "\r\n";
+        strInput = "f1()\n" + "# not ignored comment\n" + "# not ignored comment2" + "\r" + " " + "\r\n" + "# not ignored comment3";
+        strInput = "# Code run from Script Window (all text)" + Environment.NewLine + "1";
+        strInput = "\n";
+        strInput = "";
+        strInput = "x <- \"a\n\"\n";
+        strInput = "data_book$import_data(data_tables =list(data3 =clipr::read_clip_tbl(x =\"Category    Feature    Ease_of_Use     Operating Systems\n" + "\", header =TRUE)))\n";
+        strInput = "Data <- data_book$get_data_frame(data_name = \"Data\")\n" + "last_graph <- ggplot2::ggplot(data = Data |> dplyr::filter(rain > 0.85), mapping = ggplot2::aes(y = rain, x = make_factor(\"\")))" + " + ggplot2::geom_boxplot(varwidth = TRUE, coef = 2) + theme_grey()" + " + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))" + " + ggplot2::xlab(NULL) + ggplot2::facet_wrap(facets = ~ Name, drop = FALSE)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"Data\")\n" + "data_book$get_graphs(data_name = \"Data\", graph_name = \"last_graph\")";
+        strInput = "ifelse(year_2 > 30, 1, 0)\n";
+        strInput = "(year-1900)*(year<2000)+(year-2000)*(year>1999)\n";
+        strInput = @"a("""", ""\""\"""", ""b"", ""c(\""d\"")"", ""'"", ""''"", ""'e'"", ""`"", ""``"", ""`f`"")" + "\n";
+        strInput = @"a('', '\'\'', 'b', 'c(\'d\')', '""', '""""', '""e""', '`', '``', '`f`')" + "\n";
+        strInput = @"a(``, `\`\``, `b`, `c(\`d\`)`, `""`, `""""`, `""e""`, `'`, `''`, `'f'`)" + "\n";
+        strInput = "x<-\"she said 'hello'\"\n";
+        strInput = "read_clip_tbl(x = \"Ease_of_Use" + "\t" + @"Hides R by default to prevent \""code shock\""" + "\t" + "  1\", header = TRUE)\n";
+        strInput = "?log\n";
+        strInput = "?a\n" + "? b\n" + " +  c\n" + "  -   d +#comment1\n" + "(!e) - #comment2\n" + "(~f) +\n" + "(+g) - \n" + "(-h)";
+        strInput = "??log\n";
+        strInput = "??a\n" + "?? b\n";
+        strInput = "\"a\"+\"b\"\n";
+        strInput = "  tfrmt(\n" + "  # specify columns in the data\n" + "  group = c(rowlbl1, grp),\n" + "  label = rowlbl2,\n" + "  column = column, \n" + "  param = param,\n" + "  value = value,\n" + "  sorting_cols = c(ord1, ord2),\n" + "  # specify value formatting \n" + "  body_plan = body_plan(\n" + "  frmt_structure(group_val = \".default\", label_val = \".default\", frmt_combine(\"{n} ({pct} %)\",\n" + "                                                                    n = frmt(\"xxx\"),\n" + "                                                                                pct = frmt(\"xx.x\"))),\n" + "    frmt_structure(group_val = \".default\", label_val = \"n\", frmt(\"xxx\")),\n" + "    frmt_structure(group_val = \".default\", label_val = c(\"Mean\", \"Median\", \"Min\", \"Max\"), frmt(\"xxx.x\")),\n" + "    frmt_structure(group_val = \".default\", label_val = \"SD\", frmt(\"xxx.xx\")),\n" + "    frmt_structure(group_val = \".default\", label_val = \".default\", p = frmt_when(\">0.99\" ~ \">0.99\",\n" + "                                                                                 \"<0.001\" ~ \"<0.001\",\n" + "                                                                                 TRUE ~ frmt(\"x.xxx\", missing = \"\"))))) %>% \n" + "  print_to_gt(data_demog) %>% \n" + "  tab_options(\n" + "    container.width = 900)\n";
+        strInput = "x %>% f(1, .)\n";
+        strInput = "x |> f(1, y = _)\n";
+        strInput = "df %>% split(.$var)\n";
+        strInput = "{a\nb}";
+        strInput = "df %>% {split(.$x, .$y)}";
+        strInput = "mtcars %>% .$cyl\n";
+        strInput = "c(1:3, NA_real_) |> sum(na.rm = TRUE)\n";
+        strInput = "split(x = iris[-5], f = iris$Species) |> lapply(min) |> Do.call(what = rbind)\n";
+        strInput = "iris[iris$Sepal.Length > 7,] %>% subset(.$Species==\"virginica\")\n";
+        strInput = "1:3 |> sum\n";
+        strInput = "{a}\n";
+        strInput = "a<-b(c,{d})";
+        strInput = "colors <- c(\"blue\", \"red\", \"black\")\r\n";
+        strInput = "means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))";
+        strInput = "if(a)b";
+        strInput = "if\n(a)b";
+        strInput = "if\n(a)\nb";
+        strInput = "if(a){b}";
+        strInput = "if\n(a){b}";
+        strInput = "if\n(a)\n{b}";
+        strInput = "if(x>10){fn1(paste(x,\"is greater than 10\"))}";
+        strInput = "if(val > 5) break";
+        strInput = "if (x %% 2 == 0) \n    return(\"even\")";
+        strInput = "    if (i == 8)\r\n        next\n    if(i == 5)\n        break";
+        strInput = "if(a)b else c";
+        strInput = "if\n(d)e else f";
+        strInput = "if\n(g)\nh else i";
+        strInput = "if\n(j)\nk else\nl";
+        strInput = "a;b";
+        strInput = "a;\nb";
+        strInput = "a\rb";
+        strInput = "a#1\r\nb";
+        strInput = "a#1\n\rb";
+        strInput = "a#1\r\n\r\n#2 b";
+        strInput = " a";
+        strInput = " \na";
+        strInput = " \n\r\r\na";
+        strInput = "a;\nb";
+        strInput = "for(a in 1:5)a\n";
+        strInput = "for (a in 1:5)a\n";
+        strInput = "for ( a in 1:5)a\n";
+        strInput = "for (a  in  1:5)a\n";
+        strInput = "for ( a  in  1 :5)a\n";
+        strInput = "for(a in  1  : 5 ) a\n";
+        strInput = "for\n(a in 1:5)a\n";
+        strInput = "for (a \nin 1:5)a\n";
+        strInput = "for ( a in 1\n:5)a\n";
+        strInput = "for (a  in  1:5\n)a\n";
+        strInput = "for ( a  in  1 :5)\na\n";
+        strInput = "for\n(\na \nin  \n1  \n: \n5 \n) \na\n";
+        strInput = "for(a in 1:5){a}\n";
+        strInput = "for (a in 1:5){a\n}";
+        strInput = "for ( a in 1:5){a;b\n}";
+        strInput = "for (a  in  1:5){a\nb\nc\n}";
+        strInput = "for(a in 1:5)\n{a}\n";
+        strInput = "for (a in 1:5)\n{\na\n}";
+        strInput = "for ( a in 1:5)\n\n{a;b\n}";
+        strInput = "if(a)b else if(c)d else e";
+        strInput = "for(a in 1:2)if(b)c else d";
+        strInput = "for(a in 1:2)if(b)for(c in 5:6)d";
+        strInput = "for(a in 1:2)for(b in 3:4)for(c in 5:6)d";
+        strInput = "for (i in 1:r) print(t(plots[,,i]))";
+        strInput = "a=function(b)c";
+        strInput = "function(x, label = deparse(x)) {\nlabel\nx <- x + 1\nprint(label)\n}";
+        strInput = "y <- if( any(x <= 0) ) log(1+x) else log(x)";
+        //strInput = "a/if(b)c else d+e";
+        strInput = "!!a";
+        strInput = "if(!is.null(station)){data<-data%>%group_by(!!sym(station))}";
+        strInput = "a:=b";
+        strInput = "binds[[i]] <- results[[i]][[j]] %>% mutate(!!sym(station) := station_name[i])";
+        strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}";
+        strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}else{p\nq}";
+        strInput = "if(a){b<-c+d\ne<-f+g}else{h<-i+j\nk<-l+m}";
+        strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
+    }
+
+    private static void TestDictionaryKeysConsistent(OrderedDictionary dctRStatements)
+    {
+        foreach (System.Collections.DictionaryEntry entry in dctRStatements)
+        {
+            uint startPosKey = (uint)entry.Key;
+            uint startPosValue = (entry.Value as RStatement).StartPos;
+            Assert.Equal(startPosKey, startPosValue);
+        }
     }
 }
