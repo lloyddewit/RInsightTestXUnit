@@ -1540,6 +1540,47 @@ public class RInsightTestXUnit
         script.SetToken(3, "add_columns_to_data", 1, "f", true);
         script.SetToken(3, "add_columns_to_data", 2, "g");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(92, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(177, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(262, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(325, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(366, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", true);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=\"yield\")", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(92, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(202, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(287, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(350, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(391, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2", false);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(92, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(201, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(286, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(349, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(390, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.RemoveParameterByName(3, "add_columns_to_data", "adjacent_column");
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(92, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(177, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(262, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(325, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(366, (int)(dctRStatements[7] as RStatement).StartPos);
 
         statement = dctRStatements[4] as RStatement;
         script.SetToken(4, "get_columns_from_data", 0, "h", true);
