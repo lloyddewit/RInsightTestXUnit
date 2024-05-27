@@ -1549,7 +1549,7 @@ public class RInsightTestXUnit
         Assert.Equal(325, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(366, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", true);
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=\"yield\")", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1560,7 +1560,7 @@ public class RInsightTestXUnit
         Assert.Equal(350, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(391, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2", false);
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1570,6 +1570,13 @@ public class RInsightTestXUnit
         Assert.Equal(286, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(349, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(390, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", param1Name=param1Value, col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        script.AddParameterByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
+        Assert.Equal("\ndata_book$add_columns_to_data(param2Name=\"param2Value\", data_name=\"e\", param1Name=param1Value, col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        script.RemoveParameterByName(3, "add_columns_to_data", "param1Name");
+        script.RemoveParameterByName(3, "add_columns_to_data", "param2Name");
 
         script.RemoveParameterByName(3, "add_columns_to_data", "adjacent_column");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
