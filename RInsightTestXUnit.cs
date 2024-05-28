@@ -1468,6 +1468,121 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
         RStatement? statement;
 
+        strInput = "f1()" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p1", "v1");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p2", "v2");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1, p2=v2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(16, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p3", "v3");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p4", "v4", 0);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(30, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p5", "v5", 1);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(37, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p6", "v6", 2);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(44, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p7", "v7", 5);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(51, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p8", "v8", 7);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(58, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p9", "v9", 9);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8, p9=v9)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(65, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        script.RemoveParameterByName(0, "f1", "p9");
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(58, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p8");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(51, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p7");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(44, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p6");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(37, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p5");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(30, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p4");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p3");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1, p2=v2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(16, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p2");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p1");
+        Assert.Equal("f1()", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
         strInput =
                 "# Dialog: Enter" +
                 "\n_dataFrame <-data_book$get_data_frame(data_name=\"_dataFrame\")" +
