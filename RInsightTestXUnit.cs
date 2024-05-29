@@ -1461,7 +1461,7 @@ public class RInsightTestXUnit
     }
 
     [Fact]
-    public void TestGetToken()
+    public void TestAddRemoveParameters()
     {
         string strInput;
         RScript script;
@@ -1582,6 +1582,91 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
 
+
+        strInput =
+                "# Dialog: Enter" +
+                "\n_dataFrame <-data_book$get_data_frame(data_name=\"_dataFrame\")" +
+                "\nattach(what=_dataFrame)" +
+                "\n_columnName <- _columnValue" +
+                "\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE)" +
+                "\ndata_book$get_columns_from_data(data_name = \"_dataFrame\", col_names = \"_columnName\")" +
+                "\n_dataFrame <- data_book$get_data_frame(data_name=\"_dataFrame\")" +
+                "\ndetach(Name = _dataFrame, unload = True)" +
+                "\nrm(list=c(\"_columnName\", \"_dataFrame\"))";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(243, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(328, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(391, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(432, (int)(dctRStatements[7] as RStatement).StartPos);
+        TestDictionaryKeysConsistent(script.statements);
+
+        statement = dctRStatements[3] as RStatement;
+
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=\"yield\")", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(268, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(353, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(416, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(457, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2");
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(267, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(352, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(415, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(456, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", param1Name=param1Value, col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(291, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(376, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(439, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(480, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
+        Assert.Equal("\ndata_book$add_columns_to_data(param2Name=\"param2Value\", data_name=\"_dataFrame\", param1Name=param1Value, col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(317, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(402, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(465, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(506, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.RemoveParameterByName(3, "add_columns_to_data", "param1Name");
+        script.RemoveParameterByName(3, "add_columns_to_data", "param2Name");
+
+        script.RemoveParameterByName(3, "add_columns_to_data", "adjacent_column");
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE)", statement?.Text);
+    }
+
+
+    [Fact]
+    public void TestGetToken()
+    {
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
 
         strInput =
                 "# Dialog: Enter" +
