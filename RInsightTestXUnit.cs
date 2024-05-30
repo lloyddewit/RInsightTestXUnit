@@ -18,9 +18,6 @@
 using RInsightF461;
 using System.Collections.Specialized;
 using System.Collections;
-using static System.Collections.Specialized.BitVector32;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Collections.Generic;
 
 namespace RInsightTestXUnit;
 
@@ -1461,6 +1458,206 @@ public class RInsightTestXUnit
     }
 
     [Fact]
+    public void TestAddRemoveParameters()
+    {
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
+
+        strInput = "f1()" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p1", "v1");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p2", "v2");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1, p2=v2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(16, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p3", "v3");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p4", "v4", 0);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(30, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p5", "v5", 1);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(37, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p6", "v6", 2);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(44, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p7", "v7", 5);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(51, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p8", "v8", 7);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(58, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.AddParameterByName(0, "f1", "p9", "v9", 9);
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8, p9=v9)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(65, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        script.RemoveParameterByName(0, "f1", "p9");
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(58, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p8");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(51, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p7");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(44, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p6");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p5=v5, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(37, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p5");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p4=v4, p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(30, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p4");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1, p2=v2, p3=v3)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p3");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1, p2=v2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(16, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p2");
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(p1=v1)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.RemoveParameterByName(0, "f1", "p1");
+        Assert.Equal("f1()", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        strInput =
+                "# Dialog: Enter" +
+                "\n_dataFrame <-data_book$get_data_frame(data_name=\"_dataFrame\")" +
+                "\nattach(what=_dataFrame)" +
+                "\n_columnName <- _columnValue" +
+                "\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE)" +
+                "\ndata_book$get_columns_from_data(data_name = \"_dataFrame\", col_names = \"_columnName\")" +
+                "\n_dataFrame <- data_book$get_data_frame(data_name=\"_dataFrame\")" +
+                "\ndetach(Name = _dataFrame, unload = True)" +
+                "\nrm(list=c(\"_columnName\", \"_dataFrame\"))";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(243, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(328, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(391, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(432, (int)(dctRStatements[7] as RStatement).StartPos);
+        TestDictionaryKeysConsistent(script.statements);
+
+        statement = dctRStatements[3] as RStatement;
+
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=\"yield\")", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(268, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(353, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(416, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(457, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2");
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(267, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(352, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(415, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(456, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", param1Name=param1Value, col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(291, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(376, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(439, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(480, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
+        Assert.Equal("\ndata_book$add_columns_to_data(param2Name=\"param2Value\", data_name=\"_dataFrame\", param1Name=param1Value, col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(101, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(129, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(317, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(402, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(465, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(506, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.RemoveParameterByName(3, "add_columns_to_data", "param1Name");
+        script.RemoveParameterByName(3, "add_columns_to_data", "param2Name");
+
+        script.RemoveParameterByName(3, "add_columns_to_data", "adjacent_column");
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE)", statement?.Text);
+    }
+
+
+    [Fact]
     public void TestGetToken()
     {
         string strInput;
@@ -1549,7 +1746,7 @@ public class RInsightTestXUnit
         Assert.Equal(325, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(366, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", true);
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=\"yield\")", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1560,7 +1757,7 @@ public class RInsightTestXUnit
         Assert.Equal(350, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(391, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2", false);
+        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1570,6 +1767,13 @@ public class RInsightTestXUnit
         Assert.Equal(286, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(349, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(390, (int)(dctRStatements[7] as RStatement).StartPos);
+
+        script.AddParameterByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
+        Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", param1Name=param1Value, col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        script.AddParameterByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
+        Assert.Equal("\ndata_book$add_columns_to_data(param2Name=\"param2Value\", data_name=\"e\", param1Name=param1Value, col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        script.RemoveParameterByName(3, "add_columns_to_data", "param1Name");
+        script.RemoveParameterByName(3, "add_columns_to_data", "param2Name");
 
         script.RemoveParameterByName(3, "add_columns_to_data", "adjacent_column");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
