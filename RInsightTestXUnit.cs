@@ -1973,6 +1973,28 @@ public class RInsightTestXUnit
         strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
     }
 
+    [Fact]
+    public void TestReplaceParameter()
+    {
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
+
+        strInput = "f1(a)" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.ReplaceParameter(0, "f1", 0, new RScript("b"));
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal("f1(b)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+    }
+
     private static void TestDictionaryKeysConsistent(OrderedDictionary dctRStatements)
     {
         foreach (System.Collections.DictionaryEntry entry in dctRStatements)
