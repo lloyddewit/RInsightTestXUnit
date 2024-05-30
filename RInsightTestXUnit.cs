@@ -18,9 +18,6 @@
 using RInsightF461;
 using System.Collections.Specialized;
 using System.Collections;
-using static System.Collections.Specialized.BitVector32;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Collections.Generic;
 
 namespace RInsightTestXUnit;
 
