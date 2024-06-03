@@ -1989,17 +1989,17 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.ReplaceParameter(0, "+", 0, "c");
+        script.ReplaceParameterOperator(0, "+", 0, "c");
         Assert.Equal("c+b", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.ReplaceParameter(0, "+", 1, "d1");
+        script.ReplaceParameterOperator(0, "+", 1, "d1");
         Assert.Equal("c+d1", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.ReplaceParameter(0, "+", 0, "c002");
+        script.ReplaceParameterOperator(0, "+", 0, "c002");
         Assert.Equal("c002+d1", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -2012,7 +2012,7 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(140, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.ReplaceParameter(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
+        script.ReplaceParameterOperator(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5) + theme_grey()", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(171, (int)(dctRStatements[1] as RStatement).StartPos);
