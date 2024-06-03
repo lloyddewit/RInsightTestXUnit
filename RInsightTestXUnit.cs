@@ -1973,6 +1973,52 @@ public class RInsightTestXUnit
         strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
     }
 
+    [Fact]
+    public void TestReplaceParameter()
+    {
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
+
+        strInput = "a+b" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.ReplaceParameterOperator(0, "+", 0, "c");
+        Assert.Equal("c+b", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.ReplaceParameterOperator(0, "+", 1, "d1");
+        Assert.Equal("c+d1", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.ReplaceParameterOperator(0, "+", 0, "c002");
+        Assert.Equal("c002+d1", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(140, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.ReplaceParameterOperator(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
+        Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5) + theme_grey()", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(171, (int)(dctRStatements[1] as RStatement).StartPos);
+
+    }
+
     private static void TestDictionaryKeysConsistent(OrderedDictionary dctRStatements)
     {
         foreach (System.Collections.DictionaryEntry entry in dctRStatements)
