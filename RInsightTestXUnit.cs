@@ -1458,7 +1458,7 @@ public class RInsightTestXUnit
     }
 
     [Fact]
-    public void TestAddRemoveParameters()
+    public void TestFunctionAddRemoveParamByName()
     {
         string strInput;
         RScript script;
@@ -1658,7 +1658,7 @@ public class RInsightTestXUnit
 
 
     [Fact]
-    public void TestGetToken()
+    public void TestFunctionUpdateParamValue()
     {
         string strInput;
         RScript script;
@@ -1974,7 +1974,7 @@ public class RInsightTestXUnit
     }
 
     [Fact]
-    public void TestReplaceParameter()
+    public void TestOperatorUpdateParam()
     {
         string strInput;
         RScript script;
