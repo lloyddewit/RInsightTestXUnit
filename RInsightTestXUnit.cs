@@ -18,6 +18,7 @@
 using RInsightF461;
 using System.Collections.Specialized;
 using System.Collections;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RInsightTestXUnit;
 
@@ -1689,7 +1690,7 @@ public class RInsightTestXUnit
         TestDictionaryKeysConsistent(script.statements);
 
         statement = dctRStatements[0] as RStatement;
-        script.OperatorUpdateParam(0, "<-", 0, "# Dialog: Enter\na");
+        script.OperatorUpdateParam(0, "<-", 0, "a");
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(68, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(92, (int)(dctRStatements[2] as RStatement).StartPos);
@@ -1728,8 +1729,8 @@ public class RInsightTestXUnit
         Assert.Equal("\nattach(what=b2345678901)", statement?.Text);
 
         statement = dctRStatements[2] as RStatement;
-        script.OperatorUpdateParam(2, "<-", 0, "\nc");
-        script.OperatorUpdateParam(2, "<-", 1, " d");
+        script.OperatorUpdateParam(2, "<-", 0, "c");
+        script.OperatorUpdateParam(2, "<-", 1, "d");
         Assert.Equal("\nc <- d", statement?.Text);
 
         statement = dctRStatements[3] as RStatement;
@@ -1792,7 +1793,7 @@ public class RInsightTestXUnit
         Assert.Equal("\ndata_book$get_columns_from_data(data_name = \"h\", col_names = \"i\")", statement?.Text);
 
         statement = dctRStatements[5] as RStatement;
-        script.OperatorUpdateParam(5, "<-", 0, "\nj");
+        script.OperatorUpdateParam(5, "<-", 0, "j");
         script.FunctionUpdateParamValue(5, "get_data_frame", 0, "jj", true);
         Assert.Equal("\nj <- data_book$get_data_frame(data_name=\"jj\")", statement?.Text);
 
@@ -1974,6 +1975,42 @@ public class RInsightTestXUnit
     }
 
     [Fact]
+    public void TestOperatorAddParam()
+    {
+        //string strInput;
+        //RScript script;
+        //OrderedDictionary dctRStatements;
+        //RStatement? statement;
+
+        //strInput = "a+b" +
+        //           "\nf2()";
+        //script = new RScript(strInput);
+        //dctRStatements = script.statements;
+        //statement = dctRStatements[0] as RStatement;
+        //Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        //Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        //script.OperatorAddParam(0, "+", 0, "c");
+        //Assert.Equal("c+a+b", statement?.Text);
+        //Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        //Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        //strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
+        //           "\nf2()";
+        //script = new RScript(strInput);
+        //dctRStatements = script.statements;
+        //statement = dctRStatements[0] as RStatement;
+        //Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        //Assert.Equal(140, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        //script.OperatorAddParam(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
+        //Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5) + theme_grey()", statement?.Text);
+        //Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        //Assert.Equal(171, (int)(dctRStatements[1] as RStatement).StartPos);
+
+    }
+
+    [Fact]
     public void TestOperatorUpdateParam()
     {
         string strInput;
@@ -2004,6 +2041,7 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
 
+
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
                    "\nf2()";
         script = new RScript(strInput);
@@ -2016,6 +2054,40 @@ public class RInsightTestXUnit
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5) + theme_grey()", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(171, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        strInput = "#x\na+#y\nb" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(0, "+", 0, "c");
+        Assert.Equal("#x\nc+#y\nb", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(0, "+", 1, "d1");
+        Assert.Equal("#x\nc+#y\nd1", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(10, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        strInput = "# Dialog: Boxplot Options\n\n" +
+                   "survey <- data_book$get_data_frame(data_name = \"survey\")" +
+                   "last_graph <- ggplot2::ggplot(data = survey, mapping = ggplot2::aes(y = yield, x = variety, fill = fertgrp)) + ggplot2::geom_boxplot(outlier.colour = \"red\") + theme_grey()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(83, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(0, "<-", 0, "a01234");
+        Assert.Equal("# Dialog: Boxplot Options\n\na01234 <- data_book$get_data_frame(data_name = \"survey\")", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(83, (int)(dctRStatements[1] as RStatement).StartPos);
 
     }
 
