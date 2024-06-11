@@ -1977,23 +1977,29 @@ public class RInsightTestXUnit
     [Fact]
     public void TestOperatorAddParam()
     {
-        //string strInput;
-        //RScript script;
-        //OrderedDictionary dctRStatements;
-        //RStatement? statement;
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
 
-        //strInput = "a+b" +
+        //strInput = "a+b+c+d" +
         //           "\nf2()";
         //script = new RScript(strInput);
         //dctRStatements = script.statements;
         //statement = dctRStatements[0] as RStatement;
-        //Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
-        //Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        //script.OperatorAddParam(0, "+", 0, "c");
-        //Assert.Equal("c+a+b", statement?.Text);
-        //Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
-        //Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        strInput = "a+b" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 99, "c");
+        Assert.Equal("a+b + c", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
 
         //strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
         //           "\nf2()";
