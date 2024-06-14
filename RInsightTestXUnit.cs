@@ -2001,18 +2001,18 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        //strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
-        //           "\nf2()";
-        //script = new RScript(strInput);
-        //dctRStatements = script.statements;
-        //statement = dctRStatements[0] as RStatement;
-        //Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
-        //Assert.Equal(140, (int)(dctRStatements[1] as RStatement).StartPos);
+        strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey()" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(174, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        //script.OperatorAddParam(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
-        //Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5) + theme_grey()", statement?.Text);
-        //Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
-        //Assert.Equal(171, (int)(dctRStatements[1] as RStatement).StartPos);
+        script.OperatorAddParam(0, "+", 99, "ggplot2::facet_wrap(facets= ~ _facetBy)");
+        Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey() + ggplot2::facet_wrap(facets= ~ _facetBy)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(215, (int)(dctRStatements[1] as RStatement).StartPos);
 
     }
 
