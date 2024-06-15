@@ -2012,6 +2012,11 @@ public class RInsightTestXUnit
         script.OperatorAddParam(0, "+", 99, "ggplot2::facet_wrap(facets= ~ _facetBy)");
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey() + ggplot2::facet_wrap(facets= ~ _facetBy)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(216, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(0, "~", 0, "village");
+        Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey() + ggplot2::facet_wrap(facets= ~ village)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(215, (int)(dctRStatements[1] as RStatement).StartPos);
 
     }
