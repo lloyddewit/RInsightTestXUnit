@@ -18,6 +18,7 @@
 using RInsightF461;
 using System.Collections.Specialized;
 using System.Collections;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RInsightTestXUnit;
 
@@ -1458,7 +1459,7 @@ public class RInsightTestXUnit
     }
 
     [Fact]
-    public void TestAddRemoveParameters()
+    public void TestFunctionAddRemoveParamByName()
     {
         string strInput;
         RScript script;
@@ -1472,109 +1473,109 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p1", "v1");
+        script.FunctionAddParamByName(0, "f1", "p1", "v1");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p2", "v2");
+        script.FunctionAddParamByName(0, "f1", "p2", "v2");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1, p2=v2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(16, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p3", "v3");
+        script.FunctionAddParamByName(0, "f1", "p3", "v3");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p4", "v4", 0);
+        script.FunctionAddParamByName(0, "f1", "p4", "v4", 0);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(30, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p5", "v5", 1);
+        script.FunctionAddParamByName(0, "f1", "p5", "v5", 1);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(37, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p6", "v6", 2);
+        script.FunctionAddParamByName(0, "f1", "p6", "v6", 2);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(44, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p7", "v7", 5);
+        script.FunctionAddParamByName(0, "f1", "p7", "v7", 5);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(51, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p8", "v8", 7);
+        script.FunctionAddParamByName(0, "f1", "p8", "v8", 7);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(58, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.AddParameterByName(0, "f1", "p9", "v9", 9);
+        script.FunctionAddParamByName(0, "f1", "p9", "v9", 9);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8, p9=v9)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(65, (int)(dctRStatements[1] as RStatement).StartPos);
 
 
-        script.RemoveParameterByName(0, "f1", "p9");
+        script.FunctionRemoveParamByName(0, "f1", "p9");
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(58, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.RemoveParameterByName(0, "f1", "p8");
+        script.FunctionRemoveParamByName(0, "f1", "p8");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(51, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.RemoveParameterByName(0, "f1", "p7");
+        script.FunctionRemoveParamByName(0, "f1", "p7");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(44, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.RemoveParameterByName(0, "f1", "p6");
+        script.FunctionRemoveParamByName(0, "f1", "p6");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(37, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.RemoveParameterByName(0, "f1", "p5");
+        script.FunctionRemoveParamByName(0, "f1", "p5");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(30, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.RemoveParameterByName(0, "f1", "p4");
+        script.FunctionRemoveParamByName(0, "f1", "p4");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.RemoveParameterByName(0, "f1", "p3");
+        script.FunctionRemoveParamByName(0, "f1", "p3");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1, p2=v2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(16, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.RemoveParameterByName(0, "f1", "p2");
+        script.FunctionRemoveParamByName(0, "f1", "p2");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.RemoveParameterByName(0, "f1", "p1");
+        script.FunctionRemoveParamByName(0, "f1", "p1");
         Assert.Equal("f1()", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1605,7 +1606,7 @@ public class RInsightTestXUnit
 
         statement = dctRStatements[3] as RStatement;
 
-        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
+        script.FunctionAddParamByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=\"yield\")", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1616,7 +1617,7 @@ public class RInsightTestXUnit
         Assert.Equal(416, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(457, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2");
+        script.FunctionAddParamByName(3, "add_columns_to_data", "adjacent_column", "yield2");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1627,7 +1628,7 @@ public class RInsightTestXUnit
         Assert.Equal(415, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(456, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
+        script.FunctionAddParamByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", param1Name=param1Value, col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1638,7 +1639,7 @@ public class RInsightTestXUnit
         Assert.Equal(439, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(480, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
+        script.FunctionAddParamByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
         Assert.Equal("\ndata_book$add_columns_to_data(param2Name=\"param2Value\", data_name=\"_dataFrame\", param1Name=param1Value, col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(77, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1649,16 +1650,16 @@ public class RInsightTestXUnit
         Assert.Equal(465, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(506, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.RemoveParameterByName(3, "add_columns_to_data", "param1Name");
-        script.RemoveParameterByName(3, "add_columns_to_data", "param2Name");
+        script.FunctionRemoveParamByName(3, "add_columns_to_data", "param1Name");
+        script.FunctionRemoveParamByName(3, "add_columns_to_data", "param2Name");
 
-        script.RemoveParameterByName(3, "add_columns_to_data", "adjacent_column");
+        script.FunctionRemoveParamByName(3, "add_columns_to_data", "adjacent_column");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE)", statement?.Text);
     }
 
 
     [Fact]
-    public void TestGetToken()
+    public void TestFunctionUpdateParamValue()
     {
         string strInput;
         RScript script;
@@ -1689,7 +1690,7 @@ public class RInsightTestXUnit
         TestDictionaryKeysConsistent(script.statements);
 
         statement = dctRStatements[0] as RStatement;
-        script.SetToken(0, "<-", 0, "a");
+        script.OperatorUpdateParam(0, "<-", 0, "a");
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(68, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(92, (int)(dctRStatements[2] as RStatement).StartPos);
@@ -1700,7 +1701,7 @@ public class RInsightTestXUnit
         Assert.Equal(423, (int)(dctRStatements[7] as RStatement).StartPos);
         TestDictionaryKeysConsistent(script.statements);
 
-        script.SetToken(0, "get_data_frame", 0, "aa", true);
+        script.FunctionUpdateParamValue(0, "get_data_frame", 0, "aa", true);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(84, (int)(dctRStatements[2] as RStatement).StartPos);
@@ -1715,7 +1716,7 @@ public class RInsightTestXUnit
                 "a <-data_book$get_data_frame(data_name=\"aa\")", statement?.Text);
 
         statement = dctRStatements[1] as RStatement;
-        script.SetToken(1, "attach", 0, "b2345678901");
+        script.FunctionUpdateParamValue(1, "attach", 0, "b2345678901");
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(85, (int)(dctRStatements[2] as RStatement).StartPos);
@@ -1728,14 +1729,14 @@ public class RInsightTestXUnit
         Assert.Equal("\nattach(what=b2345678901)", statement?.Text);
 
         statement = dctRStatements[2] as RStatement;
-        script.SetToken(2, "<-", 0, "c");
-        script.SetToken(2, "<-", 1, "d");
+        script.OperatorUpdateParam(2, "<-", 0, "c");
+        script.OperatorUpdateParam(2, "<-", 1, "d");
         Assert.Equal("\nc <- d", statement?.Text);
 
         statement = dctRStatements[3] as RStatement;
-        script.SetToken(3, "add_columns_to_data", 0, "e", true);
-        script.SetToken(3, "add_columns_to_data", 1, "f", true);
-        script.SetToken(3, "add_columns_to_data", 2, "g");
+        script.FunctionUpdateParamValue(3, "add_columns_to_data", 0, "e", true);
+        script.FunctionUpdateParamValue(3, "add_columns_to_data", 1, "f", true);
+        script.FunctionUpdateParamValue(3, "add_columns_to_data", 2, "g");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1746,7 +1747,7 @@ public class RInsightTestXUnit
         Assert.Equal(325, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(366, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
+        script.FunctionAddParamByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=\"yield\")", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1757,7 +1758,7 @@ public class RInsightTestXUnit
         Assert.Equal(350, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(391, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "adjacent_column", "yield2");
+        script.FunctionAddParamByName(3, "add_columns_to_data", "adjacent_column", "yield2");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1768,14 +1769,14 @@ public class RInsightTestXUnit
         Assert.Equal(349, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(390, (int)(dctRStatements[7] as RStatement).StartPos);
 
-        script.AddParameterByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
+        script.FunctionAddParamByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", param1Name=param1Value, col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
-        script.AddParameterByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
+        script.FunctionAddParamByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
         Assert.Equal("\ndata_book$add_columns_to_data(param2Name=\"param2Value\", data_name=\"e\", param1Name=param1Value, col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
-        script.RemoveParameterByName(3, "add_columns_to_data", "param1Name");
-        script.RemoveParameterByName(3, "add_columns_to_data", "param2Name");
+        script.FunctionRemoveParamByName(3, "add_columns_to_data", "param1Name");
+        script.FunctionRemoveParamByName(3, "add_columns_to_data", "param2Name");
 
-        script.RemoveParameterByName(3, "add_columns_to_data", "adjacent_column");
+        script.FunctionRemoveParamByName(3, "add_columns_to_data", "adjacent_column");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(60, (int)(dctRStatements[1] as RStatement).StartPos);
@@ -1787,22 +1788,22 @@ public class RInsightTestXUnit
         Assert.Equal(366, (int)(dctRStatements[7] as RStatement).StartPos);
 
         statement = dctRStatements[4] as RStatement;
-        script.SetToken(4, "get_columns_from_data", 0, "h", true);
-        script.SetToken(4, "get_columns_from_data", 1, "i", true);
+        script.FunctionUpdateParamValue(4, "get_columns_from_data", 0, "h", true);
+        script.FunctionUpdateParamValue(4, "get_columns_from_data", 1, "i", true);
         Assert.Equal("\ndata_book$get_columns_from_data(data_name = \"h\", col_names = \"i\")", statement?.Text);
 
         statement = dctRStatements[5] as RStatement;
-        script.SetToken(5, "<-", 0, "j");
-        script.SetToken(5, "get_data_frame", 0, "jj", true);
+        script.OperatorUpdateParam(5, "<-", 0, "j");
+        script.FunctionUpdateParamValue(5, "get_data_frame", 0, "jj", true);
         Assert.Equal("\nj <- data_book$get_data_frame(data_name=\"jj\")", statement?.Text);
 
         statement = dctRStatements[6] as RStatement;
-        script.SetToken(6, "detach", 0, "k");
+        script.FunctionUpdateParamValue(6, "detach", 0, "k");
         Assert.Equal("\ndetach(Name = k, unload = True)", statement?.Text);
 
         statement = dctRStatements[7] as RStatement;
-        script.SetToken(7, "c", 0, "l", true);
-        script.SetToken(7, "c", 1, "m", true);
+        script.FunctionUpdateParamValue(7, "c", 0, "l", true);
+        script.FunctionUpdateParamValue(7, "c", 1, "m", true);
         Assert.Equal("\nrm(list=c(\"l\", \"m\"))", statement?.Text);
 
 
@@ -1974,7 +1975,74 @@ public class RInsightTestXUnit
     }
 
     [Fact]
-    public void TestReplaceParameter()
+    public void TestOperatorAddParam()
+    {
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
+
+        //strInput = "a+b+c+d" +
+        //           "\nf2()";
+        //script = new RScript(strInput);
+        //dctRStatements = script.statements;
+        //statement = dctRStatements[0] as RStatement;
+
+        strInput = "a+b" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 99, "c");
+        Assert.Equal("a+b + c", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        strInput = "a=b+c" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 99, "d");
+        Assert.Equal("a=b+c + d", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 99, " e");
+        Assert.Equal("a=b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(14, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey()" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(174, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 99, "ggplot2::facet_wrap(facets= ~ _facetBy)");
+        Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey() + ggplot2::facet_wrap(facets= ~ _facetBy)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(216, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(0, "~", 0, "village");
+        Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey() + ggplot2::facet_wrap(facets= ~ village)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(215, (int)(dctRStatements[1] as RStatement).StartPos);
+
+    }
+
+    [Fact]
+    public void TestOperatorUpdateParam()
     {
         string strInput;
         RScript script;
@@ -1989,20 +2057,21 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.ReplaceParameterOperator(0, "+", 0, "c");
+        script.OperatorUpdateParam(0, "+", 0, "c");
         Assert.Equal("c+b", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.ReplaceParameterOperator(0, "+", 1, "d1");
+        script.OperatorUpdateParam(0, "+", 1, "d1");
         Assert.Equal("c+d1", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.ReplaceParameterOperator(0, "+", 0, "c002");
+        script.OperatorUpdateParam(0, "+", 0, "c002");
         Assert.Equal("c002+d1", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
+
 
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
                    "\nf2()";
@@ -2012,10 +2081,44 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(140, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.ReplaceParameterOperator(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
+        script.OperatorUpdateParam(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5) + theme_grey()", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(171, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        strInput = "#x\na+#y\nb" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(0, "+", 0, "c");
+        Assert.Equal("#x\nc+#y\nb", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(0, "+", 1, "d1");
+        Assert.Equal("#x\nc+#y\nd1", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(10, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
+        strInput = "# Dialog: Boxplot Options\n\n" +
+                   "survey <- data_book$get_data_frame(data_name = \"survey\")" +
+                   "last_graph <- ggplot2::ggplot(data = survey, mapping = ggplot2::aes(y = yield, x = variety, fill = fertgrp)) + ggplot2::geom_boxplot(outlier.colour = \"red\") + theme_grey()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(83, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(0, "<-", 0, "a01234");
+        Assert.Equal("# Dialog: Boxplot Options\n\na01234 <- data_book$get_data_frame(data_name = \"survey\")", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(83, (int)(dctRStatements[1] as RStatement).StartPos);
 
     }
 
