@@ -2001,6 +2001,26 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
 
+
+        strInput = "a=b+c" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 99, "d");
+        Assert.Equal("a=b+c + d", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 99, " e");
+        Assert.Equal("a=b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(14, (int)(dctRStatements[1] as RStatement).StartPos);
+
+
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey()" +
                    "\nf2()";
         script = new RScript(strInput);
