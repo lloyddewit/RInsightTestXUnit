@@ -1982,12 +1982,6 @@ public class RInsightTestXUnit
         OrderedDictionary dctRStatements;
         RStatement? statement;
 
-        //strInput = "a+b+c+d" +
-        //           "\nf2()";
-        //script = new RScript(strInput);
-        //dctRStatements = script.statements;
-        //statement = dctRStatements[0] as RStatement;
-
         strInput = "a+b" +
                    "\nf2()";
         script = new RScript(strInput);
@@ -2000,6 +1994,21 @@ public class RInsightTestXUnit
         Assert.Equal("a+b + c", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 0, "d");
+        Assert.Equal("d + a+b + c", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(11, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 1, "e");
+        Assert.Equal("d + e + a+b + c", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(15, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 2, "f");
+        Assert.Equal("d + e + f + a+b + c", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(19, (int)(dctRStatements[1] as RStatement).StartPos);
 
 
         strInput = "a=b+c" +
