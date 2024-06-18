@@ -2029,6 +2029,31 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(14, (int)(dctRStatements[1] as RStatement).StartPos);
 
+        script.OperatorAddParam(0, "+", 0, "f");
+        Assert.Equal("a=f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(18, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 0, " g");
+        Assert.Equal("a= g + f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 1, "h");
+        Assert.Equal("a= g + h + f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(27, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 2, " i");
+        Assert.Equal("a= g + h +  i + f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(32, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 3, "j");
+        Assert.Equal("a= g + h +  i + j + f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(36, (int)(dctRStatements[1] as RStatement).StartPos);
+
 
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey()" +
                    "\nf2()";
@@ -2047,6 +2072,11 @@ public class RInsightTestXUnit
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey() + ggplot2::facet_wrap(facets= ~ village)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(215, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        script.OperatorAddParam(0, "+", 2, "ggplot2::stat_summary(geom=\"line\", fun.y=\"mean\", size=0.7, ggplot2::aes(group=fertgrp, colour=fertgrp), position=ggplot2::position_dodge(width=0.9))");
+        Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + ggplot2::stat_summary(geom=\"line\", fun.y=\"mean\", size=0.7, ggplot2::aes(group=fertgrp, colour=fertgrp), position=ggplot2::position_dodge(width=0.9)) + theme_grey() + ggplot2::facet_wrap(facets= ~ village)", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(366, (int)(dctRStatements[1] as RStatement).StartPos);
 
     }
 
