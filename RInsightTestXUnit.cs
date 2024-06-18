@@ -2055,6 +2055,59 @@ public class RInsightTestXUnit
         Assert.Equal(36, (int)(dctRStatements[1] as RStatement).StartPos);
 
 
+        strInput = "f1()" +
+                   "\na=b+c" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[1] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(10, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorAddParam(1, "+", 99, "d");
+        Assert.Equal("\na=b+c + d", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(14, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorAddParam(1, "+", 99, " e");
+        Assert.Equal("\na=b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(19, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorAddParam(1, "+", 0, "f");
+        Assert.Equal("\na=f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorAddParam(1, "+", 0, " g");
+        Assert.Equal("\na= g + f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(28, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorAddParam(1, "+", 1, "h");
+        Assert.Equal("\na= g + h + f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(32, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorAddParam(1, "+", 2, " i");
+        Assert.Equal("\na= g + h +  i + f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(37, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorAddParam(1, "+", 3, "j");
+        Assert.Equal("\na= g + h +  i + j + f + b+c + d +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(41, (int)(dctRStatements[2] as RStatement).StartPos);
+
+
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey()" +
                    "\nf2()";
         script = new RScript(strInput);
