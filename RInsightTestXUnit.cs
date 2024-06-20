@@ -2107,6 +2107,12 @@ public class RInsightTestXUnit
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(41, (int)(dctRStatements[2] as RStatement).StartPos);
 
+        script.OperatorAddParam(1, "+", 8, "k");
+        Assert.Equal("\na= g + h +  i + j + f + b+c + d + k +  e", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(45, (int)(dctRStatements[2] as RStatement).StartPos);
+
 
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey()" +
                    "\nf2()";
