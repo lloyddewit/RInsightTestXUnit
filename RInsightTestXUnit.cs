@@ -2205,28 +2205,52 @@ public class RInsightTestXUnit
         Assert.Equal(22, (int)(dctRStatements[2] as RStatement).StartPos);
 
         script.OperatorUpdateParam(1, "+", 2, " i");
-        Assert.Equal("\na<-g+hh +  i + e+f", statement?.Text);
+        Assert.Equal("\na<-g+hh + i + e+f", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(23, (int)(dctRStatements[2] as RStatement).StartPos);
 
         script.OperatorUpdateParam(1, "+", 3, "j ");
-        Assert.Equal("\na<-g+hh +  i + j+f", statement?.Text);
+        Assert.Equal("\na<-g+hh + i + j +f", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(24, (int)(dctRStatements[2] as RStatement).StartPos);
 
         script.OperatorUpdateParam(1, "+", 4, " kkk ");
-        Assert.Equal("\na<-g+hh +  i + j+ kkk", statement?.Text);
+        Assert.Equal("\na<-g+hh + i + j + kkk", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(27, (int)(dctRStatements[2] as RStatement).StartPos);
 
         script.OperatorUpdateParam(1, "+", 5, "l");
-        Assert.Equal("\na<-g+hh +  i + j+ l", statement?.Text);
+        Assert.Equal("\na<-g+hh + i + j + l", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(25, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(1, "<-", 0, "m");
+        Assert.Equal("\nm<-g+hh + i + j + l", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(25, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(1, "<-", 0, " n ");
+        Assert.Equal("\n n <-g+hh + i + j + l", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(27, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(1, "<-", 1, "o");
+        Assert.Equal("\n n <-o", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(12, (int)(dctRStatements[2] as RStatement).StartPos);
+
+        script.OperatorUpdateParam(1, "<-", 2, " ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()  #comment ");
+        Assert.Equal("\n n <- ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(64, (int)(dctRStatements[2] as RStatement).StartPos);
 
 
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
