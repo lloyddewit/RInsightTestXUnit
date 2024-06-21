@@ -2250,7 +2250,7 @@ public class RInsightTestXUnit
         Assert.Equal("\n n <- ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
-        Assert.Equal(64, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(70, (int)(dctRStatements[2] as RStatement).StartPos);
 
 
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
@@ -2261,7 +2261,7 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(140, (int)(dctRStatements[1] as RStatement).StartPos);
 
-        script.OperatorUpdateParam(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
+        script.OperatorUpdateParam(0, "+", 1, "ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5) + theme_grey()", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(171, (int)(dctRStatements[1] as RStatement).StartPos);
