@@ -1845,6 +1845,27 @@ public class RInsightTestXUnit
         Assert.True(script.AreScriptPositionsConsistent());
 
 
+        strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=_x, fill=fertgrp)) + " +
+            "ggplot2::geom_boxplot(outlier.colour=\"red\") + " +
+            "ggplot2::stat_summary(geom=\"line\", fun.y=\"mean\", size=1.5, ggplot2::aes(group=_group, colour=_colour), position=ggplot2::position_dodge(width=0.9)) + " +
+            "theme_grey()" +
+           "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        statement = dctRStatements[0] as RStatement;
+        script.FunctionUpdateParamValue(0, "aes", 1, "variety");
+        script.FunctionUpdateParamValue(0, "aes", 0, "fertgrp1", occurence: 1);
+        script.FunctionUpdateParamValue(0, "aes", 1, "fertgrp2", occurence: 1);
+        Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + " +
+            "ggplot2::geom_boxplot(outlier.colour=\"red\") + " +
+            "ggplot2::stat_summary(geom=\"line\", fun.y=\"mean\", size=1.5, ggplot2::aes(group=fertgrp1, colour=fertgrp2), position=ggplot2::position_dodge(width=0.9)) + " +
+            "theme_grey()", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
         strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))\n";
         strInput = "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))\n";
