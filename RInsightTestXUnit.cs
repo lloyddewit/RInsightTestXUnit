@@ -1472,113 +1472,132 @@ public class RInsightTestXUnit
         dctRStatements = script.statements;
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p1", "v1");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p2", "v2");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1, p2=v2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(16, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p3", "v3");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p4", "v4", 0);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(30, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p5", "v5", 1);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(37, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p6", "v6", 2);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(44, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p7", "v7", 5);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(51, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p8", "v8", 7);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(58, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(0, "f1", "p9", "v9", 9);
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8, p9=v9)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(65, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         script.FunctionRemoveParamByName(0, "f1", "p9");
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3, p8=v8)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(58, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(0, "f1", "p8");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p7=v7, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(51, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(0, "f1", "p7");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p6=v6, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(44, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(0, "f1", "p6");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p5=v5, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(37, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(0, "f1", "p5");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p4=v4, p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(30, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(0, "f1", "p4");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1, p2=v2, p3=v3)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(0, "f1", "p3");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1, p2=v2)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(16, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(0, "f1", "p2");
         statement = dctRStatements[0] as RStatement;
         Assert.Equal("f1(p1=v1)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(0, "f1", "p1");
         Assert.Equal("f1()", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         strInput =
@@ -1602,7 +1621,7 @@ public class RInsightTestXUnit
         Assert.Equal(328, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(391, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(432, (int)(dctRStatements[7] as RStatement).StartPos);
-        TestDictionaryKeysConsistent(script.statements);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         statement = dctRStatements[3] as RStatement;
 
@@ -1616,6 +1635,7 @@ public class RInsightTestXUnit
         Assert.Equal(353, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(416, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(457, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(3, "add_columns_to_data", "adjacent_column", "yield2");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
@@ -1627,6 +1647,7 @@ public class RInsightTestXUnit
         Assert.Equal(352, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(415, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(456, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", param1Name=param1Value, col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
@@ -1638,6 +1659,7 @@ public class RInsightTestXUnit
         Assert.Equal(376, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(439, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(480, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
         Assert.Equal("\ndata_book$add_columns_to_data(param2Name=\"param2Value\", data_name=\"_dataFrame\", param1Name=param1Value, col_name=\"_columnName\", col_data=_columnName, before=FALSE, adjacent_column=yield2)", statement?.Text);
@@ -1649,12 +1671,15 @@ public class RInsightTestXUnit
         Assert.Equal(402, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(465, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(506, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(3, "add_columns_to_data", "param1Name");
         script.FunctionRemoveParamByName(3, "add_columns_to_data", "param2Name");
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(3, "add_columns_to_data", "adjacent_column");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"_dataFrame\", col_name=\"_columnName\", col_data=_columnName, before=FALSE)", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
     }
 
 
@@ -1687,7 +1712,7 @@ public class RInsightTestXUnit
         Assert.Equal(328, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(391, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(432, (int)(dctRStatements[7] as RStatement).StartPos);
-        TestDictionaryKeysConsistent(script.statements);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         statement = dctRStatements[0] as RStatement;
         script.OperatorUpdateParam(0, "<-", 0, "a");
@@ -1699,7 +1724,7 @@ public class RInsightTestXUnit
         Assert.Equal(319, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(382, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(423, (int)(dctRStatements[7] as RStatement).StartPos);
-        TestDictionaryKeysConsistent(script.statements);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionUpdateParamValue(0, "get_data_frame", 0, "aa", true);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
@@ -1710,7 +1735,7 @@ public class RInsightTestXUnit
         Assert.Equal(311, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(374, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(415, (int)(dctRStatements[7] as RStatement).StartPos);
-        TestDictionaryKeysConsistent(script.statements);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         Assert.Equal("# Dialog: Enter\n" +
                 "a <-data_book$get_data_frame(data_name=\"aa\")", statement?.Text);
@@ -1725,13 +1750,14 @@ public class RInsightTestXUnit
         Assert.Equal(312, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(375, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(416, (int)(dctRStatements[7] as RStatement).StartPos);
-
         Assert.Equal("\nattach(what=b2345678901)", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         statement = dctRStatements[2] as RStatement;
         script.OperatorUpdateParam(2, "<-", 0, "c");
         script.OperatorUpdateParam(2, "<-", 1, "d");
         Assert.Equal("\nc <- d", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         statement = dctRStatements[3] as RStatement;
         script.FunctionUpdateParamValue(3, "add_columns_to_data", 0, "e", true);
@@ -1746,6 +1772,7 @@ public class RInsightTestXUnit
         Assert.Equal(262, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(325, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(366, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(3, "add_columns_to_data", "adjacent_column", "yield", 99, true);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=\"yield\")", statement?.Text);
@@ -1757,6 +1784,7 @@ public class RInsightTestXUnit
         Assert.Equal(287, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(350, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(391, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(3, "add_columns_to_data", "adjacent_column", "yield2");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
@@ -1768,13 +1796,18 @@ public class RInsightTestXUnit
         Assert.Equal(286, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(349, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(390, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionAddParamByName(3, "add_columns_to_data", "param1Name", "param1Value", 1);
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", param1Name=param1Value, col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
         script.FunctionAddParamByName(3, "add_columns_to_data", "param2Name", "param2Value", 0, true);
         Assert.Equal("\ndata_book$add_columns_to_data(param2Name=\"param2Value\", data_name=\"e\", param1Name=param1Value, col_name=\"f\", col_data=g, before=FALSE, adjacent_column=yield2)", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
+
         script.FunctionRemoveParamByName(3, "add_columns_to_data", "param1Name");
+        Assert.True(script.AreScriptPositionsConsistent());
         script.FunctionRemoveParamByName(3, "add_columns_to_data", "param2Name");
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.FunctionRemoveParamByName(3, "add_columns_to_data", "adjacent_column");
         Assert.Equal("\ndata_book$add_columns_to_data(data_name=\"e\", col_name=\"f\", col_data=g, before=FALSE)", statement?.Text);
@@ -1786,25 +1819,30 @@ public class RInsightTestXUnit
         Assert.Equal(262, (int)(dctRStatements[5] as RStatement).StartPos);
         Assert.Equal(325, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(366, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         statement = dctRStatements[4] as RStatement;
         script.FunctionUpdateParamValue(4, "get_columns_from_data", 0, "h", true);
         script.FunctionUpdateParamValue(4, "get_columns_from_data", 1, "i", true);
         Assert.Equal("\ndata_book$get_columns_from_data(data_name = \"h\", col_names = \"i\")", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         statement = dctRStatements[5] as RStatement;
         script.OperatorUpdateParam(5, "<-", 0, "j");
         script.FunctionUpdateParamValue(5, "get_data_frame", 0, "jj", true);
         Assert.Equal("\nj <- data_book$get_data_frame(data_name=\"jj\")", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         statement = dctRStatements[6] as RStatement;
         script.FunctionUpdateParamValue(6, "detach", 0, "k");
         Assert.Equal("\ndetach(Name = k, unload = True)", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         statement = dctRStatements[7] as RStatement;
         script.FunctionUpdateParamValue(7, "c", 0, "l", true);
         script.FunctionUpdateParamValue(7, "c", 1, "m", true);
         Assert.Equal("\nrm(list=c(\"l\", \"m\"))", statement?.Text);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
@@ -1989,26 +2027,31 @@ public class RInsightTestXUnit
         statement = dctRStatements[0] as RStatement;
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 99, "c");
         Assert.Equal("a+b + c", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 0, "d");
         Assert.Equal("d + a+b + c", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(11, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 1, "e");
         Assert.Equal("d + e + a+b + c", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(15, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 2, "f");
         Assert.Equal("d + e + f + a+b + c", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(19, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         strInput = "a=b+c" +
@@ -2018,41 +2061,49 @@ public class RInsightTestXUnit
         statement = dctRStatements[0] as RStatement;
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 99, "d");
         Assert.Equal("a=b+c + d", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 99, " e");
         Assert.Equal("a=b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(14, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 0, "f");
         Assert.Equal("a=f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(18, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 0, " g");
         Assert.Equal("a= g + f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(23, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 1, "h");
         Assert.Equal("a= g + h + f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(27, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 2, " i");
         Assert.Equal("a= g + h +  i + f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(32, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 3, "j");
         Assert.Equal("a= g + h +  i + j + f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(36, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         strInput = "f1()" +
@@ -2064,54 +2115,70 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(10, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(1, "+", 99, "d");
         Assert.Equal("\na=b+c + d", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(14, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(1, "+", 99, " e");
         Assert.Equal("\na=b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(19, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(1, "+", 0, "f");
         Assert.Equal("\na=f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(23, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(1, "+", 0, " g");
         Assert.Equal("\na= g + f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(28, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(1, "+", 1, "h");
         Assert.Equal("\na= g + h + f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(32, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(1, "+", 2, " i");
         Assert.Equal("\na= g + h +  i + f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(37, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(1, "+", 3, "j");
         Assert.Equal("\na= g + h +  i + j + f + b+c + d +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(41, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(1, "+", 8, "k");
         Assert.Equal("\na= g + h +  i + j + f + b+c + d + k +  e", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(45, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorAddParam(1, "+", 10, "l ");
+        Assert.Equal("\na= g + h +  i + j + f + b+c + d + k +  e + l", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(49, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey()" +
@@ -2121,22 +2188,25 @@ public class RInsightTestXUnit
         statement = dctRStatements[0] as RStatement;
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(174, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 99, "ggplot2::facet_wrap(facets= ~ _facetBy)");
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey() + ggplot2::facet_wrap(facets= ~ _facetBy)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(216, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorUpdateParam(0, "~", 0, "village");
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + theme_grey() + ggplot2::facet_wrap(facets= ~ village)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(215, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorAddParam(0, "+", 2, "ggplot2::stat_summary(geom=\"line\", fun.y=\"mean\", size=0.7, ggplot2::aes(group=fertgrp, colour=fertgrp), position=ggplot2::position_dodge(width=0.9))");
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=variety, fill=fertgrp)) + ggplot2::geom_boxplot(varwidth=TRUE, outlier.colour=\"red\") + ggplot2::stat_summary(geom=\"line\", fun.y=\"mean\", size=0.7, ggplot2::aes(group=fertgrp, colour=fertgrp), position=ggplot2::position_dodge(width=0.9)) + theme_grey() + ggplot2::facet_wrap(facets= ~ village)", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(366, (int)(dctRStatements[1] as RStatement).StartPos);
-
+        Assert.True(script.AreScriptPositionsConsistent());
     }
 
     [Fact]
@@ -2154,21 +2224,113 @@ public class RInsightTestXUnit
         statement = dctRStatements[0] as RStatement;
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorUpdateParam(0, "+", 0, "c");
         Assert.Equal("c+b", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorUpdateParam(0, "+", 1, "d1");
         Assert.Equal("c+d1", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorUpdateParam(0, "+", 0, "c002");
         Assert.Equal("c002+d1", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(0, "+", 1, "d2 ");
+        Assert.Equal("c002+d2", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+
+        strInput = "\nf2()" +
+                   "\na<-b+c +d + e+f" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[1] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(21, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 0, "g");
+        Assert.Equal("\na<-g+c +d + e+f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(21, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 1, "hh");
+        Assert.Equal("\na<-g+hh +d + e+f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(22, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 2, " i");
+        Assert.Equal("\na<-g+hh + i + e+f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 3, "j ");
+        Assert.Equal("\na<-g+hh + i + j +f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(24, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 4, " kkk ");
+        Assert.Equal("\na<-g+hh + i + j + kkk", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(27, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 5, "l");
+        Assert.Equal("\na<-g+hh + i + j + l", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(25, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "<-", 0, "m");
+        Assert.Equal("\nm<-g+hh + i + j + l", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(25, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "<-", 0, " n ");
+        Assert.Equal("\n n <-g+hh + i + j + l", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(27, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "<-", 1, "o");
+        Assert.Equal("\n n <-o", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(12, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "<-", 2, " ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()  #comment ");
+        Assert.Equal("\n n <- ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(70, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
@@ -2178,11 +2340,13 @@ public class RInsightTestXUnit
         statement = dctRStatements[0] as RStatement;
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(140, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
-        script.OperatorUpdateParam(0, "+", 1, " ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
+        script.OperatorUpdateParam(0, "+", 1, "ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5)");
         Assert.Equal("last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggthemes::geom_tufteboxplot(stat=\"boxplot\", median.type=\"line\", coef =1.5) + theme_grey()", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(171, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         strInput = "#x\na+#y\nb" +
@@ -2192,16 +2356,19 @@ public class RInsightTestXUnit
         statement = dctRStatements[0] as RStatement;
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorUpdateParam(0, "+", 0, "c");
         Assert.Equal("#x\nc+#y\nb", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(9, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorUpdateParam(0, "+", 1, "d1");
         Assert.Equal("#x\nc+#y\nd1", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(10, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
 
         strInput = "# Dialog: Boxplot Options\n\n" +
@@ -2212,21 +2379,14 @@ public class RInsightTestXUnit
         statement = dctRStatements[0] as RStatement;
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(83, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
         script.OperatorUpdateParam(0, "<-", 0, "a01234");
         Assert.Equal("# Dialog: Boxplot Options\n\na01234 <- data_book$get_data_frame(data_name = \"survey\")", statement?.Text);
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(83, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
 
     }
 
-    private static void TestDictionaryKeysConsistent(OrderedDictionary dctRStatements)
-    {
-        foreach (System.Collections.DictionaryEntry entry in dctRStatements)
-        {
-            uint startPosKey = (uint)entry.Key;
-            uint startPosValue = (entry.Value as RStatement).StartPos;
-            Assert.Equal(startPosKey, startPosValue);
-        }
-    }
 }
