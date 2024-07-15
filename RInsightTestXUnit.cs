@@ -2466,4 +2466,70 @@ public class RInsightTestXUnit
 
     }
 
+    [Fact]
+    public void TestOperatorUpdateParamPresentation()
+    {
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
+
+        strInput = "a+b" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParamPresentation(0, "+", 0, " ");
+        Assert.Equal(" a+b", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParamPresentation(0, "+", 0, "#d \n");
+        Assert.Equal("#d \na+b", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(7, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+
+        strInput = "\nf2()" +
+                   "\na<-b+c +d + e+f" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[1] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(21, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParamPresentation(1, "+", 0, " ");
+        Assert.Equal("\na<- b+c +d + e+f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(22, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+
+        strInput = "last_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(140, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParamPresentation(0, "<-", 0, "# comment \n\n");
+        Assert.Equal("# comment \n\nlast_graph <- ggplot2::ggplot(data=survey, mapping=ggplot2::aes(y=yield, x=\"\")) + ggplot2::geom_boxplot(outlier.colour=\"red\") + theme_grey()", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(152, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+    }
+
 }
