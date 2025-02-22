@@ -1456,6 +1456,67 @@ public class RInsightTestXUnit
         Assert.Single(dctRStatements);
         Assert.Equal("if(i==1){tmp_prev<-tmp_prev;tmp<-cnt[i]} else {tmp_prev<-tmp_prev+cnt[i-1];tmp<-tmp+cnt[i]}", (dctRStatements[0] as RStatement)?.TextNoFormatting);
 
+        // tidyverse operators used in https://github.com/IDEMSInternational/R-Instat/issues/9449
+        strInput = "!!!a";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal("!!!a", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "forcats::fct_recode(x, !!!levels)";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(strInput, (dctRStatements[0] as RStatement)?.Text);
+        Assert.Equal("forcats::fct_recode(x,!!!levels)", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        // examples of !!! from https://adv-r.hadley.nz/quasiquotation.html
+        strInput = "xs <- exprs(1, a, -b)\r\n" +
+                   "expr(f(!!!xs, y))\r\n" +
+                   "#> f(1, a, -b, y)\r\n\r\n" +
+                   "# Or with names\r\n" +
+                   "ys < -set_names(xs, c(\"a\", \"b\", \"c\"))\r\n" +
+                   "expr(f(!!!ys, d = 4))\r\n" +
+                   "#> f(a = 1, b = a, c = -b, d = 4)";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(5, dctRStatements.Count);
+        Assert.Equal("xs <- exprs(1, a, -b)", (dctRStatements[0] as RStatement)?.Text);
+        Assert.Equal("xs<-exprs(1,a,-b)", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+        Assert.Equal("expr(f(!!!xs,y))", (dctRStatements[1] as RStatement)?.TextNoFormatting);
+        Assert.Equal("expr(f(!!!ys,d=4))", (dctRStatements[3] as RStatement)?.TextNoFormatting);
+
+        strInput = "call2(\"f\", !!!xs, expr(y))\r\n" +
+                   "#> f(1, a, -b, y)\r\n";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal("call2(\"f\", !!!xs, expr(y))", (dctRStatements[0] as RStatement)?.Text);
+        Assert.Equal("call2(\"f\",!!!xs,expr(y))", (dctRStatements[0] as RStatement)?.TextNoFormatting);
+
+        strInput = "!!TRUE\r\n" +
+                   "#> [1] TRUE\r\n" +
+                   "!!!TRUE\r\n" +
+                   "#> [1] FALSE";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(3, dctRStatements.Count);
+        Assert.Equal("!!!TRUE", (dctRStatements[1] as RStatement)?.TextNoFormatting);
+
+        strInput = "indices < -rep(list(missing_arg()), 3)\r\n" +
+                   "expr(x[!!!indices])\r\n" +
+                   "#> x[, , ]";
+        strActual = new RScript(strInput).GetAsExecutableScript();
+        Assert.Equal(strInput, strActual);
+        dctRStatements = new RScript(strInput).statements;
+        Assert.Equal(3, dctRStatements.Count);
+        Assert.Equal("expr(x[!!!indices])", (dctRStatements[1] as RStatement)?.TextNoFormatting);
+
     }
 
     [Fact]
@@ -1921,172 +1982,189 @@ public class RInsightTestXUnit
             "theme_grey()", statement?.Text);
         Assert.True(script.AreScriptPositionsConsistent());
 
+        // useful striings for further testing:
+        //strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
+        //strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))\n";
+        //strInput = "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))\n";
+        //strInput = "a+b+c\n";
+        //strInput = "2+1-10/5*3\n";
+        //strInput = "1+2-3*10/5\n";
+        //strInput = "(a-b)*(c+d)\n";
+        //strInput = "a/(b)*((c))+(d-e)/f*g+(((d-e)/f)*g)\n";
+        //strInput = "var1<-pkg1::var2\n";
+        //strInput = "var1<-pkg1::obj1$obj2$var2\n";
+        //strInput = "var1<-pkg1::obj1$fun1(para1,para2)\n";
+        //strInput = "a<-b::c(d)+e\n";
+        //strInput = "f1(~a,b~,-c,+d,e~(f+g),!h,i^(-j),k+(~l),m~(~n),o/-p,q*+r)\n";
+        //strInput = "a[1]-b[c(d)+e]/f(g[2],h[3],i[4]*j[5])-k[l[m[6]]]\n";
+        //strInput = "a[[1]]-b[[c(d)+e]]/f(g[[2]],h[[3]],i[[4]]*j[[5]])-k[[l[[m[6]]]]]\n";
+        //strInput = "df[[\"a\"]]\n" + "lst[[\"a\"]][[\"b\"]]"; // same as 'df$a' and 'lst$a$b'
+        //strInput = "x<-\"a\";df[x]"; // same as 'df$a' and 'lst$a$b'
+        //strInput = "df<-data.frame(x = 1:10, y = 11:20, z = letters[1:10])\n";
+        //strInput = "x[3:5]<-13:15;names(x)[3]<-\"Three\"";
+        //strInput = "x[3:5]<-13:15;\n" + "names(x)[3]<-\"Three\"";
+        //strInput = "x[3:5]<-13:15;" + "\r\n" + "names(x)[3]<-\"Three\"";
+        //strInput = "x[3:5]<-13:15;#comment\n" + "names(x)[3]<-\"Three\"";
+        //strInput = "a[]\n";
+        //strInput = "a[,]\n";
+        //strInput = "a[,,]\n";
+        //strInput = "a[,,,]\n";
+        //strInput = "a[b,]\n";
+        //strInput = "a[,c]\n";
+        //strInput = "a[b,c]\n";
+        //strInput = "a[\"b\",]\n";
+        //strInput = "a[,\"c\",1]\n";
+        //strInput = "a[-1,1:2,,x<5|x>7]\n";
+        //strInput = "a[-1,1:2,,f1(b,c[d], f2(e)[,,f3(f,g),,]),x<5|x>7]\n";
+        //strInput = " a[]#comment\n";
+        //strInput = "a [,]\n";
+        //strInput = "a[ ,,] #comment\n";
+        //strInput = "a[, ,,]\n";
+        //strInput = "a[b, ]   #comment\n";
+        //strInput = "a [  ,   c    ]     \n";
+        //strInput = "#comment\n" + "a[b,c]\n";
+        //strInput = "a[ \"b\"  ,]\n";
+        //strInput = "a[,#comment\n" + "\"c\",  1 ]\n";
+        //strInput = "a[ -1 , 1  :   2    ,     ,      x <  5   |    x      > 7  ]\n";
+        //strInput = "weather[,1]<-As.Date(weather[,1],format = \"%m/%d/%Y\")\n";
+        //strInput = " weather  [   ,  #comment\n" + "  1     ] <-  As.Date   (weather     [#comment\n" + " ,  1   ]    ,    format =  \"%m/%d/%Y\"    )     \n";
+        //strInput = "dat <- dat[order(dat$tree, dat$dir), ]\n";
+        //strInput = "d22 <- d22[order(d22$tree, d22$day),]\n";
+        //strInput = "res <- MCA(poison[,3:8],excl =c(1,3))\n";
+        //strInput = "a[][b]\n";
+        //strInput = "a[][]\n";
+        //strInput = "output[][-1]\n";
+        //strInput = "data_book$display_daily_table(data_name = \"dodoma\", climatic_element = \"rain\", " + "date_col = \"Date\", year_col = \"year\", Misscode = \"m\", monstats = c(sum = \"sum\"))\n";
+        //strInput = "stringr::str_split_fixed(string = date,pattern = \" - \",n = \"5 \")\n";
+        //strInput = "ggplot2::ggplot(data = c(sum = \"sum\"),mapping = ggplot2::aes(x = fert,y = size,colour = variety))\n";
+        //strInput = "last_graph<-ggplot2::ggplot(data = survey,mapping = ggplot2::aes(x = fert,y = size,colour = variety))" + "+ggplot2::geom_line()" + "+ggplot2::geom_rug(colour = \"orange\")" + "+theme_grey()" + "+ggplot2::theme(axis.text.x = ggplot2::element_text())" + "+ggplot2::facet_grid(facets = village~variety,space = \"fixed\")\n";
+        //strInput = "dodoma <- data_book$get_data_frame(data_name = \"dodoma\", stack_data = TRUE, measure.vars = c(\"rain\", \"tmax\", \"tmin\"), id.vars = c(\"Date\"))\n" + "last_graph <- ggplot2::ggplot(data = dodoma, mapping = ggplot2::aes(x = date, y = value, colour = variable)) + ggplot2::geom_line() + " + "ggplot2::geom_rug(data = dodoma%>%filter(is.na(value)), colour = \"red\") + theme_grey() + ggplot2::theme(axis.text.x = ggplot2::element_text(), legend.position = \"none\") + " + "ggplot2::facet_wrap(scales = \"free_y\", ncol = 1, facet = ~variable) + ggplot2::xlab(NULL)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"dodoma\")\n" + "data_book$get_graphs(data_name = \"dodoma\", graph_name = \"last_graph\")";
+        //strInput = "a->b\n" + "c->>d\n" + "e<-f\n" + "g<<-h\n" + "i=j";
+        //strInput = "x<-df$`a b`\n";
+        //strInput = "names(x)<-c(\"a\",\"b\")\n";
+        //strInput = "a<-b" + "\r" + "c(d)" + "\r\n" + "e->>f+g\n";
+        //strInput = " f1(  f2(),   f3( a),  f4(  b =1))\n";
+        //strInput = "  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h))\n";
+        //strInput = " a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)\n";
+        //strInput = " a  +   b    +     c\n";
+        //strInput = " var1  <-   pkg1::obj1$obj2$var2\n";
+        //strInput = "    pkg ::obj1 $obj2$fn1 (a ,b=1, c    = 2 )\n";
+        //strInput = " f1(  ~   a,    b ~,  -   c,    + d,  e   ~(    f +  g),   !    h, i  ^(   -    j), k  +(   ~    l), m  ~(   ~    n), o  /   -    p, q  *   +    r)\n";
+        //strInput = "#comment1\n" + "a#comment2" + "\r" + " b #comment3" + "\r\n" + "#comment4\n" + "  c  " + "\r\n";
+        //strInput = "#not ignored comment";
+        //strInput = "#not ignored comment\n";
+        //strInput = "f1()\n" + "# not ignored comment" + "\r\n";
+        //strInput = "f1()\n" + "# not ignored comment\n" + "# not ignored comment2" + "\r" + " " + "\r\n" + "# not ignored comment3";
+        //strInput = "# Code run from Script Window (all text)" + Environment.NewLine + "1";
+        //strInput = "\n";
+        //strInput = "";
+        //strInput = "x <- \"a\n\"\n";
+        //strInput = "data_book$import_data(data_tables =list(data3 =clipr::read_clip_tbl(x =\"Category    Feature    Ease_of_Use     Operating Systems\n" + "\", header =TRUE)))\n";
+        //strInput = "Data <- data_book$get_data_frame(data_name = \"Data\")\n" + "last_graph <- ggplot2::ggplot(data = Data |> dplyr::filter(rain > 0.85), mapping = ggplot2::aes(y = rain, x = make_factor(\"\")))" + " + ggplot2::geom_boxplot(varwidth = TRUE, coef = 2) + theme_grey()" + " + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))" + " + ggplot2::xlab(NULL) + ggplot2::facet_wrap(facets = ~ Name, drop = FALSE)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"Data\")\n" + "data_book$get_graphs(data_name = \"Data\", graph_name = \"last_graph\")";
+        //strInput = "ifelse(year_2 > 30, 1, 0)\n";
+        //strInput = "(year-1900)*(year<2000)+(year-2000)*(year>1999)\n";
+        //strInput = @"a("""", ""\""\"""", ""b"", ""c(\""d\"")"", ""'"", ""''"", ""'e'"", ""`"", ""``"", ""`f`"")" + "\n";
+        //strInput = @"a('', '\'\'', 'b', 'c(\'d\')', '""', '""""', '""e""', '`', '``', '`f`')" + "\n";
+        //strInput = @"a(``, `\`\``, `b`, `c(\`d\`)`, `""`, `""""`, `""e""`, `'`, `''`, `'f'`)" + "\n";
+        //strInput = "x<-\"she said 'hello'\"\n";
+        //strInput = "read_clip_tbl(x = \"Ease_of_Use" + "\t" + @"Hides R by default to prevent \""code shock\""" + "\t" + "  1\", header = TRUE)\n";
+        //strInput = "?log\n";
+        //strInput = "?a\n" + "? b\n" + " +  c\n" + "  -   d +#comment1\n" + "(!e) - #comment2\n" + "(~f) +\n" + "(+g) - \n" + "(-h)";
+        //strInput = "??log\n";
+        //strInput = "??a\n" + "?? b\n";
+        //strInput = "\"a\"+\"b\"\n";
+        //strInput = "  tfrmt(\n" + "  # specify columns in the data\n" + "  group = c(rowlbl1, grp),\n" + "  label = rowlbl2,\n" + "  column = column, \n" + "  param = param,\n" + "  value = value,\n" + "  sorting_cols = c(ord1, ord2),\n" + "  # specify value formatting \n" + "  body_plan = body_plan(\n" + "  frmt_structure(group_val = \".default\", label_val = \".default\", frmt_combine(\"{n} ({pct} %)\",\n" + "                                                                    n = frmt(\"xxx\"),\n" + "                                                                                pct = frmt(\"xx.x\"))),\n" + "    frmt_structure(group_val = \".default\", label_val = \"n\", frmt(\"xxx\")),\n" + "    frmt_structure(group_val = \".default\", label_val = c(\"Mean\", \"Median\", \"Min\", \"Max\"), frmt(\"xxx.x\")),\n" + "    frmt_structure(group_val = \".default\", label_val = \"SD\", frmt(\"xxx.xx\")),\n" + "    frmt_structure(group_val = \".default\", label_val = \".default\", p = frmt_when(\">0.99\" ~ \">0.99\",\n" + "                                                                                 \"<0.001\" ~ \"<0.001\",\n" + "                                                                                 TRUE ~ frmt(\"x.xxx\", missing = \"\"))))) %>% \n" + "  print_to_gt(data_demog) %>% \n" + "  tab_options(\n" + "    container.width = 900)\n";
+        //strInput = "x %>% f(1, .)\n";
+        //strInput = "x |> f(1, y = _)\n";
+        //strInput = "df %>% split(.$var)\n";
+        //strInput = "{a\nb}";
+        //strInput = "df %>% {split(.$x, .$y)}";
+        //strInput = "mtcars %>% .$cyl\n";
+        //strInput = "c(1:3, NA_real_) |> sum(na.rm = TRUE)\n";
+        //strInput = "split(x = iris[-5], f = iris$Species) |> lapply(min) |> Do.call(what = rbind)\n";
+        //strInput = "iris[iris$Sepal.Length > 7,] %>% subset(.$Species==\"virginica\")\n";
+        //strInput = "1:3 |> sum\n";
+        //strInput = "{a}\n";
+        //strInput = "a<-b(c,{d})";
+        //strInput = "colors <- c(\"blue\", \"red\", \"black\")\r\n";
+        //strInput = "means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))";
+        //strInput = "if(a)b";
+        //strInput = "if\n(a)b";
+        //strInput = "if\n(a)\nb";
+        //strInput = "if(a){b}";
+        //strInput = "if\n(a){b}";
+        //strInput = "if\n(a)\n{b}";
+        //strInput = "if(x>10){fn1(paste(x,\"is greater than 10\"))}";
+        //strInput = "if(val > 5) break";
+        //strInput = "if (x %% 2 == 0) \n    return(\"even\")";
+        //strInput = "    if (i == 8)\r\n        next\n    if(i == 5)\n        break";
+        //strInput = "if(a)b else c";
+        //strInput = "if\n(d)e else f";
+        //strInput = "if\n(g)\nh else i";
+        //strInput = "if\n(j)\nk else\nl";
+        //strInput = "a;b";
+        //strInput = "a;\nb";
+        //strInput = "a\rb";
+        //strInput = "a#1\r\nb";
+        //strInput = "a#1\n\rb";
+        //strInput = "a#1\r\n\r\n#2 b";
+        //strInput = " a";
+        //strInput = " \na";
+        //strInput = " \n\r\r\na";
+        //strInput = "a;\nb";
+        //strInput = "for(a in 1:5)a\n";
+        //strInput = "for (a in 1:5)a\n";
+        //strInput = "for ( a in 1:5)a\n";
+        //strInput = "for (a  in  1:5)a\n";
+        //strInput = "for ( a  in  1 :5)a\n";
+        //strInput = "for(a in  1  : 5 ) a\n";
+        //strInput = "for\n(a in 1:5)a\n";
+        //strInput = "for (a \nin 1:5)a\n";
+        //strInput = "for ( a in 1\n:5)a\n";
+        //strInput = "for (a  in  1:5\n)a\n";
+        //strInput = "for ( a  in  1 :5)\na\n";
+        //strInput = "for\n(\na \nin  \n1  \n: \n5 \n) \na\n";
+        //strInput = "for(a in 1:5){a}\n";
+        //strInput = "for (a in 1:5){a\n}";
+        //strInput = "for ( a in 1:5){a;b\n}";
+        //strInput = "for (a  in  1:5){a\nb\nc\n}";
+        //strInput = "for(a in 1:5)\n{a}\n";
+        //strInput = "for (a in 1:5)\n{\na\n}";
+        //strInput = "for ( a in 1:5)\n\n{a;b\n}";
+        //strInput = "if(a)b else if(c)d else e";
+        //strInput = "for(a in 1:2)if(b)c else d";
+        //strInput = "for(a in 1:2)if(b)for(c in 5:6)d";
+        //strInput = "for(a in 1:2)for(b in 3:4)for(c in 5:6)d";
+        //strInput = "for (i in 1:r) print(t(plots[,,i]))";
+        //strInput = "a=function(b)c";
+        //strInput = "function(x, label = deparse(x)) {\nlabel\nx <- x + 1\nprint(label)\n}";
+        //strInput = "y <- if( any(x <= 0) ) log(1+x) else log(x)";
+        ////strInput = "a/if(b)c else d+e";
+        //strInput = "!!a";
+        //strInput = "if(!is.null(station)){data<-data%>%group_by(!!sym(station))}";
+        //strInput = "a:=b";
+        //strInput = "binds[[i]] <- results[[i]][[j]] %>% mutate(!!sym(station) := station_name[i])";
+        //strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}";
+        //strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}else{p\nq}";
+        //strInput = "if(a){b<-c+d\ne<-f+g}else{h<-i+j\nk<-l+m}";
+        //strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
+        //strInput = "xs <- exprs(1, a, -b)\r\n" +
+        //   "expr(f(!!!xs, y))\r\n" +
+        //   "#> f(1, a, -b, y)\r\n\r\n" +
+        //   "# Or with names\r\n" +
+        //   "ys < -set_names(xs, c(\"a\", \"b\", \"c\"))\r\n" +
+        //   "expr(f(!!!ys, d = 4))\r\n" +
+        //   "#> f(a = 1, b = a, c = -b, d = 4)";
+        //strInput = "call2(\"f\", !!!xs, expr(y))\r\n" +
+        //           "#> f(1, a, -b, y)\r\n";
+        //strInput = "!!TRUE\r\n" +
+        //           "#> [1] TRUE\r\n" +
+        //           "!!!TRUE\r\n" +
+        //           "#> [1] FALSE";
+        //strInput = "indices < -rep(list(missing_arg()), 3)\r\n" +
+        //           "expr(x[!!!indices])\r\n" +
+        //           "#> x[, , ]";
 
-        strInput = " f1(f2(),f3(a),f4(b=1),f5(c=2,3),f6(4,d=5),f7(,),f8(,,),f9(,,,),f10(a,,))\n";
-        strInput = "f0(f1(),f2(a),f3(f4()),f5(f6(f7(b))))\n";
-        strInput = "f0(o4a=o4b,o4c=(o8a+o8b)*(o8c-o8d),o4d=f4a(o6e=o6f,o6g=o6h))\n";
-        strInput = "a+b+c\n";
-        strInput = "2+1-10/5*3\n";
-        strInput = "1+2-3*10/5\n";
-        strInput = "(a-b)*(c+d)\n";
-        strInput = "a/(b)*((c))+(d-e)/f*g+(((d-e)/f)*g)\n";
-        strInput = "var1<-pkg1::var2\n";
-        strInput = "var1<-pkg1::obj1$obj2$var2\n";
-        strInput = "var1<-pkg1::obj1$fun1(para1,para2)\n";
-        strInput = "a<-b::c(d)+e\n";
-        strInput = "f1(~a,b~,-c,+d,e~(f+g),!h,i^(-j),k+(~l),m~(~n),o/-p,q*+r)\n";
-        strInput = "a[1]-b[c(d)+e]/f(g[2],h[3],i[4]*j[5])-k[l[m[6]]]\n";
-        strInput = "a[[1]]-b[[c(d)+e]]/f(g[[2]],h[[3]],i[[4]]*j[[5]])-k[[l[[m[6]]]]]\n";
-        strInput = "df[[\"a\"]]\n" + "lst[[\"a\"]][[\"b\"]]"; // same as 'df$a' and 'lst$a$b'
-        strInput = "x<-\"a\";df[x]"; // same as 'df$a' and 'lst$a$b'
-        strInput = "df<-data.frame(x = 1:10, y = 11:20, z = letters[1:10])\n";
-        strInput = "x[3:5]<-13:15;names(x)[3]<-\"Three\"";
-        strInput = "x[3:5]<-13:15;\n" + "names(x)[3]<-\"Three\"";
-        strInput = "x[3:5]<-13:15;" + "\r\n" + "names(x)[3]<-\"Three\"";
-        strInput = "x[3:5]<-13:15;#comment\n" + "names(x)[3]<-\"Three\"";
-        strInput = "a[]\n";
-        strInput = "a[,]\n";
-        strInput = "a[,,]\n";
-        strInput = "a[,,,]\n";
-        strInput = "a[b,]\n";
-        strInput = "a[,c]\n";
-        strInput = "a[b,c]\n";
-        strInput = "a[\"b\",]\n";
-        strInput = "a[,\"c\",1]\n";
-        strInput = "a[-1,1:2,,x<5|x>7]\n";
-        strInput = "a[-1,1:2,,f1(b,c[d], f2(e)[,,f3(f,g),,]),x<5|x>7]\n";
-        strInput = " a[]#comment\n";
-        strInput = "a [,]\n";
-        strInput = "a[ ,,] #comment\n";
-        strInput = "a[, ,,]\n";
-        strInput = "a[b, ]   #comment\n";
-        strInput = "a [  ,   c    ]     \n";
-        strInput = "#comment\n" + "a[b,c]\n";
-        strInput = "a[ \"b\"  ,]\n";
-        strInput = "a[,#comment\n" + "\"c\",  1 ]\n";
-        strInput = "a[ -1 , 1  :   2    ,     ,      x <  5   |    x      > 7  ]\n";
-        strInput = "weather[,1]<-As.Date(weather[,1],format = \"%m/%d/%Y\")\n";
-        strInput = " weather  [   ,  #comment\n" + "  1     ] <-  As.Date   (weather     [#comment\n" + " ,  1   ]    ,    format =  \"%m/%d/%Y\"    )     \n";
-        strInput = "dat <- dat[order(dat$tree, dat$dir), ]\n";
-        strInput = "d22 <- d22[order(d22$tree, d22$day),]\n";
-        strInput = "res <- MCA(poison[,3:8],excl =c(1,3))\n";
-        strInput = "a[][b]\n";
-        strInput = "a[][]\n";
-        strInput = "output[][-1]\n";
-        strInput = "data_book$display_daily_table(data_name = \"dodoma\", climatic_element = \"rain\", " + "date_col = \"Date\", year_col = \"year\", Misscode = \"m\", monstats = c(sum = \"sum\"))\n";
-        strInput = "stringr::str_split_fixed(string = date,pattern = \" - \",n = \"5 \")\n";
-        strInput = "ggplot2::ggplot(data = c(sum = \"sum\"),mapping = ggplot2::aes(x = fert,y = size,colour = variety))\n";
-        strInput = "last_graph<-ggplot2::ggplot(data = survey,mapping = ggplot2::aes(x = fert,y = size,colour = variety))" + "+ggplot2::geom_line()" + "+ggplot2::geom_rug(colour = \"orange\")" + "+theme_grey()" + "+ggplot2::theme(axis.text.x = ggplot2::element_text())" + "+ggplot2::facet_grid(facets = village~variety,space = \"fixed\")\n";
-        strInput = "dodoma <- data_book$get_data_frame(data_name = \"dodoma\", stack_data = TRUE, measure.vars = c(\"rain\", \"tmax\", \"tmin\"), id.vars = c(\"Date\"))\n" + "last_graph <- ggplot2::ggplot(data = dodoma, mapping = ggplot2::aes(x = date, y = value, colour = variable)) + ggplot2::geom_line() + " + "ggplot2::geom_rug(data = dodoma%>%filter(is.na(value)), colour = \"red\") + theme_grey() + ggplot2::theme(axis.text.x = ggplot2::element_text(), legend.position = \"none\") + " + "ggplot2::facet_wrap(scales = \"free_y\", ncol = 1, facet = ~variable) + ggplot2::xlab(NULL)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"dodoma\")\n" + "data_book$get_graphs(data_name = \"dodoma\", graph_name = \"last_graph\")";
-        strInput = "a->b\n" + "c->>d\n" + "e<-f\n" + "g<<-h\n" + "i=j";
-        strInput = "x<-df$`a b`\n";
-        strInput = "names(x)<-c(\"a\",\"b\")\n";
-        strInput = "a<-b" + "\r" + "c(d)" + "\r\n" + "e->>f+g\n";
-        strInput = " f1(  f2(),   f3( a),  f4(  b =1))\n";
-        strInput = "  f0(   o4a = o4b,  o4c =(o8a   + o8b)  *(   o8c -  o8d),   o4d = f4a(  o6e =   o6f, o6g =  o6h))\n";
-        strInput = " a  /(   b)*( c)  +(   d- e)  /   f *g  +(((   d- e)  /   f)* g)\n";
-        strInput = " a  +   b    +     c\n";
-        strInput = " var1  <-   pkg1::obj1$obj2$var2\n";
-        strInput = "    pkg ::obj1 $obj2$fn1 (a ,b=1, c    = 2 )\n";
-        strInput = " f1(  ~   a,    b ~,  -   c,    + d,  e   ~(    f +  g),   !    h, i  ^(   -    j), k  +(   ~    l), m  ~(   ~    n), o  /   -    p, q  *   +    r)\n";
-        strInput = "#comment1\n" + "a#comment2" + "\r" + " b #comment3" + "\r\n" + "#comment4\n" + "  c  " + "\r\n";
-        strInput = "#not ignored comment";
-        strInput = "#not ignored comment\n";
-        strInput = "f1()\n" + "# not ignored comment" + "\r\n";
-        strInput = "f1()\n" + "# not ignored comment\n" + "# not ignored comment2" + "\r" + " " + "\r\n" + "# not ignored comment3";
-        strInput = "# Code run from Script Window (all text)" + Environment.NewLine + "1";
-        strInput = "\n";
-        strInput = "";
-        strInput = "x <- \"a\n\"\n";
-        strInput = "data_book$import_data(data_tables =list(data3 =clipr::read_clip_tbl(x =\"Category    Feature    Ease_of_Use     Operating Systems\n" + "\", header =TRUE)))\n";
-        strInput = "Data <- data_book$get_data_frame(data_name = \"Data\")\n" + "last_graph <- ggplot2::ggplot(data = Data |> dplyr::filter(rain > 0.85), mapping = ggplot2::aes(y = rain, x = make_factor(\"\")))" + " + ggplot2::geom_boxplot(varwidth = TRUE, coef = 2) + theme_grey()" + " + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))" + " + ggplot2::xlab(NULL) + ggplot2::facet_wrap(facets = ~ Name, drop = FALSE)\n" + "data_book$add_graph(graph_name = \"last_graph\", graph = last_graph, data_name = \"Data\")\n" + "data_book$get_graphs(data_name = \"Data\", graph_name = \"last_graph\")";
-        strInput = "ifelse(year_2 > 30, 1, 0)\n";
-        strInput = "(year-1900)*(year<2000)+(year-2000)*(year>1999)\n";
-        strInput = @"a("""", ""\""\"""", ""b"", ""c(\""d\"")"", ""'"", ""''"", ""'e'"", ""`"", ""``"", ""`f`"")" + "\n";
-        strInput = @"a('', '\'\'', 'b', 'c(\'d\')', '""', '""""', '""e""', '`', '``', '`f`')" + "\n";
-        strInput = @"a(``, `\`\``, `b`, `c(\`d\`)`, `""`, `""""`, `""e""`, `'`, `''`, `'f'`)" + "\n";
-        strInput = "x<-\"she said 'hello'\"\n";
-        strInput = "read_clip_tbl(x = \"Ease_of_Use" + "\t" + @"Hides R by default to prevent \""code shock\""" + "\t" + "  1\", header = TRUE)\n";
-        strInput = "?log\n";
-        strInput = "?a\n" + "? b\n" + " +  c\n" + "  -   d +#comment1\n" + "(!e) - #comment2\n" + "(~f) +\n" + "(+g) - \n" + "(-h)";
-        strInput = "??log\n";
-        strInput = "??a\n" + "?? b\n";
-        strInput = "\"a\"+\"b\"\n";
-        strInput = "  tfrmt(\n" + "  # specify columns in the data\n" + "  group = c(rowlbl1, grp),\n" + "  label = rowlbl2,\n" + "  column = column, \n" + "  param = param,\n" + "  value = value,\n" + "  sorting_cols = c(ord1, ord2),\n" + "  # specify value formatting \n" + "  body_plan = body_plan(\n" + "  frmt_structure(group_val = \".default\", label_val = \".default\", frmt_combine(\"{n} ({pct} %)\",\n" + "                                                                    n = frmt(\"xxx\"),\n" + "                                                                                pct = frmt(\"xx.x\"))),\n" + "    frmt_structure(group_val = \".default\", label_val = \"n\", frmt(\"xxx\")),\n" + "    frmt_structure(group_val = \".default\", label_val = c(\"Mean\", \"Median\", \"Min\", \"Max\"), frmt(\"xxx.x\")),\n" + "    frmt_structure(group_val = \".default\", label_val = \"SD\", frmt(\"xxx.xx\")),\n" + "    frmt_structure(group_val = \".default\", label_val = \".default\", p = frmt_when(\">0.99\" ~ \">0.99\",\n" + "                                                                                 \"<0.001\" ~ \"<0.001\",\n" + "                                                                                 TRUE ~ frmt(\"x.xxx\", missing = \"\"))))) %>% \n" + "  print_to_gt(data_demog) %>% \n" + "  tab_options(\n" + "    container.width = 900)\n";
-        strInput = "x %>% f(1, .)\n";
-        strInput = "x |> f(1, y = _)\n";
-        strInput = "df %>% split(.$var)\n";
-        strInput = "{a\nb}";
-        strInput = "df %>% {split(.$x, .$y)}";
-        strInput = "mtcars %>% .$cyl\n";
-        strInput = "c(1:3, NA_real_) |> sum(na.rm = TRUE)\n";
-        strInput = "split(x = iris[-5], f = iris$Species) |> lapply(min) |> Do.call(what = rbind)\n";
-        strInput = "iris[iris$Sepal.Length > 7,] %>% subset(.$Species==\"virginica\")\n";
-        strInput = "1:3 |> sum\n";
-        strInput = "{a}\n";
-        strInput = "a<-b(c,{d})";
-        strInput = "colors <- c(\"blue\", \"red\", \"black\")\r\n";
-        strInput = "means <- by(cic[,5], cic[,c(2,1)], function(x) mean(x,na.rm=TRUE))";
-        strInput = "if(a)b";
-        strInput = "if\n(a)b";
-        strInput = "if\n(a)\nb";
-        strInput = "if(a){b}";
-        strInput = "if\n(a){b}";
-        strInput = "if\n(a)\n{b}";
-        strInput = "if(x>10){fn1(paste(x,\"is greater than 10\"))}";
-        strInput = "if(val > 5) break";
-        strInput = "if (x %% 2 == 0) \n    return(\"even\")";
-        strInput = "    if (i == 8)\r\n        next\n    if(i == 5)\n        break";
-        strInput = "if(a)b else c";
-        strInput = "if\n(d)e else f";
-        strInput = "if\n(g)\nh else i";
-        strInput = "if\n(j)\nk else\nl";
-        strInput = "a;b";
-        strInput = "a;\nb";
-        strInput = "a\rb";
-        strInput = "a#1\r\nb";
-        strInput = "a#1\n\rb";
-        strInput = "a#1\r\n\r\n#2 b";
-        strInput = " a";
-        strInput = " \na";
-        strInput = " \n\r\r\na";
-        strInput = "a;\nb";
-        strInput = "for(a in 1:5)a\n";
-        strInput = "for (a in 1:5)a\n";
-        strInput = "for ( a in 1:5)a\n";
-        strInput = "for (a  in  1:5)a\n";
-        strInput = "for ( a  in  1 :5)a\n";
-        strInput = "for(a in  1  : 5 ) a\n";
-        strInput = "for\n(a in 1:5)a\n";
-        strInput = "for (a \nin 1:5)a\n";
-        strInput = "for ( a in 1\n:5)a\n";
-        strInput = "for (a  in  1:5\n)a\n";
-        strInput = "for ( a  in  1 :5)\na\n";
-        strInput = "for\n(\na \nin  \n1  \n: \n5 \n) \na\n";
-        strInput = "for(a in 1:5){a}\n";
-        strInput = "for (a in 1:5){a\n}";
-        strInput = "for ( a in 1:5){a;b\n}";
-        strInput = "for (a  in  1:5){a\nb\nc\n}";
-        strInput = "for(a in 1:5)\n{a}\n";
-        strInput = "for (a in 1:5)\n{\na\n}";
-        strInput = "for ( a in 1:5)\n\n{a;b\n}";
-        strInput = "if(a)b else if(c)d else e";
-        strInput = "for(a in 1:2)if(b)c else d";
-        strInput = "for(a in 1:2)if(b)for(c in 5:6)d";
-        strInput = "for(a in 1:2)for(b in 3:4)for(c in 5:6)d";
-        strInput = "for (i in 1:r) print(t(plots[,,i]))";
-        strInput = "a=function(b)c";
-        strInput = "function(x, label = deparse(x)) {\nlabel\nx <- x + 1\nprint(label)\n}";
-        strInput = "y <- if( any(x <= 0) ) log(1+x) else log(x)";
-        //strInput = "a/if(b)c else d+e";
-        strInput = "!!a";
-        strInput = "if(!is.null(station)){data<-data%>%group_by(!!sym(station))}";
-        strInput = "a:=b";
-        strInput = "binds[[i]] <- results[[i]][[j]] %>% mutate(!!sym(station) := station_name[i])";
-        strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}";
-        strInput = "if(a){b\nc\nif(d){e\nf\nif(g){h\nk\nl}m}\nn\no}else{p\nq}";
-        strInput = "if(a){b<-c+d\ne<-f+g}else{h<-i+j\nk<-l+m}";
-        strInput = "if(i == 1) {\r\n    tmp_prev <- tmp_prev\r\n    tmp <- cnt[i]\r\n    \r\n  } else {\r\n    tmp_prev <- tmp_prev + cnt[i-1]  \r\n    tmp <- tmp + cnt[i]\r\n  }";
     }
 
     [Fact]
