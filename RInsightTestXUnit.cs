@@ -2406,6 +2406,40 @@ public class RInsightTestXUnit
         Assert.True(script.AreScriptPositionsConsistent());
 
 
+        strInput = "a+b" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[0] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(0, "+", 0, "c", true);
+        Assert.Equal("\"c\"+b", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(0, "+", 1, "d1", true);
+        Assert.Equal("\"c\"+\"d1\"", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(8, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(0, "+", 0, "c002", true);
+        Assert.Equal("\"c002\"+\"d1\"", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(11, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(0, "+", 1, "d2 ", true);
+        Assert.Equal("\"c002\"+\"d2 \"", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(12, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+
         strInput = "\nf2()" +
                    "\na<-b+c +d + e+f" +
                    "\nf2()";
@@ -2485,6 +2519,81 @@ public class RInsightTestXUnit
         Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
         Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
         Assert.Equal(70, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+
+        strInput = "\nf2()" +
+                   "\na<-b+c +d + e+f" +
+                   "\nf2()";
+        script = new RScript(strInput);
+        dctRStatements = script.statements;
+        statement = dctRStatements[1] as RStatement;
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(21, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 0, "g", true);
+        Assert.Equal("\na<-\"g\"+c +d + e+f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 1, "hh", true);
+        Assert.Equal("\na<-\"g\"+\"hh\" +d + e+f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(26, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 2, " i", true);
+        Assert.Equal("\na<-\"g\"+\"hh\" +\" i\" + e+f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(29, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 3, "j ", true);
+        Assert.Equal("\na<-\"g\"+\"hh\" +\" i\" + \"j \"+f", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(32, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 4, " kkk ", true);
+        Assert.Equal("\na<-\"g\"+\"hh\" +\" i\" + \"j \"+\" kkk \"", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(38, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "+", 5, "l", true);
+        Assert.Equal("\na<-\"g\"+\"hh\" +\" i\" + \"j \"+\"l\"", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(34, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "<-", 0, "m", true);
+        Assert.Equal("\n\"m\"<-\"g\"+\"hh\" +\" i\" + \"j \"+\"l\"", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(36, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "<-", 0, " n ", true);
+        Assert.Equal("\n\" n \"<-\"g\"+\"hh\" +\" i\" + \"j \"+\"l\"", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(38, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.True(script.AreScriptPositionsConsistent());
+
+        script.OperatorUpdateParam(1, "<-", 1, "o", true);
+        Assert.Equal("\n\" n \"<-\"o\"", statement?.Text);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(16, (int)(dctRStatements[2] as RStatement).StartPos);
         Assert.True(script.AreScriptPositionsConsistent());
 
 
