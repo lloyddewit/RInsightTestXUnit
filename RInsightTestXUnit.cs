@@ -2719,4 +2719,212 @@ public class RInsightTestXUnit
 
     }
 
+    [Fact]
+    public void TestScriptInsert()
+    {
+        string strInput;
+        RScript script;
+        OrderedDictionary dctRStatements;
+        RStatement? statement;
+
+        // insert into empty script
+        // ... at start
+        strInput = "";
+        script = new RScript(strInput);
+        script.ScriptInsert(0, "a");
+        dctRStatements = script.statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal("a", script.GetAsExecutableScript());
+        // ... at end with position 1
+        strInput = "";
+        script = new RScript(strInput);
+        script.ScriptInsert(1, "a");
+        dctRStatements = script.statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal("a", script.GetAsExecutableScript());
+        // ... at end with position 2
+        strInput = "";
+        script = new RScript(strInput);
+        script.ScriptInsert(2, "a");
+        dctRStatements = script.statements;
+        Assert.Single(dctRStatements);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal("a", script.GetAsExecutableScript());
+
+        // insert into minimal script with one statement
+        // ... at start
+        strInput = "a";
+        script = new RScript(strInput);
+        script.ScriptInsert(0, "b\n");
+        Assert.Equal("b\na", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(1, (int)(dctRStatements[1] as RStatement).StartPos);
+        // ... at end with position equal to number of statements
+        strInput = "a";
+        script = new RScript(strInput);
+        script.ScriptInsert(1, "\nc\n");
+        Assert.Equal("a\nc\n", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(3, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(1, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[2] as RStatement).StartPos);
+        // ... at end with position greater than number of statements
+        strInput = "a";
+        script = new RScript(strInput);
+        script.ScriptInsert(2, ";d");
+        Assert.Equal("a;d", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(2, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(2, (int)(dctRStatements[1] as RStatement).StartPos);
+
+        // insert into minimal script with multiple statements
+        // ... at start
+        strInput = "x;y";
+        script = new RScript(strInput);
+        script.ScriptInsert(0, "b\n");
+        Assert.Equal("b\nx;y", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(3, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(1, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[2] as RStatement).StartPos);
+        // ... at end with position equal to number of statements
+        script.ScriptInsert(3, "\nc\n");
+        Assert.Equal("b\nx;y\nc\n", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(5, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(1, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(7, (int)(dctRStatements[4] as RStatement).StartPos);
+        // ... at end with position greater than number of statements
+        script.ScriptInsert(6, "d");
+        Assert.Equal("b\nx;y\nc\nd", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(5, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(1, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(4, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(5, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(7, (int)(dctRStatements[4] as RStatement).StartPos);
+        // ... in the middle
+        script.ScriptInsert(1, ";e");
+        Assert.Equal("b;e\nx;y\nc\nd", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(6, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(2, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(6, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(7, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(9, (int)(dctRStatements[5] as RStatement).StartPos);
+
+        // insert statements into complex script with multiple statements
+        strInput = "xs <- exprs(1, a, -b)\r\n" +
+           "expr(f(!!!xs, y))\r\n" +
+           "ys <- set_names(xs, c(\"a\", \"b\", \"c\"))\r\n" +
+           "expr(f(!!!ys, d = 4))";
+        script = new RScript(strInput);
+        // ... at start
+        script.ScriptInsert(0, "b\n");
+        Assert.Equal("b\n" +
+           "xs <- exprs(1, a, -b)\r\n" +
+           "expr(f(!!!xs, y))\r\n" +
+           "ys <- set_names(xs, c(\"a\", \"b\", \"c\"))\r\n" +
+           "expr(f(!!!ys, d = 4))", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(5, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(1, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(23, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(42, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(81, (int)(dctRStatements[4] as RStatement).StartPos);
+        // ... before 2nd statement
+        script.ScriptInsert(1, ";c");
+        Assert.Equal("b" +
+           ";c\n" +
+           "xs <- exprs(1, a, -b)\r\n" +
+           "expr(f(!!!xs, y))\r\n" +
+           "ys <- set_names(xs, c(\"a\", \"b\", \"c\"))\r\n" +
+           "expr(f(!!!ys, d = 4))", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(6, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(2, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(25, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(44, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(83, (int)(dctRStatements[5] as RStatement).StartPos);
+        // ... in the middle
+        script.ScriptInsert(3, "\nd");
+        Assert.Equal("b" +
+           ";c\n" +
+           "xs <- exprs(1, a, -b)\n" + 
+           "d\r\n" +
+           "expr(f(!!!xs, y))\r\n" +
+           "ys <- set_names(xs, c(\"a\", \"b\", \"c\"))\r\n" +
+           "expr(f(!!!ys, d = 4))", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(7, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(2, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(25, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(27, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(46, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[6] as RStatement).StartPos);
+        // ... before final statement
+        script.ScriptInsert(6, "\r\ne");
+        Assert.Equal("b" +
+           ";c\n" +
+           "xs <- exprs(1, a, -b)\n" +
+           "d\r\n" +
+           "expr(f(!!!xs, y))\r\n" +
+           "ys <- set_names(xs, c(\"a\", \"b\", \"c\"))\r\n" +
+           "e\r\n" +
+           "expr(f(!!!ys, d = 4))", script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(8, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(2, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(25, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(27, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(46, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(88, (int)(dctRStatements[7] as RStatement).StartPos);
+        // ... at end
+        script.ScriptInsert(8, "\rf");
+        Assert.Equal("b" +
+           ";c\n" +
+           "xs <- exprs(1, a, -b)\n" +
+           "d\r\n" +
+           "expr(f(!!!xs, y))\r\n" +
+           "ys <- set_names(xs, c(\"a\", \"b\", \"c\"))\r\n" +
+           "e\r\n" +
+           "expr(f(!!!ys, d = 4))" + 
+           "\rf", 
+           script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(9, dctRStatements.Count);
+        Assert.Equal(0, (int)(dctRStatements[0] as RStatement).StartPos);
+        Assert.Equal(2, (int)(dctRStatements[1] as RStatement).StartPos);
+        Assert.Equal(3, (int)(dctRStatements[2] as RStatement).StartPos);
+        Assert.Equal(25, (int)(dctRStatements[3] as RStatement).StartPos);
+        Assert.Equal(27, (int)(dctRStatements[4] as RStatement).StartPos);
+        Assert.Equal(46, (int)(dctRStatements[5] as RStatement).StartPos);
+        Assert.Equal(85, (int)(dctRStatements[6] as RStatement).StartPos);
+        Assert.Equal(88, (int)(dctRStatements[7] as RStatement).StartPos);
+        Assert.Equal(111, (int)(dctRStatements[8] as RStatement).StartPos);
+
+        // todo: add tests with comments appended to statements. The comments will be considered
+        //   part of the next statement so inserting statements may give unexpected results.
+    }
 }
