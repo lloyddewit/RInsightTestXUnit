@@ -18,7 +18,6 @@
 using RInsightF461;
 using System.Collections.Specialized;
 using System.Collections;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RInsightTestXUnit;
 
@@ -2923,6 +2922,40 @@ public class RInsightTestXUnit
         Assert.Equal(85, (int)(dctRStatements[6] as RStatement).StartPos);
         Assert.Equal(88, (int)(dctRStatements[7] as RStatement).StartPos);
         Assert.Equal(111, (int)(dctRStatements[8] as RStatement).StartPos);
+
+        //https://github.com/IDEMSInternational/R-Instat/pull/9541
+        strInput = "get_index_names <-data_book$get_variables_metadata(\"_dataFrame\")\r\n" +
+                   "rankings_object <-data_book$get_object(data_name = \"_dataFrame\", object_name = \"rankings_list\") $ object\r\n" +
+                   "baseline <-\"_overallTrait\"\r\n" +
+                   "multiple_vars <-\"_traitsToCompareTo\"\r\n" +
+                   "all_vars <-c(baseline, multiple_vars)\r\n" +
+                   "compare_variables <-get_ranking_items(data = get_index_names, rankings_object, vars_to_get = all_vars, index = \"rankings_index\")\r\n" +
+                   "names(compare_variables) <-all_vars\r\n" +
+                   "kendall_rankings <-~gosset::kendallTau(x = compare_variables[[.x]], y = compare_variables[[baseline]])\r\n" +
+                   "kendall_rankings <-purrr::map_dfr(.x = multiple_vars, kendall_rankings) %>% dplyr::mutate(.before = everything(), trait = multiple_vars)\r\n" +
+                   "kendall_rankings <-kendall_rankings %>% dplyr::select(-c(`Pr(>| z |)`, `Zvalue`))\r\n" +
+                   "rm(list = c(\"last_table\", \"kendall_rankings\", \"compare_variables \", \"get_index_names\", \"rankings_object\", \"all_vars\", \"baseline\", \"multiple_vars\"))";
+        script = new RScript(strInput);
+        script.ScriptInsert(10, "\r\nlast_table <-corrr::fashion(kendall_rankings)\r\n" +
+                   "data_book$add_object(data_name = \"_dataFrame\", object_name = \"last_table\", object_type_label = \"table\", object_format = \"text\", object = last_table)\r\n\r\n" +
+                   "data_book$get_object_data(data_name = \"_dataFrame\", object_name = \"last_table\", as_file = TRUE)");
+        Assert.Equal("get_index_names <-data_book$get_variables_metadata(\"_dataFrame\")\r\n" +
+                   "rankings_object <-data_book$get_object(data_name = \"_dataFrame\", object_name = \"rankings_list\") $ object\r\n" +
+                   "baseline <-\"_overallTrait\"\r\n" +
+                   "multiple_vars <-\"_traitsToCompareTo\"\r\n" +
+                   "all_vars <-c(baseline, multiple_vars)\r\n" +
+                   "compare_variables <-get_ranking_items(data = get_index_names, rankings_object, vars_to_get = all_vars, index = \"rankings_index\")\r\n" +
+                   "names(compare_variables) <-all_vars\r\n" +
+                   "kendall_rankings <-~gosset::kendallTau(x = compare_variables[[.x]], y = compare_variables[[baseline]])\r\n" +
+                   "kendall_rankings <-purrr::map_dfr(.x = multiple_vars, kendall_rankings) %>% dplyr::mutate(.before = everything(), trait = multiple_vars)\r\n" +
+                   "kendall_rankings <-kendall_rankings %>% dplyr::select(-c(`Pr(>| z |)`, `Zvalue`))\r\n" +
+                   "last_table <-corrr::fashion(kendall_rankings)\r\n" +
+                   "data_book$add_object(data_name = \"_dataFrame\", object_name = \"last_table\", object_type_label = \"table\", object_format = \"text\", object = last_table)\r\n\r\n" +
+                   "data_book$get_object_data(data_name = \"_dataFrame\", object_name = \"last_table\", as_file = TRUE)\r\n" +
+                   "rm(list = c(\"last_table\", \"kendall_rankings\", \"compare_variables \", \"get_index_names\", \"rankings_object\", \"all_vars\", \"baseline\", \"multiple_vars\"))", 
+                   script.GetAsExecutableScript());
+        dctRStatements = script.statements;
+        Assert.Equal(14, dctRStatements.Count);
 
         // todo: add tests with comments appended to statements. The comments will be considered
         //   part of the next statement so inserting statements may give unexpected results.
